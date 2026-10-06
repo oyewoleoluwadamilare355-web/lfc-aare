@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book of the Month | LFC Aare</title>
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#124b3a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { 
+      --ink: #10221d; 
+      --forest: #124b3a; 
+      --paper: #f7f5ef; 
+      --red: #e52421; 
+      --line: rgba(16, 34, 29, 0.15);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
+    a { color: inherit; text-decoration: none; }
+
+    header { background: var(--forest); color: #fff; padding: 16px 24px; position: relative; z-index: 100; }
+    .header-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-logo { height: 42px; width: auto; object-fit: contain; background: #fff; padding: 4px; border-radius: 50%; }
+    .brand-title { font-weight: 700; font-size: 1rem; line-height: 1.2; color: #fff; }
+    .brand-subtitle { font-size: 0.75rem; opacity: 0.8; display: block; }
+    .menu-toggle { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+    nav { display: none; flex-direction: column; width: 100%; background: #0d382b; padding: 16px 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 14px; gap: 12px; }
+    nav.active { display: flex; }
+    nav a { font-size: 0.95rem; font-weight: 500; color: #e0f2ec; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    nav a:last-child { border-bottom: none; }
+    .nav-btn { background: var(--red) !important; color: #fff !important; padding: 10px 16px !important; border-radius: 4px; font-weight: 700; text-align: center; margin-top: 6px; }
+
+    @media (min-width: 900px) {
+      .menu-toggle { display: none; }
+      nav { display: flex !important; flex-direction: row; width: auto; background: transparent; padding: 0; margin-top: 0; border-top: none; align-items: center; gap: 18px; }
+      nav a { padding: 0; border-bottom: none; }
+      .nav-btn { margin-top: 0; }
+    }
+
+    .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+
+    /* FEATURED BOOK CARD */
+    .book-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    @media (min-width: 650px) {
+      .book-card {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
+
+    .book-cover {
+      width: 100%;
+      max-width: 220px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+      object-fit: cover;
+      margin: 0 auto;
+    }
+
+    .book-details { flex: 1; }
+
+    .book-details .tag {
+      font-family: "DM Mono", monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .book-details h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 2rem;
+      margin: 0 0 6px 0;
+      color: var(--forest);
+    }
+
+    .book-details .author {
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .book-details p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 24px;
+      white-space: pre-line;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pdf-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--red);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+
+    .pdf-btn:hover { background: #c21a17; }
+
+    .pdf-btn-secondary {
+      background: var(--forest);
+    }
+    .pdf-btn-secondary:hover { background: #0d382b; }
+
+    /* PAST BOOKS SECTION & GRID */
+    .archive-section {
+      margin-top: 50px;
+    }
+
+    .archive-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--forest);
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 8px;
+    }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .archive-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .archive-cover {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 14px;
+    }
+
+    .archive-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--forest);
+      margin: 0 0 6px 0;
+    }
+
+    .archive-author {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .archive-desc {
+      font-size: 0.9rem;
+      color: #444;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .archive-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .archive-btn {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* EMBEDDED PDF VIEWER STYLES */
+    .pdf-viewer-container {
+      margin-top: 30px;
+      display: none;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .pdf-viewer-header {
+      background: var(--forest);
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .pdf-close-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .pdf-viewer-container iframe {
+      width: 100%;
+      height: 650px;
+      border: none;
+    }
+
+    footer { background: var(--ink); color: #8a9e97; padding: 40px; text-align: center; font-size: 0.85rem; margin-top: 60px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <img class="brand-logo" src="./logo.png" alt="LFC Logo" />
+        <div>
+          <span class="brand-title">LIVING FAITH CHURCH</span>
+          <span class="brand-subtitle">LFC AARE</span>
+        </div>
+      </div>
+      <button class="menu-toggle" id="menuBtn" aria-label="Toggle Navigation">
+        <span>Menu</span> &#9776;
+      </button>
+    </div>
+
+    <nav id="navMenu">
+      <a href="./index.html">Home</a>
+      <a href="./announcements.html">Announcements</a>
+      <a href="./wsf-outline.html">WSF Outline</a>
+      <a href="./testimonies.html">Testimonies</a>
+      <a href="./hymns.html">Hymns</a>
+      <a href="./book-of-the-month.html">Book of the Month</a>
+      <a href="./join.html" class="nav-btn">Join Studio Units</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.4rem; margin-bottom: 8px;">Book of the Month</h1>
+    <p style="color: #40574f; margin-top: 0;">Feed your spirit with our recommended monthly spiritual growth books.</p>
+
+    <!-- FEATURED BOOK CONTAINER -->
+    <div id="bookContainer">
+      <p>Loading Book of the Month...</p>
+    </div>
+
+    <!-- EMBEDDED PDF VIEWER -->
+    <div id="pdfViewer" class="pdf-viewer-container">
+      <div class="pdf-viewer-header">
+        <span id="readerTitle">📖 Reading Document Online</span>
+        <button id="closePdfBtn" class="pdf-close-btn">✕ Close Reader</button>
+      </div>
+      <iframe id="pdfIframe" src=""></iframe>
+    </div>
+
+    <!-- PAST BOOKS LIBRARY -->
+    <div id="archiveSection" class="archive-section" style="display: none;">
+      <h2 class="archive-title">📚 Recommended Reading Library</h2>
+      <div id="booksGrid" class="books-grid"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>📍 46 Aare Road, Iyana Aare Abule Ijoko Lemode, Ogun State</p>
+    <p>&copy; 2026 Living Faith Church (LFC Aare). All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Navigation Menu Toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    menuBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW register failed:', err));
+    }
+  </script>
+
+  <!-- FIREBASE BOOK INTEGRATION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      onSnapshot, 
+      query, 
+      orderBy 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
+      authDomain: "kingmegad-30f67.firebaseapp.com",
+      projectId: "kingmegad-30f67",
+      storageBucket: "kingmegad-30f67.firebasestorage.app",
+      messagingSenderId: "81567062415",
+      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
+      measurementId: "G-BVX8SEWFD0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const bookContainer = document.getElementById('bookContainer');
+    const archiveSection = document.getElementById('archiveSection');
+    const booksGrid = document.getElementById('booksGrid');
+    const pdfViewer = document.getElementById('pdfViewer');
+    const pdfIframe = document.getElementById('pdfIframe');
+    const closePdfBtn = document.getElementById('closePdfBtn');
+    const readerTitle = document.getElementById('readerTitle');
+
+    const now = new Date();
+    const currentMonthYear = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }).toUpperCase();
+
+    // Helper function to format Google Drive links
+    function formatPdfViewerUrl(url) {
+      if (!url) return '';
+      const driveIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+      if (driveIdMatch && driveIdMatch[1]) {
+        return `https://drive.google.com/file/d/${driveIdMatch[1]}/preview`;
+      }
+      if (url.startsWith('http') && !url.includes('drive.google.com')) {
+        return `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(url)}`;
+      }
+      return url;
+    }
+
+    window.openBookReader = function(rawPdfUrl, title) {
+      const embeddedViewerUrl = formatPdfViewerUrl(rawPdfUrl);
+      pdfIframe.src = embeddedViewerUrl;
+      readerTitle.textContent = `📖 Reading: ${title}`;
+      pdfViewer.style.display = 'block';
+      pdfViewer.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    closePdfBtn.addEventListener('click', () => {
+      pdfViewer.style.display = 'none';
+      pdfIframe.src = '';
+    });
+
+    // Query all books without limit(1)
+    const q = query(collection(db, "books"), orderBy("createdAt", "desc"));
+
+    onSnapshot(q, (snapshot) => {
+      if (snapshot.empty) {
+        bookContainer.innerHTML = "<p>No featured books available yet.</p>";
+        archiveSection.style.display = 'none';
+        return;
+      }
+
+      const allDocs = snapshot.docs;
+      
+      // 1. RENDER FEATURED (NEWEST) BOOK
+      const featuredDoc = allDocs[0].data();
+      const featuredTitle = featuredDoc.title || featuredDoc.bookTitle || featuredDoc.name || "Book of the Month";
+      const authorVal = featuredDoc.author || featuredDoc.writer || "Bishop David Oyedepo";
+      const featuredAuthor = authorVal.toLowerCase().startsWith("by") ? authorVal : `By ${authorVal}`;
+      const featuredDesc = featuredDoc.description || featuredDoc.summary || featuredDoc.details || "Recommended spiritual reading for this month.";
+      const featuredCover = featuredDoc.coverUrl || featuredDoc.imageUrl || featuredDoc.cover || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400";
+      const featuredPdf = featuredDoc.pdfUrl || featuredDoc.pdf || featuredDoc.fileUrl || "#";
+
+      bookContainer.innerHTML = `
+        <div class="book-card">
+          <img class="book-cover" src="${featuredCover}" alt="${featuredTitle} Cover" onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400'" />
+          <div class="book-details">
+            <span class="tag">${currentMonthYear} • FEATURED READ</span>
+            <h2>${featuredTitle}</h2>
+            <span class="author">${featuredAuthor}</span>
+            <p>${featuredDesc}</p>
+            
+            <div class="btn-group">
+              ${featuredPdf !== "#" ? `
+                <button onclick="openBookReader('${featuredPdf}', '${featuredTitle.replace(/'/g, "\\'")}')" class="pdf-btn">📖 Read PDF Online</button>
+                <a href="${featuredPdf}" target="_blank" class="pdf-btn pdf-btn-secondary">📥 Open / Download PDF</a>
+              ` : `
+                <span style="color: #777; font-size: 0.9rem;">PDF document coming soon.</span>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // 2. RENDER PAST/OTHER BOOKS IN LIBRARY GRID
+      if (allDocs.length > 1) {
+        archiveSection.style.display = 'block';
+        const pastDocs = allDocs.slice(1);
+
+        booksGrid.innerHTML = pastDocs.map(docSnap => {
+          const data = docSnap.data();
+          const title = data.title || data.bookTitle || "Recommended Read";
+          const author = data.author || "Bishop David Oyedepo";
+          const desc = data.description || data.summary || "";
+          const cover = data.coverUrl || data.imageUrl || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400";
+          const pdf = data.pdfUrl || data.pdf || "#";
+
+          return `
+            <div class="archive-card">
+              <div>
+                <img class="archive-cover" src="${cover}" alt="${title} Cover" onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400'" />
+                <h3>${title}</h3>
+                <span class="archive-author">By ${author}</span>
+                <p class="archive-desc">${desc}</p>
+              </div>
+              
+              <div class="archive-btn-group">
+                ${pdf !== "#" ? `
+                  <button onclick="openBookReader('${pdf}', '${title.replace(/'/g, "\\'")}')" class="pdf-btn archive-btn">📖 Read Online</button>
+                  <a href="${pdf}" target="_blank" class="pdf-btn pdf-btn-secondary archive-btn">📥 Open / Download</a>
+                ` : `
+                  <span style="color: #777; font-size: 0.85rem;">PDF unavailable</span>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        archiveSection.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

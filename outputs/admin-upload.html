@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Publishing Portal | LFC Aare</title>
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <meta name="theme-color" content="#124b3a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { 
+      --ink: #10221d; 
+      --forest: #124b3a; 
+      --paper: #f7f5ef; 
+      --red: #e52421; 
+      --line: rgba(16, 34, 29, 0.15);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
+    
+    header { background: var(--forest); color: #fff; padding: 16px 24px; text-align: center; }
+    .header-title { font-family: "Playfair Display", serif; font-size: 1.6rem; margin: 0; }
+
+    .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+
+    /* AUTH CARD */
+    .auth-card, .admin-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      color: var(--forest);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--forest);
+    }
+
+    .btn {
+      width: 100%;
+      background: var(--forest);
+      color: #fff;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background: #0d382b; }
+
+    .btn-danger {
+      background: var(--red);
+      width: auto;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+    .btn-danger:hover { background: #c21a17; }
+
+    /* CONTENT LIST ITEM */
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .item-row:last-child { border-bottom: none; }
+    .item-title { font-weight: 600; font-size: 0.95rem; }
+    .item-meta { font-size: 0.8rem; color: #666; display: block; }
+
+    .tab-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--forest);
+      color: #fff;
+      border-color: var(--forest);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="header-title">LFC Aare Content Manager</h1>
+  </header>
+
+  <main class="container">
+
+    <!-- PIN PROTECTION STEP -->
+    <div id="authSection" class="auth-card">
+      <h2 style="margin-top:0; color: var(--forest);">Enter Admin PIN</h2>
+      <div class="form-group">
+        <label for="pinInput">Security PIN</label>
+        <input type="password" id="pinInput" placeholder="Enter 4-digit PIN" autofocus />
+      </div>
+      <button id="loginBtn" class="btn">Unlock Dashboard</button>
+      <p id="authError" style="color: var(--red); display: none; margin-top: 10px; font-weight: 600;">Incorrect PIN. Access Denied.</p>
+    </div>
+
+    <!-- MAIN ADMIN PANEL (HIDDEN BY DEFAULT) -->
+    <div id="adminPanel" style="display: none;">
+
+      <!-- SECTION 1: PUBLISH CONTENT FORM -->
+      <div class="admin-card">
+        <h2 style="margin-top:0; color: var(--forest);">Publish New Content</h2>
+
+        <form id="uploadForm">
+          <div class="form-group">
+            <label for="contentType">Select Category *</label>
+            <select id="contentType" required>
+              <option value="books">📚 Book of the Month</option>
+              <option value="hymns">🎵 Church Hymn</option>
+              <option value="testimonies">🙌 Testimony</option>
+            </select>
+          </div>
+
+          <!-- COMMON FIELDS -->
+          <div class="form-group">
+            <label for="titleInput">Title / Name *</label>
+            <input type="text" id="titleInput" placeholder="e.g. Anointing For Exploits" required />
+          </div>
+
+          <div class="form-group" id="authorGroup">
+            <label for="authorInput">Author / Speaker</label>
+            <input type="text" id="authorInput" placeholder="e.g. Bishop David Oyedepo" />
+          </div>
+
+          <!-- BOOK SPECIFIC FIELDS -->
+          <div id="bookFields">
+            <div class="form-group">
+              <label for="pdfUrlInput">Google Drive PDF Preview Link</label>
+              <input type="url" id="pdfUrlInput" placeholder="https://drive.google.com/file/d/.../view?usp=sharing" />
+            </div>
+
+            <div class="form-group">
+              <label for="coverUrlInput">Book Cover Image URL</label>
+              <input type="url" id="coverUrlInput" placeholder="https://..." />
+            </div>
+          </div>
+
+          <!-- CONTENT / LYRICS / DESCRIPTION -->
+          <div class="form-group">
+            <label id="contentLabel" for="contentInput">Description *</label>
+            <textarea id="contentInput" rows="5" placeholder="Enter summary, hymn lyrics, or testimony details..." required></textarea>
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn">🚀 Publish to Website</button>
+        </form>
+      </div>
+
+      <!-- SECTION 2: DELETE / MANAGE PUBLISHED ITEMS -->
+      <div class="admin-card">
+        <h2 style="margin-top:0; color: var(--forest);">Manage Published Content</h2>
+
+        <div class="tab-group">
+          <button class="tab-btn active" onclick="switchManageTab('books')">Books</button>
+          <button class="tab-btn" onclick="switchManageTab('hymns')">Hymns</button>
+          <button class="tab-btn" onclick="switchManageTab('testimonies')">Testimonies</button>
+        </div>
+
+        <div id="manageList">
+          <p>Loading items...</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FIREBASE INTEGRATION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      onSnapshot, 
+      doc, 
+      deleteDoc, 
+      query, 
+      orderBy,
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
+      authDomain: "kingmegad-30f67.firebaseapp.com",
+      projectId: "kingmegad-30f67",
+      storageBucket: "kingmegad-30f67.firebasestorage.app",
+      messagingSenderId: "81567062415",
+      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
+      measurementId: "G-BVX8SEWFD0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // PIN Authentication Handler
+    const pinInput = document.getElementById('pinInput');
+    const loginBtn = document.getElementById('loginBtn');
+    const authSection = document.getElementById('authSection');
+    const adminPanel = document.getElementById('adminPanel');
+    const authError = document.getElementById('authError');
+
+    loginBtn.addEventListener('click', () => {
+      if (pinInput.value === '2003') {
+        authSection.style.display = 'none';
+        adminPanel.style.display = 'block';
+        loadManageCategory('books');
+      } else {
+        authError.style.display = 'block';
+      }
+    });
+
+    // Form Dynamic Toggle Logic
+    const contentType = document.getElementById('contentType');
+    const bookFields = document.getElementById('bookFields');
+    const contentLabel = document.getElementById('contentLabel');
+    const authorGroup = document.getElementById('authorGroup');
+
+    contentType.addEventListener('change', () => {
+      const val = contentType.value;
+      if (val === 'books') {
+        bookFields.style.display = 'block';
+        authorGroup.style.display = 'block';
+        contentLabel.textContent = 'Book Summary / Description *';
+      } else if (val === 'hymns') {
+        bookFields.style.display = 'none';
+        authorGroup.style.display = 'none';
+        contentLabel.textContent = 'Hymn Lyrics *';
+      } else if (val === 'testimonies') {
+        bookFields.style.display = 'none';
+        authorGroup.style.display = 'block';
+        contentLabel.textContent = 'Testimony Details *';
+      }
+    });
+
+    // Form Submit Handler
+    const uploadForm = document.getElementById('uploadForm');
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const cat = contentType.value;
+      const title = document.getElementById('titleInput').value.trim();
+      const author = document.getElementById('authorInput').value.trim();
+      const content = document.getElementById('contentInput').value.trim();
+      const pdfUrl = document.getElementById('pdfUrlInput').value.trim();
+      const coverUrl = document.getElementById('coverUrlInput').value.trim();
+
+      try {
+        let payload = { title, createdAt: serverTimestamp() };
+
+        if (cat === 'books') {
+          payload.author = author || "Bishop David Oyedepo";
+          payload.description = content;
+          payload.pdfUrl = pdfUrl;
+          payload.coverUrl = coverUrl;
+        } else if (cat === 'hymns') {
+          payload.lyrics = content;
+          payload.number = title.replace(/[^0-9]/g, '') || '1';
+        } else if (cat === 'testimonies') {
+          payload.name = author || "Testifier";
+          payload.content = content;
+        }
+
+        await addDoc(collection(db, cat), payload);
+        alert(`Successfully published to ${cat}!`);
+        uploadForm.reset();
+
+      } catch (err) {
+        console.error("Publishing error:", err);
+        alert("Publishing failed: " + err.message);
+      }
+    });
+
+    // Management & Delete Logic
+    let activeTab = 'books';
+    const manageList = document.getElementById('manageList');
+
+    window.switchManageTab = function(category) {
+      activeTab = category;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      loadManageCategory(category);
+    };
+
+    function loadManageCategory(category) {
+      manageList.innerHTML = "<p>Loading items...</p>";
+      const q = query(collection(db, category), orderBy("createdAt", "desc"));
+
+      onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+          manageList.innerHTML = `<p>No items found in ${category}.</p>`;
+          return;
+        }
+
+        manageList.innerHTML = snapshot.docs.map(docSnap => {
+          const data = docSnap.data();
+          const id = docSnap.id;
+          const displayTitle = data.title || data.name || `Item ${id.substring(0, 5)}`;
+
+          return `
+            <div class="item-row">
+              <div>
+                <span class="item-title">${displayTitle}</span>
+                <span class="item-meta">Category: ${category}</span>
+              </div>
+              <button onclick="deleteItem('${category}', '${id}', '${displayTitle.replace(/'/g, "\\'")}')" class="btn btn-danger">
+                🗑️ Delete
+              </button>
+            </div>
+          `;
+        }).join('');
+      });
+    }
+
+    // Delete Record Handler
+    window.deleteItem = async function(category, docId, title) {
+      if (confirm(`Are you sure you want to delete "${title}"?`)) {
+        try {
+          await deleteDoc(doc(db, category, docId));
+          alert(`Successfully deleted "${title}"`);
+        } catch (err) {
+          console.error("Delete failed:", err);
+          alert("Failed to delete: " + err.message);
+        }
+      }
+    };
+  </script>
+</body>
+</html>

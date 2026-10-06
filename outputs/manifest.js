@@ -1,0 +1,22 @@
+{
+  "name": "LFC Aare",
+  "short_name": "LFC Aare",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#10221d",
+  "theme_color": "#124b3a",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

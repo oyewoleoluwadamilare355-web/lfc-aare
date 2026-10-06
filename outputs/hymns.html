@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hymns | LFC Aare</title>
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { 
+      --ink: #10221d; 
+      --forest: #124b3a; 
+      --paper: #f7f5ef; 
+      --red: #e52421; 
+      --line: rgba(16, 34, 29, 0.15);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
+    a { color: inherit; text-decoration: none; }
+
+    header { background: var(--forest); color: #fff; padding: 16px 24px; position: relative; z-index: 100; }
+    .header-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-logo { height: 42px; width: auto; object-fit: contain; background: #fff; padding: 4px; border-radius: 50%; }
+    .brand-title { font-weight: 700; font-size: 1rem; line-height: 1.2; color: #fff; }
+    .brand-subtitle { font-size: 0.75rem; opacity: 0.8; display: block; }
+    .menu-toggle { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+    nav { display: none; flex-direction: column; width: 100%; background: #0d382b; padding: 16px 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 14px; gap: 12px; }
+    nav.active { display: flex; }
+    nav a { font-size: 0.95rem; font-weight: 500; color: #e0f2ec; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    nav a:last-child { border-bottom: none; }
+    .nav-btn { background: var(--red) !important; color: #fff !important; padding: 10px 16px !important; border-radius: 4px; font-weight: 700; text-align: center; margin-top: 6px; }
+
+    @media (min-width: 900px) {
+      .menu-toggle { display: none; }
+      nav { display: flex !important; flex-direction: row; width: auto; background: transparent; padding: 0; margin-top: 0; border-top: none; align-items: center; gap: 18px; }
+      nav a { padding: 0; border-bottom: none; }
+      .nav-btn { margin-top: 0; }
+    }
+
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+
+    .search-box {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-top: 16px;
+      margin-bottom: 24px;
+      background: #fff;
+    }
+
+    .hymns-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hymn-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .hymn-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .hymn-num {
+      background: var(--forest);
+      color: #fff;
+      font-family: "DM Mono", monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .hymn-card h3 {
+      font-family: "Playfair Display", serif;
+      font-size: 1.4rem;
+      color: var(--forest);
+      margin: 0;
+    }
+
+    .hymn-card p {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #333;
+      white-space: pre-line;
+      margin-top: 12px;
+      margin-bottom: 0;
+    }
+
+    footer { background: var(--ink); color: #8a9e97; padding: 40px; text-align: center; font-size: 0.85rem; margin-top: 60px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <img class="brand-logo" src="./logo.png" alt="LFC Logo" />
+        <div>
+          <span class="brand-title">LIVING FAITH CHURCH</span>
+          <span class="brand-subtitle">LFC AARE</span>
+        </div>
+      </div>
+      <button class="menu-toggle" id="menuBtn" aria-label="Toggle Navigation">
+        <span>Menu</span> &#9776;
+      </button>
+    </div>
+
+    <nav id="navMenu">
+      <a href="./index.html">Home</a>
+      <a href="./announcements.html">Announcements</a>
+      <a href="./wsf-outline.html">WSF Outline</a>
+      <a href="./testimonies.html">Testimonies</a>
+      <a href="./hymns.html">Hymns</a>
+      <a href="./book-of-the-month.html">Book of the Month</a>
+      <a href="./join.html" class="nav-btn">Join Studio Units</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.4rem; margin-bottom: 8px;">Church Hymns</h1>
+    <p style="color: #40574f; margin-top: 0;">Sing along during our worship services.</p>
+
+    <input type="text" id="searchInput" class="search-box" placeholder="Search hymns by number or title..." />
+
+    <div id="hymnsContainer" class="hymns-grid">
+      <p>Loading hymns...</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>📍 46 Aare Road, Iyana Aare Abule Ijoko Lemode, Ogun State</p>
+    <p>&copy; 2026 Living Faith Church (LFC Aare). All rights reserved.</p>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    menuBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+  </script>
+
+  <!-- FIREBASE HYMNS INTEGRATION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
+      authDomain: "kingmegad-30f67.firebaseapp.com",
+      projectId: "kingmegad-30f67",
+      storageBucket: "kingmegad-30f67.firebasestorage.app",
+      messagingSenderId: "81567062415",
+      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
+      measurementId: "G-BVX8SEWFD0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const hymnsContainer = document.getElementById('hymnsContainer');
+    const searchInput = document.getElementById('searchInput');
+
+    let allHymns = [];
+
+    // Fetch all documents from 'hymns' without strict database ordering
+    onSnapshot(collection(db, "hymns"), (snapshot) => {
+      if (snapshot.empty) {
+        hymnsContainer.innerHTML = "<p>No hymns added yet.</p>";
+        return;
+      }
+
+      allHymns = [];
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+
+        // Fallback key mappings for hymn number, title, and lyrics
+        const num = data.number || data.hymnNumber || data.no || data.id || "•";
+        const title = data.title || data.name || data.hymnTitle || "Hymn";
+        const lyrics = data.lyrics || data.body || data.content || data.words || data.text || "No lyrics provided.";
+
+        allHymns.push({ num, title, lyrics });
+      });
+
+      // Sort manually by hymn number in JavaScript
+      allHymns.sort((a, b) => parseInt(a.num) - parseInt(b.num));
+
+      renderHymns(allHymns);
+    });
+
+    function renderHymns(hymnsList) {
+      if (hymnsList.length === 0) {
+        hymnsContainer.innerHTML = "<p>No matching hymns found.</p>";
+        return;
+      }
+
+      hymnsContainer.innerHTML = "";
+      hymnsList.forEach((hymn) => {
+        const card = document.createElement("div");
+        card.className = "hymn-card";
+        card.innerHTML = `
+          <div class="hymn-header">
+            <span class="hymn-num">HYMN ${hymn.num}</span>
+            <h3>${hymn.title}</h3>
+          </div>
+          <p>${hymn.lyrics}</p>
+        `;
+        hymnsContainer.appendChild(card);
+      });
+    }
+
+    // Search filter function
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase().trim();
+      const filtered = allHymns.filter(h => 
+        h.num.toString().toLowerCase().includes(term) || 
+        h.title.toLowerCase().includes(term) ||
+        h.lyrics.toLowerCase().includes(term)
+      );
+      renderHymns(filtered);
+    });
+  </script>
+</body>
+</html>

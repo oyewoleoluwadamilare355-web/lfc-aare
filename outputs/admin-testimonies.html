@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Testimonies | LFC Aare</title>
+  <link rel="icon" type="image/png" href="./app-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink: #10221d; --forest: #124b3a; --paper: #f7f5ef; --line: rgba(16, 34, 29, 0.15); --red: #e52421; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
+    header { background: var(--forest); color: #fff; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; }
+    .brand-logo { height: 40px; width: auto; object-fit: contain; }
+    .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 30px; margin-bottom: 30px; }
+    h1, h2 { font-family: "Playfair Display", serif; margin-top: 0; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 6px; }
+    input, textarea { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 4px; font-family: inherit; font-size: 0.95rem; }
+    button { background: var(--red); color: #fff; border: none; padding: 12px 24px; font-weight: 700; border-radius: 4px; cursor: pointer; }
+    button:hover { opacity: 0.9; }
+    .list-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding: 14px 0; }
+    .btn-delete { background: #d9381e; font-size: 0.8rem; padding: 6px 12px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <img class="brand-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/29/Winners_Chapel_Logo.png" alt="LFC Logo" />
+      <span style="font-weight: 700;">LFC AARE &bull; TESTIMONIES ADMIN</span>
+    </div>
+    <a href="./index.html" style="color: #a3e6cd; text-decoration: none;">&larr; Back to Home</a>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h1>Publish Testimony</h1>
+      <form id="testForm">
+        <div class="form-group">
+          <label for="testifier">Testifier Name / Initials</label>
+          <input type="text" id="testifier" placeholder="e.g. Bro. David O. / Sis. Mary A." required />
+        </div>
+
+        <div class="form-group">
+          <label for="testimonyBody">Testimony Content</label>
+          <textarea id="testimonyBody" rows="6" placeholder="Write or paste the testimony details here..." required></textarea>
+        </div>
+
+        <button type="submit">Publish Testimony</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Published Testimonies</h2>
+      <div id="testContainer"><p>Loading testimonies...</p></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { firebaseConfig } from './firebase-config.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getFirestore, collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('testForm');
+    const container = document.getElementById('testContainer');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const testifier = document.getElementById('testifier').value.trim();
+      const testimonyBody = document.getElementById('testimonyBody').value.trim();
+
+      try {
+        await addDoc(collection(db, 'testimonies'), {
+          testifier,
+          testimonyBody,
+          createdAt: serverTimestamp()
+        });
+        alert('Testimony Published!');
+        form.reset();
+      } catch (err) {
+        alert('Error publishing: ' + err.message);
+      }
+    });
+
+    const q = query(collection(db, 'testimonies'), orderBy('createdAt', 'desc'));
+    onSnapshot(q, (snapshot) => {
+      if (snapshot.empty) {
+        container.innerHTML = '<p>No testimonies published yet.</p>';
+        return;
+      }
+      container.innerHTML = '';
+      snapshot.forEach((itemDoc) => {
+        const data = itemDoc.data();
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+          <div>
+            <strong>${data.testifier}</strong>
+          </div>
+          <button class="btn-delete" data-id="${itemDoc.id}">Delete</button>
+        `;
+        div.querySelector('.btn-delete').addEventListener('click', async () => {
+          if (confirm('Delete this testimony?')) {
+            await deleteDoc(doc(db, 'testimonies', itemDoc.id));
+          }
+        });
+        container.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
