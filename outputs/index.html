@@ -9,13 +9,12 @@
   <!-- PWA MANIFEST & MOBILE THEME -->
   <link rel="manifest" href="./manifest.webmanifest" />
   <meta name="theme-color" content="#124b3a" />
-  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
-  
   <style>
     :root {
       --ink: #10221d;
@@ -364,7 +363,7 @@
       </div>
 
       <!-- TOGGLE BUTTON -->
-      <button class="menu-toggle" id="menuBtn" aria-label="Toggle Navigation" aria-expanded="false">
+      <button class="menu-toggle" id="menuBtn" aria-label="Toggle Navigation">
         <span>Menu</span> &#9776;
       </button>
     </div>
@@ -391,10 +390,10 @@
         <a href="./wsf-outline.html" class="btn-primary">WSF Outline &rarr;</a>
         <a href="./join.html" class="btn-secondary">Join Studio Units &rarr;</a>
         
-        <!-- DIRECT APK DOWNLOAD LINK -->
-        <a href="./lfc-aare.apk" class="btn-apk-download" download="lfc-aare.apk">
+        <!-- DOWNLOAD APK BUTTON -->
+        <a href="./lfc-aare.apk" download="lfc-aare.apk" class="btn-apk-download">
           <svg width="18" height="18" viewBox="0 0 24 24">
-            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+            <path d="M17.52 0c-.26 0-.51.11-.7.29L12 5.17 7.18.29C6.99.11 6.74 0 6.48 0 5.94 0 5.5.44 5.5.98c0 .26.11.51.29.7L10.59 6.5 1 6.5C.45 6.5 0 6.95 0 7.5s.45 1 1 1h22c.55 0 1-.45 1-1s-.45-1-1-1h-9.59l4.8-4.82c.18-.19.29-.44.29-.7 0-.54-.44-.98-.98-.98zM2.5 10v11c0 1.65 1.35 3 3 3h13c1.65 0 3-1.35 3-3V10H2.5z"/>
           </svg>
           Download Android App (.APK)
         </a>
@@ -444,22 +443,36 @@
     const navMenu = document.getElementById('navMenu');
 
     menuBtn.addEventListener('click', () => {
-      const isExpanded = navMenu.classList.toggle('active');
-      menuBtn.setAttribute('aria-expanded', isExpanded);
+      navMenu.classList.toggle('active');
     });
   </script>
 
-  <!-- FIREBASE REALTIME TESTIMONIES INTEGRATION -->
+  <!-- FIREBASE REALTIME TESTIMONIES INTEGRATION WITH FALLBACK READS -->
   <script type="module">
-    import { db } from "./firebase-config.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
+      getFirestore, 
       collection, 
       onSnapshot, 
       query, 
       orderBy 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
+      authDomain: "kingmegad-30f67.firebaseapp.com",
+      projectId: "kingmegad-30f67",
+      storageBucket: "kingmegad-30f67.firebasestorage.app",
+      messagingSenderId: "81567062415",
+      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
+      measurementId: "G-BVX8SEWFD0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     const testimoniesContainer = document.getElementById('testimoniesContainer');
+
     const q = query(collection(db, "testimonies"), orderBy("createdAt", "desc"));
 
     onSnapshot(q, (snapshot) => {
@@ -473,7 +486,7 @@
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
 
-        let dateString = "Recently";
+        let dateString = "";
         if (data.createdAt && typeof data.createdAt.toDate === "function") {
           dateString = data.createdAt.toDate().toLocaleDateString("en-US", {
             year: "numeric",
@@ -482,34 +495,21 @@
           });
         }
 
-        const titleText = data.title || "Praise Report";
-        const authorText = data.name || data.testifier || data.author || "Testifier";
-        const contentText = data.content || data.testimonyBody || data.testimony || "";
+        const title = data.title || "Praise Report";
+        const author = data.name || data.testifier || data.author || "Testifier";
+        const content = data.content || data.testimonyBody || data.testimony || "";
 
         const card = document.createElement("div");
         card.className = "testimony-card";
 
-        const contentWrapper = document.createElement("div");
-        
-        const h3 = document.createElement("h3");
-        h3.textContent = titleText;
-
-        const authorP = document.createElement("p");
-        authorP.style.cssText = "font-weight:600; color:var(--red); font-size:0.85rem; margin-bottom:8px;";
-        authorP.textContent = authorText;
-
-        const bodyP = document.createElement("p");
-        bodyP.textContent = contentText;
-
-        contentWrapper.appendChild(h3);
-        contentWrapper.appendChild(authorP);
-        contentWrapper.appendChild(bodyP);
-
-        const dateSmall = document.createElement("small");
-        dateSmall.textContent = dateString;
-
-        card.appendChild(contentWrapper);
-        card.appendChild(dateSmall);
+        card.innerHTML = `
+          <div>
+            <h3>${title}</h3>
+            <p style="font-weight:600; color:var(--red); font-size:0.85rem; margin-bottom:8px;">${author}</p>
+            <p>${content}</p>
+          </div>
+          <small>${dateString}</small>
+        `;
 
         testimoniesContainer.appendChild(card);
       });
@@ -519,7 +519,7 @@
     });
   </script>
 
-  <!-- PWA SERVICE WORKER & INSTALL LOGIC -->
+  <!-- PWA INSTALL LOGIC -->
   <script>
     let deferredPrompt;
     const pwaBanner = document.getElementById('pwaBanner');
@@ -530,9 +530,7 @@
     const isDismissed = localStorage.getItem('pwa_banner_dismissed');
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch((err) => {
-        console.warn('Service worker registration skipped or failed:', err);
-      });
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
 
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -567,11 +565,6 @@
     });
 
     pwaCloseBtn.addEventListener('click', () => {
-      pwaBanner.classList.remove('show');
-      localStorage.setItem('pwa_banner_dismissed', 'true');
-    });
-
-    window.addEventListener('appinstalled', () => {
       pwaBanner.classList.remove('show');
       localStorage.setItem('pwa_banner_dismissed', 'true');
     });
