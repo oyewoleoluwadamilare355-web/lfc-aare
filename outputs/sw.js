@@ -1,7 +1,4 @@
-// Increment the version to force browsers to update the service worker
-const CACHE_NAME = 'lfc-aare-v6';
-
-// Static assets to cache for offline use
+const CACHE_NAME = 'lfc-aare-v7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -15,61 +12,56 @@ const ASSETS_TO_CACHE = [
   './logo.png'
 ];
 
-// 1. INSTALL EVENT
+// 1. Install Event: Cache essential shell files
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    })
   );
+  // Force the waiting service worker to become active immediately
+  self.skipWaiting();
 });
 
-// 2. ACTIVATE EVENT (Cleans up old cache versions like v4, v5)
+// 2. Activate Event: Clean up old caches (v6, v5, etc.)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
-            console.log('Service Worker: Clearing old cache:', cache);
             return caches.delete(cache);
           }
         })
       );
-    }).then(() => self.clients.claim())
+    })
   );
+  // Take control of all open pages/clients immediately
+  self.clients.claim();
 });
 
-// 3. FETCH EVENT (With explicit APK bypass)
+// 3. Fetch Event: Network-first strategy for HTML pages, fallback to cache
 self.addEventListener('fetch', (event) => {
-  const requestUrl = new URL(event.request.url);
-
-  // CRITICAL FIX: Bypass Service Worker completely for .apk files
-  if (requestUrl.pathname.endsWith('.apk') || event.request.url.includes('.apk')) {
-    return; // Returning early lets the browser handle the network request naturally
-  }
-
-  // Bypass non-GET requests (e.g. POST, PUT)
-  if (event.request.method !== 'GET') {
-    return;
-  }
-
-  // Standard Network-first with Cache Fallback strategy
-  event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // If valid response, clone and update cache
-        if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
+            cache.put(event.request, responseClone);
           });
-        }
-        return networkResponse;
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Cache-first for static assets
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        return cachedResponse || fetch(event.request);
       })
-      .catch(() => {
-        // Fallback to offline cache if network fails
-        return caches.match(event.request);
-      })
-  );
+    );
+  }
 });
