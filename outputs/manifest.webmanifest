@@ -8,6 +8,7 @@
   "orientation": "portrait",
   "background_color": "#10221d",
   "theme_color": "#124b3a",
+  "categories": ["lifestyle", "utilities"],
   "icons": [
     {
       "src": "./icon-192.png",
