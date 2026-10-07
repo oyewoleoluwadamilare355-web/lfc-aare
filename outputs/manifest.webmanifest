@@ -1,32 +1,46 @@
 {
-  "name": "LFC Aare",
+  "id": "lfc-aare-pwa-v1",
+  "name": "Living Faith Church (LFC Aare)",
   "short_name": "LFC Aare",
   "description": "Living Faith Church (LFC Aare) Media & Tech Studio Portal",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#10221d",
-  "theme_color": "#124b3a",
-  "categories": ["lifestyle", "utilities"],
+  "background_color": "#053321",
+  "theme_color": "#053321",
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "./logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512-maskable.png",
+      "src": "./logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "LFC Aare Portal Home"
+    },
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "LFC Aare Desktop View"
     }
   ]
 }
