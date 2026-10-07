@@ -364,7 +364,7 @@
       </div>
 
       <!-- TOGGLE BUTTON -->
-      <button class="menu-toggle" id="menuBtn" aria-label="Toggle Navigation">
+      <button class="menu-toggle" id="menuBtn" aria-label="Toggle Navigation" aria-expanded="false">
         <span>Menu</span> &#9776;
       </button>
     </div>
@@ -391,7 +391,7 @@
         <a href="./wsf-outline.html" class="btn-primary">WSF Outline &rarr;</a>
         <a href="./join.html" class="btn-secondary">Join Studio Units &rarr;</a>
         
-        <!-- DIRECT APK DOWNLOAD LINK (SERVED FROM YOUR REPO / VERCEL) -->
+        <!-- DIRECT APK DOWNLOAD LINK -->
         <a href="./lfc-aare.apk" class="btn-apk-download" download="lfc-aare.apk">
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path d="M17.52 0c-.26 0-.51.11-.7.29L12 5.17 7.18.29C6.99.11 6.74 0 6.48 0 5.94 0 5.5.44 5.5.98c0 .26.11.51.29.7L10.59 6.5 1 6.5C.45 6.5 0 6.95 0 7.5s.45 1 1 1h22c.55 0 1-.45 1-1s-.45-1-1-1h-9.59l4.8-4.82c.18-.19.29-.44.29-.7 0-.54-.44-.98-.98-.98zM2.5 10v11c0 1.65 1.35 3 3 3h13c1.65 0 3-1.35 3-3V10H2.5z"/>
@@ -444,7 +444,8 @@
     const navMenu = document.getElementById('navMenu');
 
     menuBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
+      const isExpanded = navMenu.classList.toggle('active');
+      menuBtn.setAttribute('aria-expanded', isExpanded);
     });
   </script>
 
@@ -472,7 +473,7 @@
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
 
-        let dateString = "";
+        let dateString = "Recently";
         if (data.createdAt && typeof data.createdAt.toDate === "function") {
           dateString = data.createdAt.toDate().toLocaleDateString("en-US", {
             year: "numeric",
