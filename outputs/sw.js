@@ -1,10 +1,10 @@
-const CACHE_NAME = 'lfc-aare-v3';
+const CACHE_NAME = 'lfc-aare-v4'; // Incremented cache version
 
 // Cache core assets safely
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json',
+  './manifest.webmanifest',
   './logo.png'
 ];
 
@@ -37,8 +37,18 @@ self.addEventListener('activate', (event) => {
 
 // Resilient Network-First / Fallback Fetch Handler
 self.addEventListener('fetch', (event) => {
+  // 1. Only intercept GET requests
   if (event.request.method !== 'GET') return;
 
+  const url = new URL(event.request.url);
+
+  // 2. SKIP SERVICE WORKER FOR APK DOWNLOADS
+  // Let the browser handle .apk downloads directly over the network
+  if (url.pathname.endsWith('.apk')) {
+    return; // Early return allows standard browser network fetch
+  }
+
+  // 3. Network-first caching strategy with offline fallback
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
@@ -49,7 +59,7 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // Fallback to index.html if the requested offline page isn't found
+          // Fallback to index.html if requested offline page isn't found
           return caches.match('./index.html');
         });
       })
