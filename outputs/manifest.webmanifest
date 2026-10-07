@@ -1,8 +1,11 @@
 {
   "name": "LFC Aare",
   "short_name": "LFC Aare",
+  "description": "Living Faith Church (LFC Aare) Media & Tech Studio Portal",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#10221d",
   "theme_color": "#124b3a",
   "icons": [
@@ -10,13 +13,19 @@
       "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
