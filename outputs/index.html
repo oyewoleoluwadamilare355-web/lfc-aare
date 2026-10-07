@@ -447,32 +447,17 @@
     });
   </script>
 
-  <!-- FIREBASE REALTIME TESTIMONIES INTEGRATION WITH FALLBACK READS -->
+  <!-- FIREBASE REALTIME TESTIMONIES INTEGRATION -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { db } from "./firebase-config.js";
     import { 
-      getFirestore, 
       collection, 
       onSnapshot, 
       query, 
       orderBy 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
-      authDomain: "kingmegad-30f67.firebaseapp.com",
-      projectId: "kingmegad-30f67",
-      storageBucket: "kingmegad-30f67.firebasestorage.app",
-      messagingSenderId: "81567062415",
-      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
-      measurementId: "G-BVX8SEWFD0"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
     const testimoniesContainer = document.getElementById('testimoniesContainer');
-
     const q = query(collection(db, "testimonies"), orderBy("createdAt", "desc"));
 
     onSnapshot(q, (snapshot) => {
@@ -495,21 +480,34 @@
           });
         }
 
-        const title = data.title || "Praise Report";
-        const author = data.name || data.testifier || data.author || "Testifier";
-        const content = data.content || data.testimonyBody || data.testimony || "";
+        const titleText = data.title || "Praise Report";
+        const authorText = data.name || data.testifier || data.author || "Testifier";
+        const contentText = data.content || data.testimonyBody || data.testimony || "";
 
         const card = document.createElement("div");
         card.className = "testimony-card";
 
-        card.innerHTML = `
-          <div>
-            <h3>${title}</h3>
-            <p style="font-weight:600; color:var(--red); font-size:0.85rem; margin-bottom:8px;">${author}</p>
-            <p>${content}</p>
-          </div>
-          <small>${dateString}</small>
-        `;
+        const contentWrapper = document.createElement("div");
+        
+        const h3 = document.createElement("h3");
+        h3.textContent = titleText;
+
+        const authorP = document.createElement("p");
+        authorP.style.cssText = "font-weight:600; color:var(--red); font-size:0.85rem; margin-bottom:8px;";
+        authorP.textContent = authorText;
+
+        const bodyP = document.createElement("p");
+        bodyP.textContent = contentText;
+
+        contentWrapper.appendChild(h3);
+        contentWrapper.appendChild(authorP);
+        contentWrapper.appendChild(bodyP);
+
+        const dateSmall = document.createElement("small");
+        dateSmall.textContent = dateString;
+
+        card.appendChild(contentWrapper);
+        card.appendChild(dateSmall);
 
         testimoniesContainer.appendChild(card);
       });
