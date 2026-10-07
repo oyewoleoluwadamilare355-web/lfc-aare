@@ -1,32 +1,37 @@
-const CACHE_NAME = 'lfc-aare-v4'; // Incremented cache version
+// Increment the version to force browsers to update the service worker
+const CACHE_NAME = 'lfc-aare-v6';
 
-// Cache core assets safely
-const ASSETS = [
+// Static assets to cache for offline use
+const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './announcements.html',
+  './wsf-outline.html',
+  './testimonies.html',
+  './hymns.html',
+  './book-of-the-month.html',
+  './join.html',
   './manifest.webmanifest',
   './logo.png'
 ];
 
+// 1. INSTALL EVENT
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return Promise.allSettled(
-        ASSETS.map((asset) =>
-          cache.add(asset).catch((err) => console.warn(`Failed to cache ${asset}:`, err))
-        )
-      );
-    })
+      return cache.addAll(ASSETS_TO_CACHE);
+    }).then(() => self.skipWaiting())
   );
 });
 
+// 2. ACTIVATE EVENT (Cleans up old cache versions like v4, v5)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
+            console.log('Service Worker: Clearing old cache:', cache);
             return caches.delete(cache);
           }
         })
@@ -35,33 +40,36 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Resilient Network-First / Fallback Fetch Handler
+// 3. FETCH EVENT (With explicit APK bypass)
 self.addEventListener('fetch', (event) => {
-  // 1. Only intercept GET requests
-  if (event.request.method !== 'GET') return;
+  const requestUrl = new URL(event.request.url);
 
-  const url = new URL(event.request.url);
-
-  // 2. SKIP SERVICE WORKER FOR APK DOWNLOADS
-  // Let the browser handle .apk downloads directly over the network
-  if (url.pathname.endsWith('.apk')) {
-    return; // Early return allows standard browser network fetch
+  // CRITICAL FIX: Bypass Service Worker completely for .apk files
+  if (requestUrl.pathname.endsWith('.apk') || event.request.url.includes('.apk')) {
+    return; // Returning early lets the browser handle the network request naturally
   }
 
-  // 3. Network-first caching strategy with offline fallback
+  // Bypass non-GET requests (e.g. POST, PUT)
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  // Standard Network-first with Cache Fallback strategy
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
+        // If valid response, clone and update cache
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
         return networkResponse;
       })
       .catch(() => {
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          // Fallback to index.html if requested offline page isn't found
-          return caches.match('./index.html');
-        });
+        // Fallback to offline cache if network fails
+        return caches.match(event.request);
       })
   );
 });
