@@ -1,9 +1,8 @@
-// firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Firebase configuration for the LFC Aare Church website.
+// Firebase configuration for the LFC Aare Church website
 export const firebaseConfig = {
   apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
   authDomain: "kingmegad-30f67.firebaseapp.com",
@@ -21,15 +20,20 @@ export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-// Authorized admin emails for client-side UI checks
-export const adminEmails = ["lfcaarestudiounits@gmail.com"];
+// Authorized admin emails for client-side UI checks (stored in lowercase)
+export const adminEmails = [
+  "lfcaarestudiounits@gmail.com"
+];
 
 /**
- * Helper function to check if a given email is an authorized admin
- * @param {string|null} email 
+ * Helper function to check if a given email is an authorized admin.
+ * Performs trim and case-insensitive matching.
+ * 
+ * @param {string | null | undefined} email 
  * @returns {boolean}
  */
 export const isAdmin = (email) => {
-  if (!email) return false;
-  return adminEmails.includes(email.toLowerCase());
+  if (!email || typeof email !== "string") return false;
+  const cleanEmail = email.trim().toLowerCase();
+  return adminEmails.map(e => e.toLowerCase()).includes(cleanEmail);
 };
