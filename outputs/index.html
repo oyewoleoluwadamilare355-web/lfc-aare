@@ -223,6 +223,44 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     }
 
+    /* SERVICE TIMETABLE STYLES */
+    .timetable-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .timetable-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--forest);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .timetable-card.midweek {
+      border-left-color: var(--red);
+    }
+    .timetable-card h4 {
+      margin: 0 0 6px 0;
+      font-family: "Playfair Display", serif;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+    .timetable-card .time-badge {
+      display: inline-block;
+      font-family: "DM Mono", monospace;
+      font-weight: 600;
+      font-size: 0.85rem;
+      background: var(--forest);
+      color: #ffffff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+    .timetable-card.midweek .time-badge {
+      background: var(--red);
+    }
+
     /* TESTIMONIES STYLES */
     .testimonies-grid {
       display: grid;
@@ -418,14 +456,45 @@
       <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0;"></p>
     </section>
 
-    <!-- LOCATION & FELLOWSHIP -->
-    <div style="margin-bottom: 32px;">
-      <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">LOCATION & FELLOWSHIP</span>
-      <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-top: 0;">Visit Our Worship Center</h2>
-      <p style="line-height: 1.6; color: #40574f;">Join us for life-changing services, worship, and fellowship at 46 Aare Road, Iyana Aare Abule Ijoko Lemode, Ogun State.</p>
-    </div>
+    <!-- 2. SERVICE TIMETABLE & LOCATION FINDER -->
+    <section class="card">
+      <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">SCHEDULE & DIRECTIONS</span>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-top: 0; margin-bottom: 8px; color: var(--forest);">⏰ Service Timetable & Location Finder</h2>
+      <p style="line-height: 1.6; color: #40574f; margin-top: 0; margin-bottom: 20px;">Join us for our worship services at 46 Aare Road, Iyana Aare Abule Ijoko Lemode, Ogun State.</p>
 
-    <!-- 2. INTEGRATED BIBLE & DAILY READING PLAN -->
+      <!-- TIMETABLE CARDS -->
+      <div class="timetable-grid">
+        <div class="timetable-card">
+          <h4>Sunday First Service</h4>
+          <p style="margin: 0 0 6px 0; font-size: 0.88rem; color: #555;">Celebration Service</p>
+          <span class="time-badge">7:30 AM – 9:00 AM</span>
+        </div>
+
+        <div class="timetable-card">
+          <h4>Sunday Second Service</h4>
+          <p style="margin: 0 0 6px 0; font-size: 0.88rem; color: #555;">Celebration Service</p>
+          <span class="time-badge">9:00 AM – 11:00 AM</span>
+        </div>
+
+        <div class="timetable-card midweek">
+          <h4>Wednesday Midweek</h4>
+          <p style="margin: 0 0 6px 0; font-size: 0.88rem; color: #555;">Communion Service</p>
+          <span class="time-badge">5:00 PM – 6:30 PM</span>
+        </div>
+      </div>
+
+      <!-- LOCATION MAP LINK BUTTONS -->
+      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <a href="https://maps.google.com/?q=46+Aare+Road+Iyana+Aare+Abule+Ijoko+Lemode+Ogun+State" target="_blank" rel="noopener noreferrer" style="background: var(--forest); color: #ffffff; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
+          📍 Open in Google Maps
+        </a>
+        <a href="https://waze.com/ul?q=46+Aare+Road+Iyana+Aare+Abule+Ijoko+Lemode+Ogun+State" target="_blank" rel="noopener noreferrer" style="background: #ffffff; color: var(--forest); border: 1px solid var(--line); padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
+          🚗 Get Driving Directions
+        </a>
+      </div>
+    </section>
+
+    <!-- 3. INTEGRATED BIBLE & DAILY READING PLAN -->
     <section class="card">
       <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 16px;">📖 Holy Bible & Reading Plan</h2>
       
@@ -454,7 +523,7 @@
       </div>
     </section>
 
-    <!-- 3. PRAYER REQUEST SUBMISSION FORM -->
+    <!-- 4. PRAYER REQUEST SUBMISSION FORM -->
     <section class="card">
       <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 6px;">🙏 Prayer Request & Intercession</h2>
       <p style="font-size: 0.9rem; color: #555; margin-top: 0; margin-bottom: 16px;">Submit your prayer points. Our intercessory team will join you in faith.</p>
@@ -541,7 +610,7 @@
         showPlanBtn.style.background = 'var(--forest)';
         showPlanBtn.style.color = '#ffffff';
         showBibleBtn.style.background = '#f7f5ef';
-        showBibleBtn.style.color = 'var(--ink)';
+        showPlanBtn.style.color = 'var(--ink)';
       }
     }
   </script>
