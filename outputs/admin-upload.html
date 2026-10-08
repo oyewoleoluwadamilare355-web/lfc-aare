@@ -99,12 +99,14 @@
 
     .tab-group {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .tab-btn {
       flex: 1;
+      min-width: 110px;
       padding: 10px;
       border: 1px solid var(--line);
       background: #fff;
@@ -150,40 +152,56 @@
           <div class="form-group">
             <label for="contentType">Select Category *</label>
             <select id="contentType" required>
+              <option value="announcements">📢 Weekly Announcement</option>
+              <option value="wsf_outlines">📖 WSF Outline</option>
               <option value="books">📚 Book of the Month</option>
               <option value="hymns">🎵 Church Hymn</option>
               <option value="testimonies">🙌 Testimony</option>
             </select>
           </div>
 
-          <!-- COMMON FIELDS -->
+          <!-- COMMON TITLE -->
           <div class="form-group">
             <label for="titleInput">Title / Name *</label>
-            <input type="text" id="titleInput" placeholder="e.g. Anointing For Exploits" required />
+            <input type="text" id="titleInput" placeholder="e.g. Sunday Service Announcement / WSF Study Outline" required />
           </div>
 
-          <div class="form-group" id="authorGroup">
+          <!-- AUTHOR / SPEAKER -->
+          <div class="form-group" id="authorGroup" style="display: none;">
             <label for="authorInput">Author / Speaker</label>
             <input type="text" id="authorInput" placeholder="e.g. Bishop David Oyedepo" />
           </div>
 
-          <!-- BOOK SPECIFIC FIELDS -->
-          <div id="bookFields">
-            <div class="form-group">
-              <label for="pdfUrlInput">Google Drive PDF Preview Link</label>
-              <input type="url" id="pdfUrlInput" placeholder="https://drive.google.com/file/d/.../view?usp=sharing" />
-            </div>
+          <!-- DATE FIELD FOR ANNOUNCEMENTS & WSF OUTLINES -->
+          <div class="form-group" id="dateGroup">
+            <label for="dateInput">Date / Event Date *</label>
+            <input type="date" id="dateInput" />
+          </div>
 
+          <!-- BOOK SPECIFIC FIELDS -->
+          <div id="bookFields" style="display: none;">
             <div class="form-group">
               <label for="coverUrlInput">Book Cover Image URL</label>
               <input type="url" id="coverUrlInput" placeholder="https://..." />
             </div>
           </div>
 
+          <!-- ATTACHMENT / PDF URL FIELD -->
+          <div class="form-group" id="attachmentGroup">
+            <label for="pdfUrlInput">Attachment / PDF Link (e.g. Google Drive)</label>
+            <input type="url" id="pdfUrlInput" placeholder="https://drive.google.com/file/d/.../view?usp=sharing" />
+          </div>
+
+          <!-- EXTERNAL LINK FIELD -->
+          <div class="form-group" id="linkGroup">
+            <label for="externalLinkInput">External Link / Action URL</label>
+            <input type="url" id="externalLinkInput" placeholder="https://..." />
+          </div>
+
           <!-- CONTENT / LYRICS / DESCRIPTION -->
           <div class="form-group">
-            <label id="contentLabel" for="contentInput">Description *</label>
-            <textarea id="contentInput" rows="5" placeholder="Enter summary, hymn lyrics, or testimony details..." required></textarea>
+            <label id="contentLabel" for="contentInput">Content / Body *</label>
+            <textarea id="contentInput" rows="5" placeholder="Enter announcement content, outline details, summary, or lyrics..." required></textarea>
           </div>
 
           <button type="submit" id="submitBtn" class="btn">🚀 Publish to Website</button>
@@ -195,7 +213,9 @@
         <h2 style="margin-top:0; color: var(--forest);">Manage Published Content</h2>
 
         <div class="tab-group">
-          <button class="tab-btn active" onclick="switchManageTab('books')">Books</button>
+          <button class="tab-btn active" onclick="switchManageTab('announcements')">Announcements</button>
+          <button class="tab-btn" onclick="switchManageTab('wsf_outlines')">WSF Outlines</button>
+          <button class="tab-btn" onclick="switchManageTab('books')">Books</button>
           <button class="tab-btn" onclick="switchManageTab('hymns')">Hymns</button>
           <button class="tab-btn" onclick="switchManageTab('testimonies')">Testimonies</button>
         </div>
@@ -237,6 +257,8 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    const ADMIN_PIN = '2003';
+
     // PIN Authentication Handler
     const pinInput = document.getElementById('pinInput');
     const loginBtn = document.getElementById('loginBtn');
@@ -245,10 +267,10 @@
     const authError = document.getElementById('authError');
 
     loginBtn.addEventListener('click', () => {
-      if (pinInput.value === '2003') {
+      if (pinInput.value === ADMIN_PIN) {
         authSection.style.display = 'none';
         adminPanel.style.display = 'block';
-        loadManageCategory('books');
+        loadManageCategory('announcements');
       } else {
         authError.style.display = 'block';
       }
@@ -259,23 +281,45 @@
     const bookFields = document.getElementById('bookFields');
     const contentLabel = document.getElementById('contentLabel');
     const authorGroup = document.getElementById('authorGroup');
+    const dateGroup = document.getElementById('dateGroup');
+    const attachmentGroup = document.getElementById('attachmentGroup');
+    const linkGroup = document.getElementById('linkGroup');
 
-    contentType.addEventListener('change', () => {
+    function updateFormFields() {
       const val = contentType.value;
-      if (val === 'books') {
+      if (val === 'announcements' || val === 'wsf_outlines') {
+        bookFields.style.display = 'none';
+        authorGroup.style.display = 'none';
+        dateGroup.style.display = 'block';
+        attachmentGroup.style.display = 'block';
+        linkGroup.style.display = 'block';
+        contentLabel.textContent = 'Content / Body *';
+      } else if (val === 'books') {
         bookFields.style.display = 'block';
         authorGroup.style.display = 'block';
+        dateGroup.style.display = 'none';
+        attachmentGroup.style.display = 'block';
+        linkGroup.style.display = 'none';
         contentLabel.textContent = 'Book Summary / Description *';
       } else if (val === 'hymns') {
         bookFields.style.display = 'none';
         authorGroup.style.display = 'none';
+        dateGroup.style.display = 'none';
+        attachmentGroup.style.display = 'none';
+        linkGroup.style.display = 'none';
         contentLabel.textContent = 'Hymn Lyrics *';
       } else if (val === 'testimonies') {
         bookFields.style.display = 'none';
         authorGroup.style.display = 'block';
+        dateGroup.style.display = 'none';
+        attachmentGroup.style.display = 'none';
+        linkGroup.style.display = 'none';
         contentLabel.textContent = 'Testimony Details *';
       }
-    });
+    }
+
+    contentType.addEventListener('change', updateFormFields);
+    updateFormFields(); // Initialize default view
 
     // Form Submit Handler
     const uploadForm = document.getElementById('uploadForm');
@@ -285,14 +329,21 @@
       const cat = contentType.value;
       const title = document.getElementById('titleInput').value.trim();
       const author = document.getElementById('authorInput').value.trim();
+      const dateVal = document.getElementById('dateInput').value;
       const content = document.getElementById('contentInput').value.trim();
       const pdfUrl = document.getElementById('pdfUrlInput').value.trim();
       const coverUrl = document.getElementById('coverUrlInput').value.trim();
+      const externalLink = document.getElementById('externalLinkInput').value.trim();
 
       try {
         let payload = { title, createdAt: serverTimestamp() };
 
-        if (cat === 'books') {
+        if (cat === 'announcements' || cat === 'wsf_outlines') {
+          payload.content = content;
+          payload.date = dateVal || new Date().toISOString().split('T')[0];
+          payload.pdfUrl = pdfUrl;
+          payload.link = externalLink;
+        } else if (cat === 'books') {
           payload.author = author || "Bishop David Oyedepo";
           payload.description = content;
           payload.pdfUrl = pdfUrl;
@@ -308,6 +359,7 @@
         await addDoc(collection(db, cat), payload);
         alert(`Successfully published to ${cat}!`);
         uploadForm.reset();
+        updateFormFields();
 
       } catch (err) {
         console.error("Publishing error:", err);
@@ -316,7 +368,7 @@
     });
 
     // Management & Delete Logic
-    let activeTab = 'books';
+    let activeTab = 'announcements';
     const manageList = document.getElementById('manageList');
 
     window.switchManageTab = function(category) {
@@ -340,12 +392,13 @@
           const data = docSnap.data();
           const id = docSnap.id;
           const displayTitle = data.title || data.name || `Item ${id.substring(0, 5)}`;
+          const displayDate = data.date ? ` | Date: ${data.date}` : '';
 
           return `
             <div class="item-row">
               <div>
                 <span class="item-title">${displayTitle}</span>
-                <span class="item-meta">Category: ${category}</span>
+                <span class="item-meta">Category: ${category}${displayDate}</span>
               </div>
               <button onclick="deleteItem('${category}', '${id}', '${displayTitle.replace(/'/g, "\\'")}')" class="btn btn-danger">
                 🗑️ Delete
@@ -356,9 +409,13 @@
       });
     }
 
-    // Delete Record Handler
+    // Delete Record Handler with Password Prompt
     window.deleteItem = async function(category, docId, title) {
-      if (confirm(`Are you sure you want to delete "${title}"?`)) {
+      const enteredPin = prompt(`Enter Admin PIN to confirm deletion of "${title}":`);
+      
+      if (enteredPin === null) return; // User canceled
+
+      if (enteredPin === ADMIN_PIN) {
         try {
           await deleteDoc(doc(db, category, docId));
           alert(`Successfully deleted "${title}"`);
@@ -366,6 +423,8 @@
           console.error("Delete failed:", err);
           alert("Failed to delete: " + err.message);
         }
+      } else {
+        alert("Incorrect PIN! Deletion canceled.");
       }
     };
   </script>
