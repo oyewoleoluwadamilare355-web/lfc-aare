@@ -4,7 +4,9 @@
     "target": {
       "namespace": "android_app",
       "package_name": "app.vercel.lfc_aare.twa",
-      "sha256_cert_fingerprints": ["07:9D:32:91:58:7F:5A:28:A9:3F:A5:5B:DA:CA:DE:F9:DB:07:74:81:FF:42:6E:B2:2D:35:3B:AE:C5:AA:21:19"]
+      "sha256_cert_fingerprints": [
+        "40:B4:EA:22:9D:12:F9:05:A3:EC:DA:0B:9B:8D:6A:46:94:7B:FE:9E:9E:2E:17:13:27:DF:5A:58:92:AE:DF:27"
+      ]
     }
   }
 ]
