@@ -889,7 +889,7 @@
         showPlanBtn.style.background = 'var(--forest)';
         showPlanBtn.style.color = '#ffffff';
         showBibleBtn.style.background = '#f7f5ef';
-        showPlanBtn.style.color = 'var(--ink)';
+        showBibleBtn.style.color = 'var(--ink)';
       }
     }
   </script>
@@ -898,19 +898,29 @@
   <script>
     const audioSermons = [
       {
-        title: "Understanding The Power Of Faith",
+        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 1",
         preacher: "Sunday Service Message",
-        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" // Replace with your Firebase Storage MP3 URL
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3"
       },
       {
-        title: "Walking In Divine Wisdom",
-        preacher: "Midweek Communion Teaching",
-        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" // Replace with your Firebase Storage MP3 URL
+        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 2",
+        preacher: "Sunday Service Message",
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3.2.mp3"
       },
       {
-        title: "The Reality Of Redemption",
+        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 3",
         preacher: "Sunday Service Message",
-        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" // Replace with your Firebase Storage MP3 URL
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3.3.mp3"
+      },
+      {
+        title: "Prophetic Blessings October",
+        preacher: "Prophetic Service",
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/Prophetic.Blessings.October.mp3"
+      },
+      {
+        title: "Showers of Blessings",
+        preacher: "Special Service Message",
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/Showers.of.Blessings.mp3"
       }
     ];
 
@@ -971,7 +981,7 @@
         navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
         navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
         navigator.mediaSession.setActionHandler('seekbackward', () => { audio.currentTime = Math.max(audio.currentTime - 10, 0); });
-        navigator.mediaSession.setActionHandler('seekforward', () => { audio.currentTime = Math.min(audio.currentTime + 10, audio.duration); });
+        navigator.mediaSession.setActionHandler('seekforward', () => { audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0); });
       }
     }
 
@@ -1042,228 +1052,8 @@
       nextBtn.click();
     });
 
-    // Initialize initial track
+    // Initialize first track on load
     loadTrack(0);
-  </script>
-
-  <!-- FIREBASE REALTIME TESTIMONIES, PROPHETIC FOCUS, PRAYER REQUEST & FCM PUSH NOTIFICATIONS -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getFirestore, 
-      collection, 
-      onSnapshot, 
-      query, 
-      orderBy,
-      limit,
-      addDoc,
-      doc,
-      setDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { 
-      getMessaging, 
-      getToken, 
-      onMessage 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
-      authDomain: "kingmegad-30f67.firebaseapp.com",
-      projectId: "kingmegad-30f67",
-      storageBucket: "kingmegad-30f67.firebasestorage.app",
-      messagingSenderId: "81567062415",
-      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
-      measurementId: "G-BVX8SEWFD0"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const messaging = getMessaging(app);
-
-    // --- 1. FETCH LATEST PROPHETIC FOCUS ---
-    const focusQuery = query(collection(db, "prophetic_focus"), orderBy("createdAt", "desc"), limit(1));
-
-    onSnapshot(focusQuery, (snapshot) => {
-      const focusSection = document.getElementById('propheticFocusSection');
-      if (!snapshot.empty) {
-        const data = snapshot.docs[0].data();
-        document.getElementById('focusTitle').textContent = data.title || "Prophetic Focus";
-        document.getElementById('focusContent').textContent = data.content || "";
-        focusSection.style.display = 'block';
-      } else {
-        focusSection.style.display = 'none';
-      }
-    }, (error) => {
-      console.warn("Prophetic focus listener failed:", error);
-    });
-
-    // --- 2. SUBMIT PRAYER REQUEST TO FIREBASE ---
-    const prayerForm = document.getElementById('prayerForm');
-    if (prayerForm) {
-      prayerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const name = document.getElementById('prayerName').value.trim() || "Anonymous";
-        const contact = document.getElementById('prayerContact').value.trim() || "None";
-        const request = document.getElementById('prayerContent').value.trim();
-
-        try {
-          await addDoc(collection(db, "prayer_requests"), {
-            name: name,
-            contact: contact,
-            request: request,
-            createdAt: serverTimestamp()
-          });
-
-          alert("Your prayer request has been received. Our intercessory team will join you in prayer!");
-          prayerForm.reset();
-        } catch (err) {
-          console.error("Prayer submission error:", err);
-          alert("Failed to submit prayer request: " + err.message);
-        }
-      });
-    }
-
-    // --- 3. FETCH TESTIMONIES ---
-    const testimoniesContainer = document.getElementById('testimoniesContainer');
-    const q = query(collection(db, "testimonies"), orderBy("createdAt", "desc"));
-
-    onSnapshot(q, (snapshot) => {
-      if (snapshot.empty) {
-        testimoniesContainer.innerHTML = "<p>No testimonies published yet.</p>";
-        return;
-      }
-
-      testimoniesContainer.innerHTML = "";
-
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-
-        let dateString = "";
-        if (data.createdAt && typeof data.createdAt.toDate === "function") {
-          dateString = data.createdAt.toDate().toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
-          });
-        }
-
-        const title = data.title || "Praise Report";
-        const author = data.name || data.testifier || data.author || "Testifier";
-        const content = data.content || data.testimonyBody || data.testimony || "";
-
-        const card = document.createElement("div");
-        card.className = "testimony-card";
-
-        card.innerHTML = `
-          <div>
-            <h3>${title}</h3>
-            <p style="font-weight:600; color:var(--red); font-size:0.85rem; margin-bottom:8px;">${author}</p>
-            <p>${content}</p>
-          </div>
-          <small>${dateString}</small>
-        `;
-
-        testimoniesContainer.appendChild(card);
-      });
-    }, (error) => {
-      console.warn("Realtime listener failed:", error);
-      testimoniesContainer.innerHTML = "<p>Unable to load testimonies right now.</p>";
-    });
-
-    // --- 4. FCM WEB PUSH NOTIFICATION REGISTRATION ---
-    const VAPID_KEY = "BDLp0t9wS90KGYI-_yAO_InvKknd1Jwi8UO5_hdCYdqqtTebXbCUJsSkhjXSSP0qE_L2KkhDEo75nGjzJZKjl8c";
-
-    async function requestNotificationPermission() {
-      try {
-        const permission = await Notification.requestPermission();
-        if (permission === 'granted') {
-          const swRegistration = await navigator.serviceWorker.ready;
-          const token = await getToken(messaging, { 
-            vapidKey: VAPID_KEY,
-            serviceWorkerRegistration: swRegistration
-          });
-
-          if (token) {
-            await setDoc(doc(db, "fcm_tokens", token), {
-              token: token,
-              device: navigator.userAgent,
-              updatedAt: serverTimestamp()
-            });
-            console.log("FCM Push Token registered successfully.");
-          }
-        }
-      } catch (error) {
-        console.warn("Push Notification registration failed:", error);
-      }
-    }
-
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      navigator.serviceWorker.ready.then(() => {
-        setTimeout(requestNotificationPermission, 3000);
-      });
-    }
-
-    onMessage(messaging, (payload) => {
-      if (Notification.permission === 'granted') {
-        new Notification(payload.notification?.title || "LFC Aare", {
-          body: payload.notification?.body || "",
-          icon: './logo.png'
-        });
-      }
-    });
-  </script>
-
-  <!-- PWA INSTALL LOGIC -->
-  <script>
-    let deferredPrompt;
-    const pwaBanner = document.getElementById('pwaBanner');
-    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
-    const pwaCloseBtn = document.getElementById('pwaCloseBtn');
-    const pwaSubtitle = document.getElementById('pwaSubtitle');
-
-    const isDismissed = localStorage.getItem('pwa_banner_dismissed');
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    }
-
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-
-    if (isIOS && !isStandalone && !isDismissed) {
-      pwaSubtitle.textContent = 'Tap Share & "Add to Home Screen"';
-      pwaInstallBtn.style.display = 'none';
-      setTimeout(() => pwaBanner.classList.add('show'), 2500);
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-
-      if (!isDismissed && !isStandalone) {
-        setTimeout(() => {
-          pwaBanner.classList.add('show');
-        }, 2000);
-      }
-    });
-
-    pwaInstallBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      pwaBanner.classList.remove('show');
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        localStorage.setItem('pwa_banner_dismissed', 'true');
-      }
-      deferredPrompt = null;
-    });
-
-    pwaCloseBtn.addEventListener('click', () => {
-      pwaBanner.classList.remove('show');
-      localStorage.setItem('pwa_banner_dismissed', 'true');
-    });
   </script>
 </body>
 </html>
