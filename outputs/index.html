@@ -22,6 +22,7 @@
       --paper: #f7f5ef;
       --line: rgba(16, 34, 29, 0.15);
       --red: #e52421;
+      --gold: #f5a623;
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
@@ -221,6 +222,68 @@
       padding: 24px;
       margin-bottom: 24px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    /* SHILOH & EVENT COUNTDOWN STYLES */
+    .countdown-card {
+      background: linear-gradient(135deg, #0f2d23 0%, #124b3a 100%);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .countdown-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .countdown-badge {
+      background: var(--red);
+      color: #ffffff;
+      font-family: "DM Mono", monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .countdown-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 14px 8px;
+      backdrop-filter: blur(4px);
+    }
+    .countdown-num {
+      font-family: "DM Mono", monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1;
+      display: block;
+    }
+    .countdown-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #a3e6cd;
+      margin-top: 6px;
+      display: block;
+    }
+    @media (max-width: 480px) {
+      .countdown-num { font-size: 1.3rem; }
+      .countdown-grid { gap: 8px; }
     }
 
     /* SERVICE TIMETABLE STYLES */
@@ -449,14 +512,50 @@
 
   <div class="container">
 
-    <!-- 1. PROPHETIC FOCUS OF THE MONTH BANNER -->
+    <!-- 1. SHILOH 2026 ANIMATED COUNTDOWN CARD -->
+    <section class="card countdown-card">
+      <div class="countdown-header">
+        <div>
+          <span class="countdown-badge">Upcoming Major Event</span>
+          <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin: 8px 0 4px 0; color: #ffffff;">SHILOH 2026: FAR ABOVE</h2>
+          <p style="margin: 0; color: #a3e6cd; font-size: 0.95rem; font-weight: 500;">Ephesians 1:20-21 &bull; Faith Tabernacle, Canaanland</p>
+        </div>
+      </div>
+
+      <!-- ANIMATED COUNTDOWN TIMER -->
+      <div class="countdown-grid">
+        <div class="countdown-box">
+          <span class="countdown-num" id="cdDays">00</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-box">
+          <span class="countdown-num" id="cdHours">00</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-box">
+          <span class="countdown-num" id="cdMins">00</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <div class="countdown-box">
+          <span class="countdown-num" id="cdSecs">00</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.15); font-size: 0.88rem; color: #d1e8e0;">
+        <span>📅 <strong>Date:</strong> 8th – 13th Dec. 2026 | 7AM & 7PM Daily (WAT)</span>
+        <a href="./announcements.html" style="color: #ffffff; background: var(--red); padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">View Event Details &rarr;</a>
+      </div>
+    </section>
+
+    <!-- 2. PROPHETIC FOCUS OF THE MONTH BANNER -->
     <section class="card" id="propheticFocusSection" style="background: var(--forest); color: #ffffff; display: none;">
       <span style="font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; font-weight: 700; display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; color: #a3e6cd;">🔥 PROPHETIC FOCUS</span>
       <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">Loading theme...</h2>
       <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0;"></p>
     </section>
 
-    <!-- 2. SERVICE TIMETABLE & LOCATION FINDER -->
+    <!-- 3. SERVICE TIMETABLE & LOCATION FINDER -->
     <section class="card">
       <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">SCHEDULE & DIRECTIONS</span>
       <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-top: 0; margin-bottom: 8px; color: var(--forest);">⏰ Service Timetable & Location Finder</h2>
@@ -494,7 +593,7 @@
       </div>
     </section>
 
-    <!-- 3. INTEGRATED BIBLE & DAILY READING PLAN -->
+    <!-- 4. INTEGRATED BIBLE & DAILY READING PLAN -->
     <section class="card">
       <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 16px;">📖 Holy Bible & Reading Plan</h2>
       
@@ -523,7 +622,7 @@
       </div>
     </section>
 
-    <!-- 4. PRAYER REQUEST SUBMISSION FORM -->
+    <!-- 5. PRAYER REQUEST SUBMISSION FORM -->
     <section class="card">
       <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 6px;">🙏 Prayer Request & Intercession</h2>
       <p style="font-size: 0.9rem; color: #555; margin-top: 0; margin-bottom: 16px;">Submit your prayer points. Our intercessory team will join you in faith.</p>
@@ -581,6 +680,36 @@
       <button id="pwaCloseBtn" class="btn-pwa-close" aria-label="Close">&times;</button>
     </div>
   </div>
+
+  <!-- SCRIPT FOR SHILOH COUNTDOWN TIMER -->
+  <script>
+    function updateShilohCountdown() {
+      // Shiloh 2026 start date: Dec 8, 2026 07:00:00 WAT
+      const targetDate = new Date("December 8, 2026 07:00:00 GMT+0100").getTime();
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        document.getElementById("cdDays").textContent = String(days).padStart(2, '0');
+        document.getElementById("cdHours").textContent = String(hours).padStart(2, '0');
+        document.getElementById("cdMins").textContent = String(minutes).padStart(2, '0');
+        document.getElementById("cdSecs").textContent = String(seconds).padStart(2, '0');
+      } else {
+        document.getElementById("cdDays").textContent = "00";
+        document.getElementById("cdHours").textContent = "00";
+        document.getElementById("cdMins").textContent = "00";
+        document.getElementById("cdSecs").textContent = "00";
+      }
+    }
+
+    setInterval(updateShilohCountdown, 1000);
+    updateShilohCountdown();
+  </script>
 
   <!-- SCRIPT TO TOGGLE MOBILE MENU & BIBLE TAB -->
   <script>
