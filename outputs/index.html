@@ -871,7 +871,7 @@
     });
 
     // --- 4. FCM WEB PUSH NOTIFICATION REGISTRATION ---
-    const VAPID_KEY = "YOUR_PUBLIC_VAPID_KEY_HERE";
+    const VAPID_KEY = "BDLp0t9wS90KGYI-_yAO_InvKknd1Jwi8UO5_hdCYdqqtTebXbCUJsSkhjXSSP0qE_L2KkhDEo75nGjzJZKjl8c";
 
     async function requestNotificationPermission() {
       try {
@@ -889,7 +889,7 @@
               device: navigator.userAgent,
               updatedAt: serverTimestamp()
             });
-            console.log("FCM Push Token registered.");
+            console.log("FCM Push Token registered successfully.");
           }
         }
       } catch (error) {
