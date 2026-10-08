@@ -191,7 +191,6 @@
       font-weight: 600;
     }
 
-    /* APK DOWNLOAD BUTTON STYLES */
     .btn-apk-download {
       display: inline-flex;
       align-items: center;
@@ -222,6 +221,121 @@
       padding: 24px;
       margin-bottom: 24px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    /* AUDIO SERMON PLAYER STYLES */
+    .sermon-player-container {
+      background: linear-gradient(135deg, #10221d 0%, #124b3a 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .sermon-track-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .sermon-cover {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      background: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+    .sermon-details h3 {
+      margin: 0 0 4px 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: #ffffff;
+    }
+    .sermon-details p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #a3e6cd;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .audio-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .audio-progress-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: #d1e8e0;
+    }
+    .audio-progress-bar {
+      flex: 1;
+      accent-color: var(--red);
+      cursor: pointer;
+    }
+    .audio-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 6px;
+    }
+    .btn-audio-control {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+    }
+    .btn-audio-control:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .btn-audio-play {
+      background: var(--red);
+      width: 52px;
+      height: 52px;
+      font-size: 1.3rem;
+      border: none;
+    }
+    .btn-audio-play:hover {
+      background: #c81e1b;
+    }
+
+    .sermon-playlist {
+      margin-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 14px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .sermon-playlist-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.9rem;
+    }
+    .sermon-playlist-item:hover, .sermon-playlist-item.active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .sermon-playlist-item.active {
+      border-left: 3px solid var(--red);
     }
 
     /* SHILOH & EVENT COUNTDOWN STYLES */
@@ -512,6 +626,43 @@
 
   <div class="container">
 
+    <!-- AUDIO SERMON & MESSAGE PLAYER -->
+    <section class="card sermon-player-container">
+      <span style="font: 600 0.75rem 'DM Mono', monospace; color: #a3e6cd; display: block; margin-bottom: 8px;">AUDIO MESSAGES & SERMONS</span>
+      
+      <div class="sermon-track-info">
+        <div class="sermon-cover">🎧</div>
+        <div class="sermon-details">
+          <h3 id="currentAudioTitle">Select a Sermon</h3>
+          <p id="currentAudioPreacher">LFC Aare Audio Library</p>
+        </div>
+      </div>
+
+      <!-- HTML5 AUDIO PLAYER CONTROLS -->
+      <audio id="sermonAudio" preload="metadata"></audio>
+
+      <div class="audio-controls">
+        <div class="audio-progress-container">
+          <span id="currentTime">00:00</span>
+          <input type="range" id="audioProgress" class="audio-progress-bar" value="0" min="0" max="100" />
+          <span id="totalDuration">00:00</span>
+        </div>
+
+        <div class="audio-buttons">
+          <button class="btn-audio-control" id="prevAudioBtn" title="Previous Track">⏮</button>
+          <button class="btn-audio-control" id="seekBackBtn" title="Rewind 10s">⏪</button>
+          <button class="btn-audio-control btn-audio-play" id="playAudioBtn" title="Play/Pause">▶</button>
+          <button class="btn-audio-control" id="seekForwardBtn" title="Forward 10s">⏩</button>
+          <button class="btn-audio-control" id="nextAudioBtn" title="Next Track">⏭</button>
+        </div>
+      </div>
+
+      <!-- PLAYLIST SELECTOR -->
+      <div class="sermon-playlist" id="playlistContainer">
+        <!-- Audio items populated dynamically via JS -->
+      </div>
+    </section>
+
     <!-- 1. SHILOH 2026 ANIMATED COUNTDOWN CARD -->
     <section class="card countdown-card">
       <div class="countdown-header">
@@ -684,7 +835,6 @@
   <!-- SCRIPT FOR SHILOH COUNTDOWN TIMER -->
   <script>
     function updateShilohCountdown() {
-      // Shiloh 2026 start date: Dec 8, 2026 07:00:00 WAT
       const targetDate = new Date("December 8, 2026 07:00:00 GMT+0100").getTime();
       const now = new Date().getTime();
       const difference = targetDate - now;
@@ -742,6 +892,158 @@
         showPlanBtn.style.color = 'var(--ink)';
       }
     }
+  </script>
+
+  <!-- SCRIPT FOR AUDIO SERMON PLAYER & BACKGROUND PLAYBACK (MEDIA SESSION) -->
+  <script>
+    const audioSermons = [
+      {
+        title: "Understanding The Power Of Faith",
+        preacher: "Sunday Service Message",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" // Replace with your Firebase Storage MP3 URL
+      },
+      {
+        title: "Walking In Divine Wisdom",
+        preacher: "Midweek Communion Teaching",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" // Replace with your Firebase Storage MP3 URL
+      },
+      {
+        title: "The Reality Of Redemption",
+        preacher: "Sunday Service Message",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" // Replace with your Firebase Storage MP3 URL
+      }
+    ];
+
+    let currentTrackIndex = 0;
+    const audio = document.getElementById("sermonAudio");
+    const playBtn = document.getElementById("playAudioBtn");
+    const prevBtn = document.getElementById("prevAudioBtn");
+    const nextBtn = document.getElementById("nextAudioBtn");
+    const seekBackBtn = document.getElementById("seekBackBtn");
+    const seekForwardBtn = document.getElementById("seekForwardBtn");
+    const progressBar = document.getElementById("audioProgress");
+    const currentTimeEl = document.getElementById("currentTime");
+    const totalDurationEl = document.getElementById("totalDuration");
+    const titleEl = document.getElementById("currentAudioTitle");
+    const preacherEl = document.getElementById("currentAudioPreacher");
+    const playlistContainer = document.getElementById("playlistContainer");
+
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "00:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function renderPlaylist() {
+      playlistContainer.innerHTML = "";
+      audioSermons.forEach((track, index) => {
+        const item = document.createElement("div");
+        item.className = `sermon-playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
+        item.innerHTML = `
+          <div>
+            <strong>${track.title}</strong>
+            <div style="font-size:0.75rem; opacity:0.8; font-family:'DM Mono', monospace;">${track.preacher}</div>
+          </div>
+          <span>${index === currentTrackIndex ? '🎵' : '▶'}</span>
+        `;
+        item.addEventListener("click", () => {
+          loadTrack(index);
+          audio.play();
+        });
+        playlistContainer.appendChild(item);
+      });
+    }
+
+    function updateMediaSession() {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: audioSermons[currentTrackIndex].title,
+          artist: audioSermons[currentTrackIndex].preacher,
+          album: 'LFC Aare Audio Sermons',
+          artwork: [
+            { src: './logo.png', sizes: '192x192', type: 'image/png' }
+          ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => audio.play());
+        navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
+        navigator.mediaSession.setActionHandler('seekbackward', () => { audio.currentTime = Math.max(audio.currentTime - 10, 0); });
+        navigator.mediaSession.setActionHandler('seekforward', () => { audio.currentTime = Math.min(audio.currentTime + 10, audio.duration); });
+      }
+    }
+
+    function loadTrack(index) {
+      currentTrackIndex = index;
+      const track = audioSermons[currentTrackIndex];
+      audio.src = track.src;
+      titleEl.textContent = track.title;
+      preacherEl.textContent = track.preacher;
+      renderPlaylist();
+      updateMediaSession();
+    }
+
+    playBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    audio.addEventListener("play", () => {
+      playBtn.textContent = "⏸";
+    });
+
+    audio.addEventListener("pause", () => {
+      playBtn.textContent = "▶";
+    });
+
+    audio.addEventListener("loadedmetadata", () => {
+      totalDurationEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      if (audio.duration) {
+        progressBar.value = (audio.currentTime / audio.duration) * 100;
+      }
+    });
+
+    progressBar.addEventListener("input", () => {
+      if (audio.duration) {
+        audio.currentTime = (progressBar.value / 100) * audio.duration;
+      }
+    });
+
+    prevBtn.addEventListener("click", () => {
+      const newIndex = currentTrackIndex === 0 ? audioSermons.length - 1 : currentTrackIndex - 1;
+      loadTrack(newIndex);
+      audio.play();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      const newIndex = (currentTrackIndex + 1) % audioSermons.length;
+      loadTrack(newIndex);
+      audio.play();
+    });
+
+    seekBackBtn.addEventListener("click", () => {
+      audio.currentTime = Math.max(audio.currentTime - 10, 0);
+    });
+
+    seekForwardBtn.addEventListener("click", () => {
+      audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0);
+    });
+
+    audio.addEventListener("ended", () => {
+      nextBtn.click();
+    });
+
+    // Initialize initial track
+    loadTrack(0);
   </script>
 
   <!-- FIREBASE REALTIME TESTIMONIES, PROPHETIC FOCUS, PRAYER REQUEST & FCM PUSH NOTIFICATIONS -->
