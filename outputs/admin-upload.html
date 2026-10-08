@@ -89,13 +89,15 @@
     .item-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       padding: 14px;
       border-bottom: 1px solid var(--line);
+      gap: 12px;
     }
     .item-row:last-child { border-bottom: none; }
     .item-title { font-weight: 600; font-size: 0.95rem; }
-    .item-meta { font-size: 0.8rem; color: #666; display: block; }
+    .item-meta { font-size: 0.8rem; color: #666; display: block; margin-top: 4px; }
+    .item-body { font-size: 0.85rem; color: #333; margin-top: 6px; background: #fdfdfd; padding: 8px; border-radius: 4px; border: 1px solid #eee; }
 
     .tab-group {
       display: flex;
@@ -154,6 +156,7 @@
             <select id="contentType" required>
               <option value="announcements">📢 Weekly Announcement</option>
               <option value="wsf_outlines">📖 WSF Outline</option>
+              <option value="prophetic_focus">🔥 Prophetic Focus of the Month</option>
               <option value="books">📚 Book of the Month</option>
               <option value="hymns">🎵 Church Hymn</option>
               <option value="testimonies">🙌 Testimony</option>
@@ -161,9 +164,9 @@
           </div>
 
           <!-- COMMON TITLE -->
-          <div class="form-group">
-            <label for="titleInput">Title / Name *</label>
-            <input type="text" id="titleInput" placeholder="e.g. Sunday Service Announcement / WSF Study Outline" required />
+          <div class="form-group" id="titleGroup">
+            <label id="titleLabel" for="titleInput">Title / Theme *</label>
+            <input type="text" id="titleInput" placeholder="e.g. Sunday Service Announcement / November Prophetic Theme" required />
           </div>
 
           <!-- AUTHOR / SPEAKER -->
@@ -210,14 +213,16 @@
 
       <!-- SECTION 2: DELETE / MANAGE PUBLISHED ITEMS -->
       <div class="admin-card">
-        <h2 style="margin-top:0; color: var(--forest);">Manage Published Content</h2>
+        <h2 style="margin-top:0; color: var(--forest);">Manage Published Content & Requests</h2>
 
         <div class="tab-group">
           <button class="tab-btn active" onclick="switchManageTab('announcements')">Announcements</button>
           <button class="tab-btn" onclick="switchManageTab('wsf_outlines')">WSF Outlines</button>
+          <button class="tab-btn" onclick="switchManageTab('prophetic_focus')">Prophetic Focus</button>
           <button class="tab-btn" onclick="switchManageTab('books')">Books</button>
           <button class="tab-btn" onclick="switchManageTab('hymns')">Hymns</button>
           <button class="tab-btn" onclick="switchManageTab('testimonies')">Testimonies</button>
+          <button class="tab-btn" onclick="switchManageTab('prayer_requests')">🙏 Prayer Requests</button>
         </div>
 
         <div id="manageList">
@@ -279,6 +284,7 @@
     // Form Dynamic Toggle Logic
     const contentType = document.getElementById('contentType');
     const bookFields = document.getElementById('bookFields');
+    const titleLabel = document.getElementById('titleLabel');
     const contentLabel = document.getElementById('contentLabel');
     const authorGroup = document.getElementById('authorGroup');
     const dateGroup = document.getElementById('dateGroup');
@@ -293,13 +299,23 @@
         dateGroup.style.display = 'block';
         attachmentGroup.style.display = 'block';
         linkGroup.style.display = 'block';
+        titleLabel.textContent = 'Title / Name *';
         contentLabel.textContent = 'Content / Body *';
+      } else if (val === 'prophetic_focus') {
+        bookFields.style.display = 'none';
+        authorGroup.style.display = 'none';
+        dateGroup.style.display = 'none';
+        attachmentGroup.style.display = 'block';
+        linkGroup.style.display = 'none';
+        titleLabel.textContent = 'Monthly Theme Title *';
+        contentLabel.textContent = 'Theme Details & Anchor Scriptures *';
       } else if (val === 'books') {
         bookFields.style.display = 'block';
         authorGroup.style.display = 'block';
         dateGroup.style.display = 'none';
         attachmentGroup.style.display = 'block';
         linkGroup.style.display = 'none';
+        titleLabel.textContent = 'Book Title *';
         contentLabel.textContent = 'Book Summary / Description *';
       } else if (val === 'hymns') {
         bookFields.style.display = 'none';
@@ -307,6 +323,7 @@
         dateGroup.style.display = 'none';
         attachmentGroup.style.display = 'none';
         linkGroup.style.display = 'none';
+        titleLabel.textContent = 'Hymn Title / Number *';
         contentLabel.textContent = 'Hymn Lyrics *';
       } else if (val === 'testimonies') {
         bookFields.style.display = 'none';
@@ -314,6 +331,7 @@
         dateGroup.style.display = 'none';
         attachmentGroup.style.display = 'none';
         linkGroup.style.display = 'none';
+        titleLabel.textContent = 'Testimony Heading *';
         contentLabel.textContent = 'Testimony Details *';
       }
     }
@@ -343,6 +361,9 @@
           payload.date = dateVal || new Date().toISOString().split('T')[0];
           payload.pdfUrl = pdfUrl;
           payload.link = externalLink;
+        } else if (cat === 'prophetic_focus') {
+          payload.content = content;
+          payload.pdfUrl = pdfUrl;
         } else if (cat === 'books') {
           payload.author = author || "Bishop David Oyedepo";
           payload.description = content;
@@ -391,12 +412,31 @@
         manageList.innerHTML = snapshot.docs.map(docSnap => {
           const data = docSnap.data();
           const id = docSnap.id;
+
+          if (category === 'prayer_requests') {
+            const name = data.name || "Anonymous";
+            const contact = data.contact || "No contact info";
+            const reqText = data.request || "";
+            return `
+              <div class="item-row">
+                <div style="flex:1;">
+                  <span class="item-title">🙏 ${name}</span>
+                  <span class="item-meta">Contact: ${contact}</span>
+                  <div class="item-body">${reqText}</div>
+                </div>
+                <button onclick="deleteItem('${category}', '${id}', 'Prayer Request from ${name}')" class="btn btn-danger">
+                  🗑️ Clear
+                </button>
+              </div>
+            `;
+          }
+
           const displayTitle = data.title || data.name || `Item ${id.substring(0, 5)}`;
           const displayDate = data.date ? ` | Date: ${data.date}` : '';
 
           return `
             <div class="item-row">
-              <div>
+              <div style="flex:1;">
                 <span class="item-title">${displayTitle}</span>
                 <span class="item-meta">Category: ${category}${displayDate}</span>
               </div>
