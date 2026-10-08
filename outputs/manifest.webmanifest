@@ -3,10 +3,12 @@
   "name": "Living Faith Church (LFC Aare)",
   "short_name": "LFC Aare",
   "description": "Living Faith Church (LFC Aare) Media & Tech Studio Portal",
-  "start_url": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#053321",
   "theme_color": "#053321",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "./logo.png",
