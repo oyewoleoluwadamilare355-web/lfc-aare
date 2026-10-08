@@ -212,9 +212,17 @@
       fill: currentColor;
     }
 
-    /* CONTENT SECTIONS */
-    .container { max-width: 900px; margin: 50px auto; padding: 0 20px; }
-    
+    /* CONTENT SECTIONS & CARDS */
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
     /* TESTIMONIES STYLES */
     .testimonies-grid {
       display: grid;
@@ -402,19 +410,87 @@
   </section>
 
   <div class="container">
-    <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">LOCATION & FELLOWSHIP</span>
-    <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-top: 0;">Visit Our Worship Center</h2>
-    <p style="line-height: 1.6; color: #40574f;">Join us for life-changing services, worship, and fellowship at 46 Aare Road, Iyana Aare Abule Ijoko Lemode, Ogun State.</p>
-  </div>
 
-  <!-- TESTIMONIES SECTION -->
-  <div class="container">
-    <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">TESTIMONIES</span>
-    <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-top: 0;">Praise Reports & Testimonies</h2>
-    
-    <div id="testimoniesContainer" class="testimonies-grid">
-      <p>Loading testimonies...</p>
+    <!-- 1. PROPHETIC FOCUS OF THE MONTH BANNER -->
+    <section class="card" id="propheticFocusSection" style="background: var(--forest); color: #ffffff; display: none;">
+      <span style="font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; font-weight: 700; display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; color: #a3e6cd;">🔥 PROPHETIC FOCUS</span>
+      <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">Loading theme...</h2>
+      <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0;"></p>
+    </section>
+
+    <!-- LOCATION & FELLOWSHIP -->
+    <div style="margin-bottom: 32px;">
+      <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">LOCATION & FELLOWSHIP</span>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-top: 0;">Visit Our Worship Center</h2>
+      <p style="line-height: 1.6; color: #40574f;">Join us for life-changing services, worship, and fellowship at 46 Aare Road, Iyana Aare Abule Ijoko Lemode, Ogun State.</p>
     </div>
+
+    <!-- 2. INTEGRATED BIBLE & DAILY READING PLAN -->
+    <section class="card">
+      <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 16px;">📖 Holy Bible & Reading Plan</h2>
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <button id="showBibleBtn" onclick="toggleBibleTab('bible')" style="flex:1; padding: 10px; background: var(--forest); color: #ffffff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Online Bible</button>
+        <button id="showPlanBtn" onclick="toggleBibleTab('plan')" style="flex:1; padding: 10px; background: #f7f5ef; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Daily Plan</button>
+      </div>
+
+      <!-- EMBEDDED BIBLE READER -->
+      <div id="bibleTab">
+        <iframe src="https://www.bible.com/bible/116/GEN.1.NLT" style="width: 100%; height: 480px; border: none; border-radius: 8px;"></iframe>
+      </div>
+
+      <!-- DAILY READING PLAN OUTLINE -->
+      <div id="planTab" style="display: none; background: #f7f5ef; padding: 16px; border-radius: 8px;">
+        <h3 style="margin-top:0; color: var(--forest); font-size: 1.1rem;">This Week's Reading Outline</h3>
+        <ul style="line-height: 2; padding-left: 20px; font-weight: 500; margin-bottom: 0;">
+          <li><strong>Monday:</strong> Psalm 119:1–32</li>
+          <li><strong>Tuesday:</strong> Psalm 119:33–72</li>
+          <li><strong>Wednesday:</strong> Psalm 119:73–104</li>
+          <li><strong>Thursday:</strong> Psalm 119:105–144</li>
+          <li><strong>Friday:</strong> Psalm 119:145–176</li>
+          <li><strong>Saturday:</strong> Proverbs 1:1–33</li>
+          <li><strong>Sunday:</strong> Proverbs 2:1–22</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3. PRAYER REQUEST SUBMISSION FORM -->
+    <section class="card">
+      <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 6px;">🙏 Prayer Request & Intercession</h2>
+      <p style="font-size: 0.9rem; color: #555; margin-top: 0; margin-bottom: 16px;">Submit your prayer points. Our intercessory team will join you in faith.</p>
+
+      <form id="prayerForm">
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Your Name (Optional)</label>
+          <input type="text" id="prayerName" placeholder="Leave blank to remain anonymous" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Phone / Email (Optional)</label>
+          <input type="text" id="prayerContact" placeholder="For follow-up support" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Prayer Request *</label>
+          <textarea id="prayerContent" rows="4" required placeholder="Type your prayer request here..." style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;"></textarea>
+        </div>
+
+        <button type="submit" style="width: 100%; background: var(--forest); color: #ffffff; padding: 12px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 1rem; font-family: inherit;">
+          🕊️ Submit Prayer Request
+        </button>
+      </form>
+    </section>
+
+    <!-- TESTIMONIES SECTION -->
+    <div style="margin-top: 40px;">
+      <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">TESTIMONIES</span>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-top: 0;">Praise Reports & Testimonies</h2>
+      
+      <div id="testimoniesContainer" class="testimonies-grid">
+        <p>Loading testimonies...</p>
+      </div>
+    </div>
+
   </div>
 
   <footer>
@@ -437,7 +513,7 @@
     </div>
   </div>
 
-  <!-- SCRIPT TO TOGGLE MOBILE MENU -->
+  <!-- SCRIPT TO TOGGLE MOBILE MENU & BIBLE TAB -->
   <script>
     const menuBtn = document.getElementById('menuBtn');
     const navMenu = document.getElementById('navMenu');
@@ -445,9 +521,32 @@
     menuBtn.addEventListener('click', () => {
       navMenu.classList.toggle('active');
     });
+
+    function toggleBibleTab(tab) {
+      const bibleTab = document.getElementById('bibleTab');
+      const planTab = document.getElementById('planTab');
+      const showBibleBtn = document.getElementById('showBibleBtn');
+      const showPlanBtn = document.getElementById('showPlanBtn');
+
+      if (tab === 'bible') {
+        bibleTab.style.display = 'block';
+        planTab.style.display = 'none';
+        showBibleBtn.style.background = 'var(--forest)';
+        showBibleBtn.style.color = '#ffffff';
+        showPlanBtn.style.background = '#f7f5ef';
+        showPlanBtn.style.color = 'var(--ink)';
+      } else {
+        bibleTab.style.display = 'none';
+        planTab.style.display = 'block';
+        showPlanBtn.style.background = 'var(--forest)';
+        showPlanBtn.style.color = '#ffffff';
+        showBibleBtn.style.background = '#f7f5ef';
+        showBibleBtn.style.color = 'var(--ink)';
+      }
+    }
   </script>
 
-  <!-- FIREBASE REALTIME TESTIMONIES INTEGRATION WITH FALLBACK READS -->
+  <!-- FIREBASE REALTIME TESTIMONIES, PROPHETIC FOCUS & PRAYER REQUEST INTEGRATION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -455,7 +554,10 @@
       collection, 
       onSnapshot, 
       query, 
-      orderBy 
+      orderBy,
+      limit,
+      addDoc,
+      serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -471,8 +573,52 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const testimoniesContainer = document.getElementById('testimoniesContainer');
+    // --- 1. FETCH LATEST PROPHETIC FOCUS ---
+    const focusQuery = query(collection(db, "prophetic_focus"), orderBy("createdAt", "desc"), limit(1));
 
+    onSnapshot(focusQuery, (snapshot) => {
+      const focusSection = document.getElementById('propheticFocusSection');
+      if (!snapshot.empty) {
+        const data = snapshot.docs[0].data();
+        document.getElementById('focusTitle').textContent = data.title || "Prophetic Focus";
+        document.getElementById('focusContent').textContent = data.content || "";
+        focusSection.style.display = 'block';
+      } else {
+        focusSection.style.display = 'none';
+      }
+    }, (error) => {
+      console.warn("Prophetic focus listener failed:", error);
+    });
+
+    // --- 2. SUBMIT PRAYER REQUEST TO FIREBASE ---
+    const prayerForm = document.getElementById('prayerForm');
+    if (prayerForm) {
+      prayerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('prayerName').value.trim() || "Anonymous";
+        const contact = document.getElementById('prayerContact').value.trim() || "None";
+        const request = document.getElementById('prayerContent').value.trim();
+
+        try {
+          await addDoc(collection(db, "prayer_requests"), {
+            name: name,
+            contact: contact,
+            request: request,
+            createdAt: serverTimestamp()
+          });
+
+          alert("Your prayer request has been received. Our intercessory team will join you in prayer!");
+          prayerForm.reset();
+        } catch (err) {
+          console.error("Prayer submission error:", err);
+          alert("Failed to submit prayer request: " + err.message);
+        }
+      });
+    }
+
+    // --- 3. FETCH TESTIMONIES ---
+    const testimoniesContainer = document.getElementById('testimoniesContainer');
     const q = query(collection(db, "testimonies"), orderBy("createdAt", "desc"));
 
     onSnapshot(q, (snapshot) => {
