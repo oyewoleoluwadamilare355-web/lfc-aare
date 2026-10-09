@@ -1049,12 +1049,12 @@
     loadTrack(0);
   </script>
 
-  <!-- FIREBASE DATA INTEGRATION MODULE (UPDATED WITH KINGMEGAD-30F67 CONFIG) -->
+  <!-- FIREBASE DATA INTEGRATION MODULE (DIRECTLY READS PROPHETIC_FOCUS & TESTIMONIES) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 1. YOUR FIREBASE CONFIGURATION
+    // 1. FIREBASE CONFIGURATION
     const firebaseConfig = {
       apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
       authDomain: "kingmegad-30f67.firebaseapp.com",
@@ -1069,23 +1069,22 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Dynamic Prophetic Focus Fetcher
+    // Fetch directly from the "prophetic_focus" collection
     async function loadPropheticFocus() {
       const focusTitle = document.getElementById("focusTitle");
       const focusContent = document.getElementById("focusContent");
 
       try {
-        const contentRef = collection(db, "content");
-        const q = query(contentRef, where("category", "==", "prophetic_focus"));
-        const snapshot = await getDocs(q);
+        const querySnapshot = await getDocs(collection(db, "prophetic_focus"));
 
-        if (!snapshot.empty) {
-          const docData = snapshot.docs[0].data();
+        if (!querySnapshot.empty) {
+          const docData = querySnapshot.docs[0].data();
+
           if (focusTitle && docData.title) {
             focusTitle.textContent = docData.title;
           }
-          if (focusContent) {
-            focusContent.textContent = docData.content || docData.description || docData.body || docData.text || "";
+          if (focusContent && docData.content) {
+            focusContent.textContent = docData.content;
           }
         }
       } catch (err) {
@@ -1093,19 +1092,17 @@
       }
     }
 
-    // Dynamic Testimonies Fetcher
+    // Fetch directly from the "testimonies" collection
     async function loadTestimonies() {
       const container = document.getElementById("testimoniesContainer");
       if (!container) return;
 
       try {
-        const contentRef = collection(db, "content");
-        const q = query(contentRef, where("category", "==", "testimonies"));
-        const snapshot = await getDocs(q);
+        const querySnapshot = await getDocs(collection(db, "testimonies"));
 
-        if (!snapshot.empty) {
+        if (!querySnapshot.empty) {
           container.innerHTML = "";
-          snapshot.forEach(doc => {
+          querySnapshot.forEach(doc => {
             const data = doc.data();
             const card = document.createElement("div");
             card.className = "testimony-card";
