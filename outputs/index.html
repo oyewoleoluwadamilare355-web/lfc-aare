@@ -699,11 +699,11 @@
       </div>
     </section>
 
-    <!-- 2. PROPHETIC FOCUS OF THE MONTH BANNER -->
+    <!-- 2. PROPHETIC FOCUS OF THE MONTH BANNER (DYNAMICALLY UPDATED FROM FIRESTORE) -->
     <section class="card" id="propheticFocusSection" style="background: var(--forest); color: #ffffff;">
       <span style="font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; font-weight: 700; display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; color: #a3e6cd;">🔥 PROPHETIC FOCUS</span>
-      <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">SHOWERS OF BLESSINGS</h2>
-      <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0;">Ezekiel 34:26 - "And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing."</p>
+      <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">Loading Prophetic Focus...</h2>
+      <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0;">Please wait while we fetch the latest focus...</p>
     </section>
 
     <!-- 3. SERVICE TIMETABLE & LOCATION FINDER -->
@@ -744,7 +744,7 @@
       </div>
     </section>
 
-    <!-- 4. INTEGRATED BIBLE & DAILY READING PLAN (OPTION 3: BIBLE GATEWAY READER) -->
+    <!-- 4. INTEGRATED BIBLE & DAILY READING PLAN -->
     <section class="card">
       <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 16px;">📖 Holy Bible & Reading Plan</h2>
       
@@ -1003,17 +1003,9 @@
       }
     });
 
-    audio.addEventListener("play", () => {
-      playBtn.textContent = "⏸";
-    });
-
-    audio.addEventListener("pause", () => {
-      playBtn.textContent = "▶";
-    });
-
-    audio.addEventListener("loadedmetadata", () => {
-      totalDurationEl.textContent = formatTime(audio.duration);
-    });
+    audio.addEventListener("play", () => { playBtn.textContent = "⏸"; });
+    audio.addEventListener("pause", () => { playBtn.textContent = "▶"; });
+    audio.addEventListener("loadedmetadata", () => { totalDurationEl.textContent = formatTime(audio.duration); });
 
     audio.addEventListener("timeupdate", () => {
       currentTimeEl.textContent = formatTime(audio.currentTime);
@@ -1040,20 +1032,128 @@
       audio.play();
     });
 
-    seekBackBtn.addEventListener("click", () => {
-      audio.currentTime = Math.max(audio.currentTime - 10, 0);
-    });
+    seekBackBtn.addEventListener("click", () => { audio.currentTime = Math.max(audio.currentTime - 10, 0); });
+    seekForwardBtn.addEventListener("click", () => { audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0); });
+    audio.addEventListener("ended", () => { nextBtn.click(); });
 
-    seekForwardBtn.addEventListener("click", () => {
-      audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0);
-    });
-
-    audio.addEventListener("ended", () => {
-      nextBtn.click();
-    });
-
-    // Initialize first track on load
     loadTrack(0);
+  </script>
+
+  <!-- FIREBASE DATA INTEGRATION MODULE (FETCHES PUBLISHED PROPHETIC FOCUS & TESTIMONIES) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Re-use app firebaseConfig or fallback to existing window.db instance if initialized elsewhere
+    let db;
+    if (window.db) {
+      db = window.db;
+    } else if (window.firebaseConfig) {
+      const app = initializeApp(window.firebaseConfig);
+      db = getFirestore(app);
+    }
+
+    // Dynamic Prophetic Focus Fetcher
+    async function loadPropheticFocus() {
+      const titleEl = document.getElementById("focusTitle");
+      const contentEl = document.getElementById("focusContent");
+
+      if (!db) {
+        // Static Fallback if Firebase config isn't attached globally yet
+        titleEl.textContent = "SHOWERS OF BLESSINGS";
+        contentEl.textContent = "Ezekiel 34:26 - \"And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.\"";
+        return;
+      }
+
+      try {
+        // Query the admin content collection for category: 'prophetic_focus'
+        const contentRef = collection(db, "content");
+        const q = query(contentRef, where("category", "==", "prophetic_focus"));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+          const docData = snapshot.docs[0].data();
+          titleEl.textContent = docData.title || "PROPHETIC FOCUS";
+          contentEl.textContent = docData.content || docData.description || docData.body || docData.text || "";
+        } else {
+          // Fallback if no uploaded record found
+          titleEl.textContent = "SHOWERS OF BLESSINGS";
+          contentEl.textContent = "Ezekiel 34:26 - \"And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.\"";
+        }
+      } catch (err) {
+        console.error("Error loading prophetic focus:", err);
+        titleEl.textContent = "SHOWERS OF BLESSINGS";
+        contentEl.textContent = "Ezekiel 34:26 - \"And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.\"";
+      }
+    }
+
+    // Dynamic Testimonies Fetcher
+    async function loadTestimonies() {
+      const container = document.getElementById("testimoniesContainer");
+      if (!db || !container) return;
+
+      try {
+        const contentRef = collection(db, "content");
+        const q = query(contentRef, where("category", "==", "testimonies"));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+          container.innerHTML = "";
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const card = document.createElement("div");
+            card.className = "testimony-card";
+            card.innerHTML = `
+              <h3>${data.title || "Testimony"}</h3>
+              <p>${data.content || data.description || ""}</p>
+              <small>— ${data.author || "Member"}</small>
+            `;
+            container.appendChild(card);
+          });
+        } else {
+          container.innerHTML = "<p style='color: #777;'>No praise reports published yet.</p>";
+        }
+      } catch (err) {
+        console.error("Error loading testimonies:", err);
+        container.innerHTML = "<p style='color: #777;'>Unable to load testimonies at this time.</p>";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadPropheticFocus();
+      loadTestimonies();
+    });
+  </script>
+
+  <!-- PWA INSTALL PROMPT HANDLER -->
+  <script>
+    let deferredPrompt;
+    const pwaBanner = document.getElementById('pwaBanner');
+    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+    const pwaCloseBtn = document.getElementById('pwaCloseBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (pwaBanner) pwaBanner.classList.add('show');
+    });
+
+    if (pwaInstallBtn) {
+      pwaInstallBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          deferredPrompt = null;
+          if (pwaBanner) pwaBanner.classList.remove('show');
+        }
+      });
+    }
+
+    if (pwaCloseBtn) {
+      pwaCloseBtn.addEventListener('click', () => {
+        if (pwaBanner) pwaBanner.classList.remove('show');
+      });
+    }
   </script>
 </body>
 </html>
