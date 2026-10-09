@@ -894,7 +894,7 @@
     }
   </script>
 
-  <!-- SCRIPT FOR AUDIO SERMON PLAYER & BACKGROUND PLAYBACK -->
+  <!-- SCRIPT FOR AUDIO SERMON PLAYER -->
   <script>
     const audioSermons = [
       {
@@ -972,9 +972,7 @@
           title: audioSermons[currentTrackIndex].title,
           artist: audioSermons[currentTrackIndex].preacher,
           album: 'LFC Aare Audio Sermons',
-          artwork: [
-            { src: './logo.png', sizes: '192x192', type: 'image/png' }
-          ]
+          artwork: [{ src: './logo.png', sizes: '192x192', type: 'image/png' }]
         });
 
         navigator.mediaSession.setActionHandler('play', () => audio.play());
@@ -1048,29 +1046,33 @@
     if (seekBackBtn) seekBackBtn.addEventListener("click", () => { if (audio) audio.currentTime = Math.max(audio.currentTime - 10, 0); });
     if (seekForwardBtn) seekForwardBtn.addEventListener("click", () => { if (audio) audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0); });
 
-    // Initialize track
     loadTrack(0);
   </script>
 
-  <!-- FIREBASE DATA INTEGRATION MODULE (PROPHETIC FOCUS & TESTIMONIES) -->
+  <!-- FIREBASE DATA INTEGRATION MODULE (UPDATED WITH KINGMEGAD-30F67 CONFIG) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    let db;
-    if (window.db) {
-      db = window.db;
-    } else if (window.firebaseConfig) {
-      const app = initializeApp(window.firebaseConfig);
-      db = getFirestore(app);
-    }
+    // 1. YOUR FIREBASE CONFIGURATION
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
+      authDomain: "kingmegad-30f67.firebaseapp.com",
+      projectId: "kingmegad-30f67",
+      storageBucket: "kingmegad-30f67.firebasestorage.app",
+      messagingSenderId: "81567062415",
+      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
+      measurementId: "G-BVX8SEWFD0"
+    };
+
+    // 2. INITIALIZE FIREBASE & FIRESTORE
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     // Dynamic Prophetic Focus Fetcher
     async function loadPropheticFocus() {
       const focusTitle = document.getElementById("focusTitle");
       const focusContent = document.getElementById("focusContent");
-
-      if (!db) return;
 
       try {
         const contentRef = collection(db, "content");
@@ -1079,7 +1081,9 @@
 
         if (!snapshot.empty) {
           const docData = snapshot.docs[0].data();
-          if (focusTitle && docData.title) focusTitle.textContent = docData.title;
+          if (focusTitle && docData.title) {
+            focusTitle.textContent = docData.title;
+          }
           if (focusContent) {
             focusContent.textContent = docData.content || docData.description || docData.body || docData.text || "";
           }
@@ -1092,7 +1096,7 @@
     // Dynamic Testimonies Fetcher
     async function loadTestimonies() {
       const container = document.getElementById("testimoniesContainer");
-      if (!db || !container) return;
+      if (!container) return;
 
       try {
         const contentRef = collection(db, "content");
