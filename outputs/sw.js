@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lfc-aare-v2';
+const CACHE_NAME = 'lfc-aare-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -9,7 +9,8 @@ const STATIC_ASSETS = [
   './book-of-the-month.html',
   './join.html',
   './manifest.webmanifest',
-  './logo.png'
+  './icon-192.png?v=2',
+  './icon-512.png?v=2'
 ];
 
 // Install Event: Cache Static Core Assets
@@ -36,7 +37,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event: Network First with Cache Fallback for dynamic pages (Announcements/WSF/Hymns)
+// Fetch Event: Network First with Cache Fallback for dynamic pages
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
@@ -57,7 +58,7 @@ self.addEventListener('fetch', (event) => {
           return cachedResponse;
         }
         // Fallback for HTML navigation requests offline
-        if (event.request.headers.get('accept').includes('text/html')) {
+        if (event.request.headers.get('accept')?.includes('text/html')) {
           return caches.match('./index.html');
         }
       })
@@ -69,8 +70,8 @@ self.addEventListener('push', (event) => {
   let notificationData = {
     title: 'LFC Aare Notification',
     body: 'You have a new update from LFC Aare.',
-    icon: './logo.png',
-    badge: './logo.png'
+    icon: './icon-512.png?v=2',
+    badge: './icon-192.png?v=2'
   };
 
   if (event.data) {
