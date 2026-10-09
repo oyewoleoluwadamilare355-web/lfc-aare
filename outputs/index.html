@@ -702,8 +702,8 @@
     <!-- 2. PROPHETIC FOCUS OF THE MONTH BANNER (DYNAMICALLY UPDATED FROM FIRESTORE) -->
     <section class="card" id="propheticFocusSection" style="background: var(--forest); color: #ffffff;">
       <span style="font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; font-weight: 700; display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; color: #a3e6cd;">🔥 PROPHETIC FOCUS</span>
-      <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">Loading Prophetic Focus...</h2>
-      <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0;">Please wait while we fetch the latest focus...</p>
+      <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">SHOWERS OF BLESSINGS</h2>
+      <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0;">Ezekiel 34:26 - "And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing."</p>
     </section>
 
     <!-- 3. SERVICE TIMETABLE & LOCATION FINDER -->
@@ -894,7 +894,7 @@
     }
   </script>
 
-  <!-- SCRIPT FOR AUDIO SERMON PLAYER & BACKGROUND PLAYBACK (MEDIA SESSION) -->
+  <!-- SCRIPT FOR AUDIO SERMON PLAYER & BACKGROUND PLAYBACK -->
   <script>
     const audioSermons = [
       {
@@ -946,6 +946,7 @@
     }
 
     function renderPlaylist() {
+      if (!playlistContainer) return;
       playlistContainer.innerHTML = "";
       audioSermons.forEach((track, index) => {
         const item = document.createElement("div");
@@ -988,63 +989,74 @@
     function loadTrack(index) {
       currentTrackIndex = index;
       const track = audioSermons[currentTrackIndex];
-      audio.src = track.src;
-      titleEl.textContent = track.title;
-      preacherEl.textContent = track.preacher;
+      if (audio) audio.src = track.src;
+      if (titleEl) titleEl.textContent = track.title;
+      if (preacherEl) preacherEl.textContent = track.preacher;
       renderPlaylist();
       updateMediaSession();
     }
 
-    playBtn.addEventListener("click", () => {
-      if (audio.paused) {
+    if (playBtn) {
+      playBtn.addEventListener("click", () => {
+        if (audio.paused) {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+      });
+    }
+
+    if (audio) {
+      audio.addEventListener("play", () => { if (playBtn) playBtn.textContent = "⏸"; });
+      audio.addEventListener("pause", () => { if (playBtn) playBtn.textContent = "▶"; });
+      audio.addEventListener("loadedmetadata", () => { if (totalDurationEl) totalDurationEl.textContent = formatTime(audio.duration); });
+
+      audio.addEventListener("timeupdate", () => {
+        if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
+        if (audio.duration && progressBar) {
+          progressBar.value = (audio.currentTime / audio.duration) * 100;
+        }
+      });
+
+      audio.addEventListener("ended", () => { if (nextBtn) nextBtn.click(); });
+    }
+
+    if (progressBar) {
+      progressBar.addEventListener("input", () => {
+        if (audio && audio.duration) {
+          audio.currentTime = (progressBar.value / 100) * audio.duration;
+        }
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        const newIndex = currentTrackIndex === 0 ? audioSermons.length - 1 : currentTrackIndex - 1;
+        loadTrack(newIndex);
         audio.play();
-      } else {
-        audio.pause();
-      }
-    });
+      });
+    }
 
-    audio.addEventListener("play", () => { playBtn.textContent = "⏸"; });
-    audio.addEventListener("pause", () => { playBtn.textContent = "▶"; });
-    audio.addEventListener("loadedmetadata", () => { totalDurationEl.textContent = formatTime(audio.duration); });
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        const newIndex = (currentTrackIndex + 1) % audioSermons.length;
+        loadTrack(newIndex);
+        audio.play();
+      });
+    }
 
-    audio.addEventListener("timeupdate", () => {
-      currentTimeEl.textContent = formatTime(audio.currentTime);
-      if (audio.duration) {
-        progressBar.value = (audio.currentTime / audio.duration) * 100;
-      }
-    });
+    if (seekBackBtn) seekBackBtn.addEventListener("click", () => { if (audio) audio.currentTime = Math.max(audio.currentTime - 10, 0); });
+    if (seekForwardBtn) seekForwardBtn.addEventListener("click", () => { if (audio) audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0); });
 
-    progressBar.addEventListener("input", () => {
-      if (audio.duration) {
-        audio.currentTime = (progressBar.value / 100) * audio.duration;
-      }
-    });
-
-    prevBtn.addEventListener("click", () => {
-      const newIndex = currentTrackIndex === 0 ? audioSermons.length - 1 : currentTrackIndex - 1;
-      loadTrack(newIndex);
-      audio.play();
-    });
-
-    nextBtn.addEventListener("click", () => {
-      const newIndex = (currentTrackIndex + 1) % audioSermons.length;
-      loadTrack(newIndex);
-      audio.play();
-    });
-
-    seekBackBtn.addEventListener("click", () => { audio.currentTime = Math.max(audio.currentTime - 10, 0); });
-    seekForwardBtn.addEventListener("click", () => { audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0); });
-    audio.addEventListener("ended", () => { nextBtn.click(); });
-
+    // Initialize track
     loadTrack(0);
   </script>
 
-  <!-- FIREBASE DATA INTEGRATION MODULE (FETCHES PUBLISHED PROPHETIC FOCUS & TESTIMONIES) -->
+  <!-- FIREBASE DATA INTEGRATION MODULE (PROPHETIC FOCUS & TESTIMONIES) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Re-use app firebaseConfig or fallback to existing window.db instance if initialized elsewhere
     let db;
     if (window.db) {
       db = window.db;
@@ -1055,35 +1067,25 @@
 
     // Dynamic Prophetic Focus Fetcher
     async function loadPropheticFocus() {
-      const titleEl = document.getElementById("focusTitle");
-      const contentEl = document.getElementById("focusContent");
+      const focusTitle = document.getElementById("focusTitle");
+      const focusContent = document.getElementById("focusContent");
 
-      if (!db) {
-        // Static Fallback if Firebase config isn't attached globally yet
-        titleEl.textContent = "SHOWERS OF BLESSINGS";
-        contentEl.textContent = "Ezekiel 34:26 - \"And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.\"";
-        return;
-      }
+      if (!db) return;
 
       try {
-        // Query the admin content collection for category: 'prophetic_focus'
         const contentRef = collection(db, "content");
         const q = query(contentRef, where("category", "==", "prophetic_focus"));
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
           const docData = snapshot.docs[0].data();
-          titleEl.textContent = docData.title || "PROPHETIC FOCUS";
-          contentEl.textContent = docData.content || docData.description || docData.body || docData.text || "";
-        } else {
-          // Fallback if no uploaded record found
-          titleEl.textContent = "SHOWERS OF BLESSINGS";
-          contentEl.textContent = "Ezekiel 34:26 - \"And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.\"";
+          if (focusTitle && docData.title) focusTitle.textContent = docData.title;
+          if (focusContent) {
+            focusContent.textContent = docData.content || docData.description || docData.body || docData.text || "";
+          }
         }
       } catch (err) {
-        console.error("Error loading prophetic focus:", err);
-        titleEl.textContent = "SHOWERS OF BLESSINGS";
-        contentEl.textContent = "Ezekiel 34:26 - \"And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.\"";
+        console.error("Error fetching prophetic focus:", err);
       }
     }
 
@@ -1114,7 +1116,7 @@
           container.innerHTML = "<p style='color: #777;'>No praise reports published yet.</p>";
         }
       } catch (err) {
-        console.error("Error loading testimonies:", err);
+        console.error("Error fetching testimonies:", err);
         container.innerHTML = "<p style='color: #777;'>Unable to load testimonies at this time.</p>";
       }
     }
