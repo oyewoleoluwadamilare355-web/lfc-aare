@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LFC Aare | Living Faith Church</title>
-  <link rel="icon" type="image/png" href="./logo.png" />
+  
+  <!-- FAVICON & APPLE TOUCH ICON WITH CACHE BUSTING -->
+  <link rel="icon" type="image/png" href="./icon-512.png?v=2" />
+  <link rel="apple-touch-icon" href="./icon-512.png?v=2" />
   
   <!-- PWA MANIFEST & MOBILE THEME -->
   <link rel="manifest" href="./manifest.webmanifest" />
@@ -578,7 +581,7 @@
   <header>
     <div class="header-container">
       <div class="brand">
-        <img class="brand-logo" src="./logo.png" alt="LFC Logo" />
+        <img class="brand-logo" src="./icon-512.png?v=2" alt="LFC Logo" />
         <div>
           <span class="brand-title">LIVING FAITH CHURCH</span>
           <span class="brand-subtitle">LFC AARE</span>
@@ -820,7 +823,7 @@
   <!-- CUSTOM PWA INSTALL BANNER -->
   <div id="pwaBanner" class="pwa-install-banner" role="dialog" aria-label="Install App">
     <div class="pwa-info">
-      <img src="./logo.png" alt="LFC Logo" class="pwa-icon" />
+      <img src="./icon-512.png?v=2" alt="LFC Logo" class="pwa-icon" />
       <div class="pwa-text">
         <h4>Install LFC Aare App</h4>
         <p id="pwaSubtitle">Add to your Home Screen for easy access</p>
@@ -925,238 +928,117 @@
     ];
 
     let currentTrackIndex = 0;
-    const audio = document.getElementById("sermonAudio");
-    const playBtn = document.getElementById("playAudioBtn");
-    const prevBtn = document.getElementById("prevAudioBtn");
-    const nextBtn = document.getElementById("nextAudioBtn");
-    const seekBackBtn = document.getElementById("seekBackBtn");
-    const seekForwardBtn = document.getElementById("seekForwardBtn");
-    const progressBar = document.getElementById("audioProgress");
-    const currentTimeEl = document.getElementById("currentTime");
-    const totalDurationEl = document.getElementById("totalDuration");
-    const titleEl = document.getElementById("currentAudioTitle");
-    const preacherEl = document.getElementById("currentAudioPreacher");
-    const playlistContainer = document.getElementById("playlistContainer");
+    const audio = document.getElementById('sermonAudio');
+    const playBtn = document.getElementById('playAudioBtn');
+    const prevBtn = document.getElementById('prevAudioBtn');
+    const nextBtn = document.getElementById('nextAudioBtn');
+    const seekBackBtn = document.getElementById('seekBackBtn');
+    const seekForwardBtn = document.getElementById('seekForwardBtn');
+    const progressBar = document.getElementById('audioProgress');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalDurationEl = document.getElementById('totalDuration');
+    const titleEl = document.getElementById('currentAudioTitle');
+    const preacherEl = document.getElementById('currentAudioPreacher');
+    const playlistContainer = document.getElementById('playlistContainer');
+
+    function loadTrack(index) {
+      currentTrackIndex = index;
+      const track = audioSermons[index];
+      audio.src = track.src;
+      titleEl.textContent = track.title;
+      preacherEl.textContent = track.preacher;
+      updatePlaylistUI();
+    }
+
+    function renderPlaylist() {
+      playlistContainer.innerHTML = '';
+      audioSermons.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = `sermon-playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
+        item.innerHTML = `<span>🎵 ${track.title}</span>`;
+        item.onclick = () => {
+          loadTrack(index);
+          audio.play();
+          playBtn.textContent = '⏸';
+        };
+        playlistContainer.appendChild(item);
+      });
+    }
+
+    function updatePlaylistUI() {
+      const items = playlistContainer.querySelectorAll('.sermon-playlist-item');
+      items.forEach((item, idx) => {
+        if (idx === currentTrackIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
 
     function formatTime(seconds) {
-      if (isNaN(seconds)) return "00:00";
       const mins = Math.floor(seconds / 60);
       const secs = Math.floor(seconds % 60);
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     }
 
-    function renderPlaylist() {
-      if (!playlistContainer) return;
-      playlistContainer.innerHTML = "";
-      audioSermons.forEach((track, index) => {
-        const item = document.createElement("div");
-        item.className = `sermon-playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
-        item.innerHTML = `
-          <div>
-            <strong>${track.title}</strong>
-            <div style="font-size:0.75rem; opacity:0.8; font-family:'DM Mono', monospace;">${track.preacher}</div>
-          </div>
-          <span>${index === currentTrackIndex ? '🎵' : '▶'}</span>
-        `;
-        item.addEventListener("click", () => {
-          loadTrack(index);
-          audio.play();
-        });
-        playlistContainer.appendChild(item);
-      });
-    }
-
-    function updateMediaSession() {
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: audioSermons[currentTrackIndex].title,
-          artist: audioSermons[currentTrackIndex].preacher,
-          album: 'LFC Aare Audio Sermons',
-          artwork: [{ src: './logo.png', sizes: '192x192', type: 'image/png' }]
-        });
-
-        navigator.mediaSession.setActionHandler('play', () => audio.play());
-        navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-        navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
-        navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
-        navigator.mediaSession.setActionHandler('seekbackward', () => { audio.currentTime = Math.max(audio.currentTime - 10, 0); });
-        navigator.mediaSession.setActionHandler('seekforward', () => { audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0); });
+    playBtn.addEventListener('click', () => {
+      if (!audio.src) {
+        loadTrack(0);
       }
-    }
-
-    function loadTrack(index) {
-      currentTrackIndex = index;
-      const track = audioSermons[currentTrackIndex];
-      if (audio) audio.src = track.src;
-      if (titleEl) titleEl.textContent = track.title;
-      if (preacherEl) preacherEl.textContent = track.preacher;
-      renderPlaylist();
-      updateMediaSession();
-    }
-
-    if (playBtn) {
-      playBtn.addEventListener("click", () => {
-        if (audio.paused) {
-          audio.play();
-        } else {
-          audio.pause();
-        }
-      });
-    }
-
-    if (audio) {
-      audio.addEventListener("play", () => { if (playBtn) playBtn.textContent = "⏸"; });
-      audio.addEventListener("pause", () => { if (playBtn) playBtn.textContent = "▶"; });
-      audio.addEventListener("loadedmetadata", () => { if (totalDurationEl) totalDurationEl.textContent = formatTime(audio.duration); });
-
-      audio.addEventListener("timeupdate", () => {
-        if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
-        if (audio.duration && progressBar) {
-          progressBar.value = (audio.currentTime / audio.duration) * 100;
-        }
-      });
-
-      audio.addEventListener("ended", () => { if (nextBtn) nextBtn.click(); });
-    }
-
-    if (progressBar) {
-      progressBar.addEventListener("input", () => {
-        if (audio && audio.duration) {
-          audio.currentTime = (progressBar.value / 100) * audio.duration;
-        }
-      });
-    }
-
-    if (prevBtn) {
-      prevBtn.addEventListener("click", () => {
-        const newIndex = currentTrackIndex === 0 ? audioSermons.length - 1 : currentTrackIndex - 1;
-        loadTrack(newIndex);
+      if (audio.paused) {
         audio.play();
-      });
-    }
+        playBtn.textContent = '⏸';
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶';
+      }
+    });
 
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
-        const newIndex = (currentTrackIndex + 1) % audioSermons.length;
-        loadTrack(newIndex);
-        audio.play();
-      });
-    }
+    prevBtn.addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex - 1 + audioSermons.length) % audioSermons.length;
+      loadTrack(currentTrackIndex);
+      audio.play();
+      playBtn.textContent = '⏸';
+    });
 
-    if (seekBackBtn) seekBackBtn.addEventListener("click", () => { if (audio) audio.currentTime = Math.max(audio.currentTime - 10, 0); });
-    if (seekForwardBtn) seekForwardBtn.addEventListener("click", () => { if (audio) audio.currentTime = Math.min(audio.currentTime + 10, audio.duration || 0); });
+    nextBtn.addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex + 1) % audioSermons.length;
+      loadTrack(currentTrackIndex);
+      audio.play();
+      playBtn.textContent = '⏸';
+    });
 
+    seekBackBtn.addEventListener('click', () => {
+      audio.currentTime = Math.max(0, audio.currentTime - 10);
+    });
+
+    seekForwardBtn.addEventListener('click', () => {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        progressBar.value = pct;
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        totalDurationEl.textContent = formatTime(audio.duration);
+      }
+    });
+
+    progressBar.addEventListener('input', () => {
+      if (audio.duration) {
+        audio.currentTime = (progressBar.value / 100) * audio.duration;
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      nextBtn.click();
+    });
+
+    // Initialize default playlist track
+    renderPlaylist();
     loadTrack(0);
-  </script>
-
-  <!-- FIREBASE DATA INTEGRATION MODULE (DIRECTLY READS PROPHETIC_FOCUS & TESTIMONIES) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // 1. FIREBASE CONFIGURATION
-    const firebaseConfig = {
-      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
-      authDomain: "kingmegad-30f67.firebaseapp.com",
-      projectId: "kingmegad-30f67",
-      storageBucket: "kingmegad-30f67.firebasestorage.app",
-      messagingSenderId: "81567062415",
-      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
-      measurementId: "G-BVX8SEWFD0"
-    };
-
-    // 2. INITIALIZE FIREBASE & FIRESTORE
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // Fetch directly from the "prophetic_focus" collection
-    async function loadPropheticFocus() {
-      const focusTitle = document.getElementById("focusTitle");
-      const focusContent = document.getElementById("focusContent");
-
-      try {
-        const querySnapshot = await getDocs(collection(db, "prophetic_focus"));
-
-        if (!querySnapshot.empty) {
-          const docData = querySnapshot.docs[0].data();
-
-          if (focusTitle && docData.title) {
-            focusTitle.textContent = docData.title;
-          }
-          if (focusContent && docData.content) {
-            focusContent.textContent = docData.content;
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching prophetic focus:", err);
-      }
-    }
-
-    // Fetch directly from the "testimonies" collection
-    async function loadTestimonies() {
-      const container = document.getElementById("testimoniesContainer");
-      if (!container) return;
-
-      try {
-        const querySnapshot = await getDocs(collection(db, "testimonies"));
-
-        if (!querySnapshot.empty) {
-          container.innerHTML = "";
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
-            const card = document.createElement("div");
-            card.className = "testimony-card";
-            card.innerHTML = `
-              <h3>${data.title || "Testimony"}</h3>
-              <p>${data.content || data.description || ""}</p>
-              <small>— ${data.author || "Member"}</small>
-            `;
-            container.appendChild(card);
-          });
-        } else {
-          container.innerHTML = "<p style='color: #777;'>No praise reports published yet.</p>";
-        }
-      } catch (err) {
-        console.error("Error fetching testimonies:", err);
-        container.innerHTML = "<p style='color: #777;'>Unable to load testimonies at this time.</p>";
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadPropheticFocus();
-      loadTestimonies();
-    });
-  </script>
-
-  <!-- PWA INSTALL PROMPT HANDLER -->
-  <script>
-    let deferredPrompt;
-    const pwaBanner = document.getElementById('pwaBanner');
-    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
-    const pwaCloseBtn = document.getElementById('pwaCloseBtn');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      if (pwaBanner) pwaBanner.classList.add('show');
-    });
-
-    if (pwaInstallBtn) {
-      pwaInstallBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          deferredPrompt = null;
-          if (pwaBanner) pwaBanner.classList.remove('show');
-        }
-      });
-    }
-
-    if (pwaCloseBtn) {
-      pwaCloseBtn.addEventListener('click', () => {
-        if (pwaBanner) pwaBanner.classList.remove('show');
-      });
-    }
   </script>
 </body>
 </html>
