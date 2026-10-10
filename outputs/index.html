@@ -251,9 +251,11 @@
     }
     .sermon-track-info {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       margin-bottom: 16px;
+      width: 100%;
     }
     .sermon-cover-box {
       width: 60px;
@@ -269,7 +271,7 @@
     .sermon-details h3 {
       margin: 0 0 4px 0;
       font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       color: #ffffff;
     }
     .sermon-details p {
@@ -277,6 +279,26 @@
       font-size: 0.85rem;
       color: #a3e6cd;
       font-family: 'DM Mono', monospace;
+    }
+
+    .btn-download-audio {
+      background: rgba(255, 255, 255, 0.15);
+      color: #a3e6cd;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'DM Mono', monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .btn-download-audio:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
     }
 
     .audio-controls {
@@ -649,22 +671,28 @@
 
   <div class="container">
 
-    <!-- AUDIO SERMON & MESSAGE PLAYER WITH ANIMATED VIDEO COVER ART -->
+    <!-- AUDIO SERMON & MESSAGE PLAYER WITH ANIMATED VIDEO COVER & DIRECT DOWNLOAD -->
     <section class="card sermon-player-container">
       <span style="font: 600 0.75rem 'DM Mono', monospace; color: #a3e6cd; display: block; margin-bottom: 8px;">AUDIO MESSAGES & SERMONS</span>
       
       <div class="sermon-track-info">
-        <div class="sermon-cover-box" id="sermonCoverContainer">
-          <!-- DYNAMIC VIDEO / IMAGE CONTAINER -->
-          <video id="currentAudioCoverVideo" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
-            <source id="currentVideoSource" src="./5929544454863068666.mp4" type="video/mp4" />
-          </video>
-          <img id="currentAudioCoverImg" src="./icon-512.png?v=2" alt="Cover" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+        <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
+          <div class="sermon-cover-box" id="sermonCoverContainer">
+            <video id="currentAudioCoverVideo" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
+              <source id="currentVideoSource" src="./5929544454863068666.mp4" type="video/mp4" />
+            </video>
+            <img id="currentAudioCoverImg" src="./icon-512.png?v=2" alt="Cover" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+          </div>
+          <div class="sermon-details" style="overflow: hidden;">
+            <h3 id="currentAudioTitle" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Select a Sermon</h3>
+            <p id="currentAudioPreacher">LFC Aare Audio Library</p>
+          </div>
         </div>
-        <div class="sermon-details">
-          <h3 id="currentAudioTitle">Select a Sermon</h3>
-          <p id="currentAudioPreacher">LFC Aare Audio Library</p>
-        </div>
+
+        <!-- MAIN AUDIO DOWNLOAD BUTTON -->
+        <a id="downloadAudioBtn" href="#" download target="_blank" rel="noopener noreferrer" class="btn-download-audio">
+          📥 Download
+        </a>
       </div>
 
       <!-- HTML5 AUDIO PLAYER CONTROLS -->
@@ -686,7 +714,7 @@
         </div>
       </div>
 
-      <!-- PLAYLIST SELECTOR -->
+      <!-- PLAYLIST SELECTOR WITH ITEM DOWNLOAD BUTTONS -->
       <div class="sermon-playlist" id="playlistContainer">
         <!-- Audio items populated dynamically via JS -->
       </div>
@@ -939,7 +967,7 @@
     }
   </script>
 
-  <!-- SCRIPT FOR AUDIO SERMON PLAYER WITH ANIMATED VIDEO COVER & LOCK SCREEN CONTROLS -->
+  <!-- SCRIPT FOR AUDIO SERMON PLAYER WITH ANIMATED VIDEO COVER, DOWNLOAD LINKS & LOCK SCREEN CONTROLS -->
   <script>
     const audioSermons = [
       {
@@ -987,6 +1015,7 @@
     const titleEl = document.getElementById('currentAudioTitle');
     const preacherEl = document.getElementById('currentAudioPreacher');
     const playlistContainer = document.getElementById('playlistContainer');
+    const downloadAudioBtn = document.getElementById('downloadAudioBtn');
 
     const coverVideo = document.getElementById('currentAudioCoverVideo');
     const videoSource = document.getElementById('currentVideoSource');
@@ -999,6 +1028,12 @@
       titleEl.textContent = track.title;
       preacherEl.textContent = track.preacher;
       
+      // Update Main Download Button Target URL
+      if (downloadAudioBtn) {
+        downloadAudioBtn.href = track.src;
+        downloadAudioBtn.setAttribute('download', `${track.title}.mp3`);
+      }
+
       // Update Cover Display (Check if Video or Image)
       if (track.cover && track.cover.endsWith('.mp4')) {
         coverImg.style.display = 'none';
@@ -1046,9 +1081,14 @@
         }
 
         item.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-            ${coverMarkup}
-            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${track.title}</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${coverMarkup}
+              <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${track.title}</span>
+            </div>
+            <a href="${track.src}" download target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" title="Download Sermon" style="color: #a3e6cd; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08); text-decoration: none;">
+              ⬇️
+            </a>
           </div>
         `;
         item.onclick = () => {
