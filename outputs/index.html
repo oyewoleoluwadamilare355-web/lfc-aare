@@ -725,8 +725,9 @@
     <!-- 2. PROPHETIC FOCUS OF THE MONTH BANNER (DYNAMICALLY UPDATED FROM FIRESTORE) -->
     <section class="card" id="propheticFocusSection" style="background: var(--forest); color: #ffffff;">
       <span style="font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; font-weight: 700; display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; color: #a3e6cd;">🔥 PROPHETIC FOCUS</span>
-      <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">SHOWERS OF BLESSINGS</h2>
-      <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0;">Ezekiel 34:26 - "And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing."</p>
+      <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">Loading...</h2>
+      <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0 0 12px 0;"></p>
+      <a id="focusPdfLink" href="#" target="_blank" rel="noopener noreferrer" style="display: none; color: #a3e6cd; border: 1px dashed rgba(163, 230, 205, 0.5); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; width: fit-content;">📄 View Document</a>
     </section>
 
     <!-- 3. SERVICE TIMETABLE & LOCATION FINDER -->
@@ -1114,6 +1115,46 @@
 
     window.addEventListener('appinstalled', () => {
       if (pwaBanner) pwaBanner.classList.remove('show');
+    });
+  </script>
+
+  <!-- FIRESTORE LIVE LISTENER FOR PROPHETIC FOCUS COLLECTION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Replace with your Firebase Project Configuration
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Query 'prophetic_focus' collection ordered by 'createdAt'
+    const q = query(collection(db, "prophetic_focus"), orderBy("createdAt", "desc"), limit(1));
+
+    onSnapshot(q, (snapshot) => {
+      if (!snapshot.empty) {
+        const data = snapshot.docs[0].data();
+        if (data.title) document.getElementById('focusTitle').textContent = data.title;
+        if (data.content) document.getElementById('focusContent').textContent = data.content;
+        
+        const pdfLink = document.getElementById('focusPdfLink');
+        if (data.pdfUrl) {
+          pdfLink.href = data.pdfUrl;
+          pdfLink.style.display = 'inline-block';
+        } else {
+          pdfLink.style.display = 'none';
+        }
+      }
+    }, (error) => {
+      console.error("Error fetching prophetic_focus:", error);
     });
   </script>
 </body>
