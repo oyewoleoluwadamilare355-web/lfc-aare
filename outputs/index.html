@@ -649,7 +649,7 @@
 
   <div class="container">
 
-    <!-- AUDIO SERMON & MESSAGE PLAYER -->
+    <!-- AUDIO SERMON & MESSAGE PLAYER WITH BACKGROUND MEDIA SESSION -->
     <section class="card sermon-player-container">
       <span style="font: 600 0.75rem 'DM Mono', monospace; color: #a3e6cd; display: block; margin-bottom: 8px;">AUDIO MESSAGES & SERMONS</span>
       
@@ -933,7 +933,7 @@
     }
   </script>
 
-  <!-- SCRIPT FOR AUDIO SERMON PLAYER -->
+  <!-- SCRIPT FOR AUDIO SERMON PLAYER WITH LOCK SCREEN & BACKGROUND MEDIA CONTROLS -->
   <script>
     const audioSermons = [
       {
@@ -984,6 +984,25 @@
       titleEl.textContent = track.title;
       preacherEl.textContent = track.preacher;
       updatePlaylistUI();
+
+      // Enable Mobile Lock Screen & Control Center Media Controls
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: track.title,
+          artist: track.preacher,
+          album: "LFC Aare Sermons",
+          artwork: [
+            { src: './icon-512.png?v=2', sizes: '512x512', type: 'image/png' }
+          ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => { audio.play(); playBtn.textContent = '⏸'; });
+        navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); playBtn.textContent = '▶'; });
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
+        navigator.mediaSession.setActionHandler('seekbackward', () => seekBackBtn.click());
+        navigator.mediaSession.setActionHandler('seekforward', () => seekForwardBtn.click());
+      }
     }
 
     function renderPlaylist() {
