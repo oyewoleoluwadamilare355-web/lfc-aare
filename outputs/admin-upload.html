@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Publishing Portal | LFC Aare</title>
-  <link rel="icon" type="image/png" href="./logo.png" />
+  <link rel="icon" type="image/png" href="./icon-512.png?v=2" />
   <meta name="theme-color" content="#124b3a" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -95,9 +95,9 @@
       gap: 12px;
     }
     .item-row:last-child { border-bottom: none; }
-    .item-title { font-weight: 600; font-size: 0.95rem; }
-    .item-meta { font-size: 0.8rem; color: #666; display: block; margin-top: 4px; }
-    .item-body { font-size: 0.85rem; color: #333; margin-top: 6px; background: #fdfdfd; padding: 8px; border-radius: 4px; border: 1px solid #eee; }
+    .item-title { font-weight: 600; font-size: 0.95rem; color: var(--forest); }
+    .item-meta { font-size: 0.8rem; color: #666; display: block; margin-top: 4px; font-family: "DM Mono", monospace; }
+    .item-body { font-size: 0.88rem; color: #333; margin-top: 6px; background: #fdfdfd; padding: 10px; border-radius: 4px; border: 1px solid #eee; white-space: pre-line; }
 
     .tab-group {
       display: flex;
@@ -115,6 +115,7 @@
       border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
+      font-size: 0.85rem;
     }
 
     .tab-btn.active {
@@ -204,7 +205,7 @@
           <!-- CONTENT / LYRICS / DESCRIPTION -->
           <div class="form-group">
             <label id="contentLabel" for="contentInput">Content / Body *</label>
-            <textarea id="contentInput" rows="5" placeholder="Enter announcement content, outline details, summary, or lyrics..." required></textarea>
+            <textarea id="contentInput" rows="6" placeholder="Enter announcement content, outline details, summary, or lyrics..." required></textarea>
           </div>
 
           <button type="submit" id="submitBtn" class="btn">🚀 Publish to Website</button>
@@ -216,13 +217,13 @@
         <h2 style="margin-top:0; color: var(--forest);">Manage Published Content & Requests</h2>
 
         <div class="tab-group">
-          <button class="tab-btn active" onclick="switchManageTab('announcements')">Announcements</button>
-          <button class="tab-btn" onclick="switchManageTab('wsf_outlines')">WSF Outlines</button>
-          <button class="tab-btn" onclick="switchManageTab('prophetic_focus')">Prophetic Focus</button>
-          <button class="tab-btn" onclick="switchManageTab('books')">Books</button>
-          <button class="tab-btn" onclick="switchManageTab('hymns')">Hymns</button>
-          <button class="tab-btn" onclick="switchManageTab('testimonies')">Testimonies</button>
-          <button class="tab-btn" onclick="switchManageTab('prayer_requests')">🙏 Prayer Requests</button>
+          <button class="tab-btn active" onclick="switchManageTab('announcements', event)">Announcements</button>
+          <button class="tab-btn" onclick="switchManageTab('wsf_outlines', event)">WSF Outlines</button>
+          <button class="tab-btn" onclick="switchManageTab('prophetic_focus', event)">Prophetic Focus</button>
+          <button class="tab-btn" onclick="switchManageTab('books', event)">Books</button>
+          <button class="tab-btn" onclick="switchManageTab('hymns', event)">Hymns</button>
+          <button class="tab-btn" onclick="switchManageTab('testimonies', event)">Testimonies</button>
+          <button class="tab-btn" onclick="switchManageTab('prayer_requests', event)">🙏 Prayer Requests</button>
         </div>
 
         <div id="manageList">
@@ -281,6 +282,10 @@
       }
     });
 
+    pinInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') loginBtn.click();
+    });
+
     // Form Dynamic Toggle Logic
     const contentType = document.getElementById('contentType');
     const bookFields = document.getElementById('bookFields');
@@ -337,7 +342,7 @@
     }
 
     contentType.addEventListener('change', updateFormFields);
-    updateFormFields(); // Initialize default view
+    updateFormFields();
 
     // Form Submit Handler
     const uploadForm = document.getElementById('uploadForm');
@@ -392,7 +397,7 @@
     let activeTab = 'announcements';
     const manageList = document.getElementById('manageList');
 
-    window.switchManageTab = function(category) {
+    window.switchManageTab = function(category, event) {
       activeTab = category;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
@@ -416,7 +421,7 @@
           if (category === 'prayer_requests') {
             const name = data.name || "Anonymous";
             const contact = data.contact || "No contact info";
-            const reqText = data.request || "";
+            const reqText = data.request || data.content || "";
             return `
               <div class="item-row">
                 <div style="flex:1;">
@@ -424,7 +429,7 @@
                   <span class="item-meta">Contact: ${contact}</span>
                   <div class="item-body">${reqText}</div>
                 </div>
-                <button onclick="deleteItem('${category}', '${id}', 'Prayer Request from ${name}')" class="btn btn-danger">
+                <button onclick="deleteItem('${category}', '${id}', 'Prayer Request')" class="btn btn-danger">
                   🗑️ Clear
                 </button>
               </div>
@@ -433,12 +438,14 @@
 
           const displayTitle = data.title || data.name || `Item ${id.substring(0, 5)}`;
           const displayDate = data.date ? ` | Date: ${data.date}` : '';
+          const bodyText = data.content || data.description || data.lyrics || "";
 
           return `
             <div class="item-row">
               <div style="flex:1;">
                 <span class="item-title">${displayTitle}</span>
                 <span class="item-meta">Category: ${category}${displayDate}</span>
+                ${bodyText ? `<div class="item-body">\${bodyText.substring(0, 120)}...</div>` : ''}
               </div>
               <button onclick="deleteItem('${category}', '${id}', '${displayTitle.replace(/'/g, "\\'")}')" class="btn btn-danger">
                 🗑️ Delete
@@ -446,14 +453,17 @@
             </div>
           `;
         }).join('');
+      }, (error) => {
+        console.error("Error loading management list:", error);
+        manageList.innerHTML = `<p>Unable to load items.</p>`;
       });
     }
 
-    // Delete Record Handler with Password Prompt
+    // Delete Record Handler with PIN Prompt
     window.deleteItem = async function(category, docId, title) {
       const enteredPin = prompt(`Enter Admin PIN to confirm deletion of "${title}":`);
       
-      if (enteredPin === null) return; // User canceled
+      if (enteredPin === null) return; 
 
       if (enteredPin === ADMIN_PIN) {
         try {
