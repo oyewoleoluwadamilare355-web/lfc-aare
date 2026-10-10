@@ -1118,44 +1118,61 @@
     });
   </script>
 
-  <!-- FIRESTORE LIVE LISTENER FOR PROPHETIC FOCUS COLLECTION -->
+ <!-- FIRESTORE LIVE LISTENER FOR PROPHETIC FOCUS COLLECTION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Replace with your Firebase Project Configuration
+    // Your Firebase Project Credentials
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
+      authDomain: "kingmegad-30f67.firebaseapp.com",
+      projectId: "kingmegad-30f67",
+      storageBucket: "kingmegad-30f67.firebasestorage.app",
+      messagingSenderId: "81567062415",
+      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
+      measurementId: "G-BVX8SEWFD0"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // Default fallback values in case of network issue
+    const defaultTitle = "Prophetic Focus for October 2026";
+    const defaultContent = "Epistle of the Month Office of the President";
 
-    // Query 'prophetic_focus' collection ordered by 'createdAt'
-    const q = query(collection(db, "prophetic_focus"), orderBy("createdAt", "desc"), limit(1));
+    async function fetchPropheticFocus() {
+      try {
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    onSnapshot(q, (snapshot) => {
-      if (!snapshot.empty) {
-        const data = snapshot.docs[0].data();
-        if (data.title) document.getElementById('focusTitle').textContent = data.title;
-        if (data.content) document.getElementById('focusContent').textContent = data.content;
+        // Fetch docs directly from prophetic_focus collection
+        const querySnapshot = await getDocs(collection(db, "prophetic_focus"));
         
-        const pdfLink = document.getElementById('focusPdfLink');
-        if (data.pdfUrl) {
-          pdfLink.href = data.pdfUrl;
-          pdfLink.style.display = 'inline-block';
+        if (!querySnapshot.empty) {
+          // Grab the latest document in the collection
+          const docData = querySnapshot.docs[querySnapshot.docs.length - 1].data();
+          
+          document.getElementById('focusTitle').textContent = docData.title || defaultTitle;
+          document.getElementById('focusContent').textContent = docData.content || defaultContent;
+
+          const pdfLink = document.getElementById('focusPdfLink');
+          if (docData.pdfUrl) {
+            pdfLink.href = docData.pdfUrl;
+            pdfLink.style.display = 'inline-block';
+          }
         } else {
-          pdfLink.style.display = 'none';
+          showFallback();
         }
+      } catch (error) {
+        console.warn("Firestore fetch error, displaying fallback:", error);
+        showFallback();
       }
-    }, (error) => {
-      console.error("Error fetching prophetic_focus:", error);
-    });
+    }
+
+    function showFallback() {
+      document.getElementById('focusTitle').textContent = defaultTitle;
+      document.getElementById('focusContent').textContent = defaultContent;
+    }
+
+    fetchPropheticFocus();
   </script>
 </body>
 </html>
