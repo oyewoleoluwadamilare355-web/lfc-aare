@@ -255,16 +255,21 @@
       gap: 16px;
       margin-bottom: 16px;
     }
-    .sermon-cover {
+    .sermon-cover-box {
       width: 60px;
       height: 60px;
       border-radius: 8px;
+      overflow: hidden;
       background: var(--red);
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
-      flex-shrink: 0;
+    }
+    .sermon-cover-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .sermon-details h3 {
       margin: 0 0 4px 0;
@@ -336,14 +341,14 @@
       margin-top: 20px;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       padding-top: 14px;
-      max-height: 200px;
+      max-height: 220px;
       overflow-y: auto;
     }
     .sermon-playlist-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 12px;
+      padding: 8px 12px;
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.2s;
@@ -649,12 +654,14 @@
 
   <div class="container">
 
-    <!-- AUDIO SERMON & MESSAGE PLAYER WITH BACKGROUND MEDIA SESSION -->
+    <!-- AUDIO SERMON & MESSAGE PLAYER WITH THUMBNAIL COVER ART -->
     <section class="card sermon-player-container">
       <span style="font: 600 0.75rem 'DM Mono', monospace; color: #a3e6cd; display: block; margin-bottom: 8px;">AUDIO MESSAGES & SERMONS</span>
       
       <div class="sermon-track-info">
-        <div class="sermon-cover">🎧</div>
+        <div class="sermon-cover-box">
+          <img id="currentAudioCover" src="./icon-512.png?v=2" alt="Sermon Cover" />
+        </div>
         <div class="sermon-details">
           <h3 id="currentAudioTitle">Select a Sermon</h3>
           <p id="currentAudioPreacher">LFC Aare Audio Library</p>
@@ -933,32 +940,37 @@
     }
   </script>
 
-  <!-- SCRIPT FOR AUDIO SERMON PLAYER WITH LOCK SCREEN & BACKGROUND MEDIA CONTROLS -->
+  <!-- SCRIPT FOR AUDIO SERMON PLAYER WITH COVER ARTWORK & LOCK SCREEN CONTROLS -->
   <script>
     const audioSermons = [
       {
         title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 1",
         preacher: "Sunday Service Message",
+        cover: "./icon-512.png?v=2",
         src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3"
       },
       {
         title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 2",
         preacher: "Sunday Service Message",
+        cover: "./icon-512.png?v=2",
         src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3.2.mp3"
       },
       {
         title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 3",
         preacher: "Sunday Service Message",
+        cover: "./icon-512.png?v=2",
         src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3.3.mp3"
       },
       {
         title: "Prophetic Blessings October",
         preacher: "Prophetic Service",
+        cover: "./icon-512.png?v=2",
         src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/Prophetic.Blessings.October.mp3"
       },
       {
         title: "Showers of Blessings",
         preacher: "Special Service Message",
+        cover: "./icon-512.png?v=2",
         src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/Showers.of.Blessings.mp3"
       }
     ];
@@ -976,6 +988,7 @@
     const titleEl = document.getElementById('currentAudioTitle');
     const preacherEl = document.getElementById('currentAudioPreacher');
     const playlistContainer = document.getElementById('playlistContainer');
+    const coverImg = document.getElementById('currentAudioCover');
 
     function loadTrack(index) {
       currentTrackIndex = index;
@@ -983,16 +996,20 @@
       audio.src = track.src;
       titleEl.textContent = track.title;
       preacherEl.textContent = track.preacher;
+      
+      // Update Cover Image
+      coverImg.src = track.cover || "./icon-512.png?v=2";
+
       updatePlaylistUI();
 
-      // Enable Mobile Lock Screen & Control Center Media Controls
+      // Mobile Lock Screen & Control Center Media Controls with Artwork
       if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
           title: track.title,
           artist: track.preacher,
           album: "LFC Aare Sermons",
           artwork: [
-            { src: './icon-512.png?v=2', sizes: '512x512', type: 'image/png' }
+            { src: track.cover || './icon-512.png?v=2', sizes: '512x512', type: 'image/png' }
           ]
         });
 
@@ -1010,7 +1027,12 @@
       audioSermons.forEach((track, index) => {
         const item = document.createElement('div');
         item.className = `sermon-playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
-        item.innerHTML = `<span>🎵 ${track.title}</span>`;
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <img src="${track.cover || './icon-512.png?v=2'}" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover; flex-shrink: 0;" alt="thumb" />
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${track.title}</span>
+          </div>
+        `;
         item.onclick = () => {
           loadTrack(index);
           audio.play();
