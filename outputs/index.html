@@ -1069,21 +1069,18 @@
     const pwaInstallBtn = document.getElementById('pwaInstallBtn');
     const pwaCloseBtn = document.getElementById('pwaCloseBtn');
 
-    // Helper to trigger banner pop-up
     function showInstallBanner() {
       if (!sessionStorage.getItem('pwaBannerDismissed') && pwaBanner) {
         pwaBanner.classList.add('show');
       }
     }
 
-    // Capture the PWA install prompt event
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       showInstallBanner();
     });
 
-    // Auto-pop banner after 3 seconds if not already installed/dismissed
     window.addEventListener('load', () => {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
       if (!isStandalone) {
@@ -1091,7 +1088,6 @@
       }
     });
 
-    // Handle Install Button Clicks
     async function triggerInstallPrompt() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -1109,7 +1105,6 @@
     if (heroInstallBtn) heroInstallBtn.addEventListener('click', triggerInstallPrompt);
     if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', triggerInstallPrompt);
 
-    // Handle Close Button
     if (pwaCloseBtn) {
       pwaCloseBtn.addEventListener('click', () => {
         if (pwaBanner) pwaBanner.classList.remove('show');
@@ -1117,7 +1112,6 @@
       });
     }
 
-    // Hide banner once app is installed
     window.addEventListener('appinstalled', () => {
       if (pwaBanner) pwaBanner.classList.remove('show');
     });
