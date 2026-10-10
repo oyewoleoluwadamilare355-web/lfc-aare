@@ -722,12 +722,27 @@
       </div>
     </section>
 
-    <!-- 2. PROPHETIC FOCUS OF THE MONTH BANNER (DYNAMICALLY UPDATED FROM FIRESTORE) -->
-    <section class="card" id="propheticFocusSection" style="background: var(--forest); color: #ffffff;">
-      <span style="font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; font-weight: 700; display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; color: #a3e6cd;">🔥 PROPHETIC FOCUS</span>
-      <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0 0 10px 0; color: #ffffff; font-size: 1.6rem;">Loading...</h2>
-      <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0 0 12px 0;"></p>
-      <a id="focusPdfLink" href="#" target="_blank" rel="noopener noreferrer" style="display: none; color: #a3e6cd; border: 1px dashed rgba(163, 230, 205, 0.5); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; width: fit-content;">📄 View Document</a>
+    <!-- 2. PROPHETIC FOCUS OF THE MONTH BANNER (ANIMATED MP4 VIDEO) -->
+    <section class="card" id="propheticFocusSection" style="padding: 0; overflow: hidden; border-radius: 12px;">
+      <div style="position: relative; width: 100%; max-height: 280px; overflow: hidden; background: #000;">
+        <!-- LOOPING BACKGROUND VIDEO -->
+        <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
+          <source src="./5929544454863068666.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        
+        <!-- OVERLAY HEADING -->
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(18, 75, 58, 0.95)); color: #ffffff;">
+          <span style="font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #a3e6cd; font-family: 'DM Mono', monospace; display: block; margin-bottom: 4px;">🔥 PROPHETIC FOCUS</span>
+          <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0; color: #ffffff; font-size: 1.6rem;">SHOWERS OF BLESSINGS</h2>
+        </div>
+      </div>
+
+      <!-- TEXT DESCRIPTION BELOW VIDEO -->
+      <div style="padding: 20px; background: var(--forest); color: #ffffff;">
+        <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0 0 12px 0;">Ezekiel 34:26 - "And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing."</p>
+        <a id="focusPdfLink" href="#" target="_blank" rel="noopener noreferrer" style="display: none; color: #a3e6cd; border: 1px dashed rgba(163, 230, 205, 0.5); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; width: fit-content;">📄 View Document</a>
+      </div>
     </section>
 
     <!-- 3. SERVICE TIMETABLE & LOCATION FINDER -->
@@ -1118,7 +1133,7 @@
     });
   </script>
 
- <!-- FIRESTORE LIVE LISTENER FOR PROPHETIC FOCUS COLLECTION -->
+  <!-- FIRESTORE LIVE LISTENER FOR PROPHETIC FOCUS COLLECTION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1134,42 +1149,31 @@
       measurementId: "G-BVX8SEWFD0"
     };
 
-    // Default fallback values in case of network issue
-    const defaultTitle = "Prophetic Focus for October 2026";
-    const defaultContent = "Epistle of the Month Office of the President";
+    const defaultTitle = "SHOWERS OF BLESSINGS";
+    const defaultContent = "Ezekiel 34:26 - \"And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.\"";
 
     async function fetchPropheticFocus() {
       try {
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Fetch docs directly from prophetic_focus collection
         const querySnapshot = await getDocs(collection(db, "prophetic_focus"));
         
         if (!querySnapshot.empty) {
-          // Grab the latest document in the collection
           const docData = querySnapshot.docs[querySnapshot.docs.length - 1].data();
           
-          document.getElementById('focusTitle').textContent = docData.title || defaultTitle;
-          document.getElementById('focusContent').textContent = docData.content || defaultContent;
+          if (docData.title) document.getElementById('focusTitle').textContent = docData.title;
+          if (docData.content) document.getElementById('focusContent').textContent = docData.content;
 
           const pdfLink = document.getElementById('focusPdfLink');
           if (docData.pdfUrl) {
             pdfLink.href = docData.pdfUrl;
             pdfLink.style.display = 'inline-block';
           }
-        } else {
-          showFallback();
         }
       } catch (error) {
-        console.warn("Firestore fetch error, displaying fallback:", error);
-        showFallback();
+        console.warn("Firestore fetch error, displaying defaults:", error);
       }
-    }
-
-    function showFallback() {
-      document.getElementById('focusTitle').textContent = defaultTitle;
-      document.getElementById('focusContent').textContent = defaultContent;
     }
 
     fetchPropheticFocus();
