@@ -194,7 +194,7 @@
       font-weight: 600;
     }
 
-    .btn-apk-download {
+    .btn-pwa-hero {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -204,15 +204,30 @@
       border-radius: 4px;
       font-weight: 700;
       font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.2s ease-in-out;
+      font-family: inherit;
     }
-    .btn-apk-download:hover {
+    .btn-pwa-hero:hover {
       background: #1eb857;
       transform: translateY(-1px);
     }
-    .btn-apk-download svg {
+    .btn-pwa-hero svg {
       fill: currentColor;
+    }
+
+    .btn-apk-fallback {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #a3e6cd;
+      border: 1px dashed rgba(163, 230, 205, 0.4);
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.85rem;
     }
 
     /* CONTENT SECTIONS & CARDS */
@@ -616,12 +631,17 @@
         <a href="./wsf-outline.html" class="btn-primary">WSF Outline &rarr;</a>
         <a href="./join.html" class="btn-secondary">Join Studio Units &rarr;</a>
         
-        <!-- DIRECT GITHUB RELEASE APK DOWNLOAD BUTTON -->
-        <a href="https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.2/LFC.Aare.apk" class="btn-apk-download" target="_blank" rel="noopener noreferrer">
+        <!-- INSTANT PWA INSTALL BUTTON (CLEAN & NO WARNINGS) -->
+        <button id="heroInstallBtn" class="btn-pwa-hero">
           <svg width="18" height="18" viewBox="0 0 24 24">
-            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
           </svg>
-          Download Android App (.APK)
+          Install App Instantly
+        </button>
+
+        <!-- STANDALONE APK DIRECT DOWNLOAD OPTION -->
+        <a href="https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.2/LFC.Aare.apk" class="btn-apk-fallback" target="_blank" rel="noopener noreferrer">
+          Direct .APK
         </a>
       </div>
     </div>
@@ -1039,6 +1059,49 @@
     // Initialize default playlist track
     renderPlaylist();
     loadTrack(0);
+  </script>
+
+  <!-- PWA INSTALL EVENT LISTENER & PROMPT HANDLER -->
+  <script>
+    let deferredPrompt;
+    const heroInstallBtn = document.getElementById('heroInstallBtn');
+    const pwaBanner = document.getElementById('pwaBanner');
+    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+    const pwaCloseBtn = document.getElementById('pwaCloseBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+
+      if (pwaBanner) pwaBanner.classList.add('show');
+    });
+
+    async function triggerInstallPrompt() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          console.log('App installed successfully');
+        }
+        deferredPrompt = null;
+        if (pwaBanner) pwaBanner.classList.remove('show');
+      } else {
+        alert("To install: tap your browser's menu (⋮ or Share) and select 'Add to Home Screen' / 'Install App'.");
+      }
+    }
+
+    if (heroInstallBtn) heroInstallBtn.addEventListener('click', triggerInstallPrompt);
+    if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', triggerInstallPrompt);
+
+    if (pwaCloseBtn) {
+      pwaCloseBtn.addEventListener('click', () => {
+        if (pwaBanner) pwaBanner.classList.remove('show');
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      if (pwaBanner) pwaBanner.classList.remove('show');
+    });
   </script>
 </body>
 </html>
