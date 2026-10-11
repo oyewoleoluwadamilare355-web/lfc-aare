@@ -39,29 +39,27 @@ self.addEventListener('activate', (event) => {
 
 // Fetch Event: Network First with Cache Fallback for dynamic pages
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url);
+
+  // IGNORE external requests (Firebase, Google APIs, extensions) so they never throw cache errors
+  if (url.origin !== location.origin || url.pathname.includes('googleapis') || url.pathname.includes('identitytoolkit')) {
+    return; 
+  }
 
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        return networkResponse;
-      })
-      .catch(async () => {
-        const cachedResponse = await caches.match(event.request);
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        // Fallback for HTML navigation requests offline
-        if (event.request.headers.get('accept')?.includes('text/html')) {
-          return caches.match('./index.html');
-        }
-      })
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request).then((networkResponse) => {
+        return caches.open('v1').then((cache) => {
+          // Only cache valid basic responses
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+            cache.put(event.request, networkResponse.clone());
+          }
+          return networkResponse;
+        });
+      });
+    }).catch(() => {
+      // Fallback for offline pages if needed
+    })
   );
 });
 
