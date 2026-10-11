@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Publishing Portal | LFC Aare</title>
   <link rel="icon" type="image/png" href="./icon-512.png?v=2" />
+  <link rel="manifest" href="./manifest.webmanifest" />
   <meta name="theme-color" content="#124b3a" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -297,13 +298,11 @@
     // Monitor Auth State
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in
         authSection.style.display = 'none';
         adminPanel.style.display = 'block';
         logoutBtn.style.display = 'block';
         loadManageCategory('announcements');
       } else {
-        // User is signed out
         authSection.style.display = 'block';
         adminPanel.style.display = 'none';
         logoutBtn.style.display = 'none';
@@ -508,7 +507,7 @@
       });
     }
 
-    // Delete Record Handler (Directly deletes since user is authenticated via Firebase Auth)
+    // Delete Record Handler
     window.deleteItem = async function(category, docId, title) {
       if (confirm(`Are you sure you want to delete "${title}"?`)) {
         try {
