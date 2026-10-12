@@ -254,14 +254,18 @@
 
   </main>
 
-  <!-- FIREBASE INTEGRATION WITH AUTH -->
+  <!-- FIREBASE INTEGRATION WITH AUTH & PASSWORD RE-VERIFICATION FOR DELETION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getAuth, 
       signInWithEmailAndPassword, 
       signOut, 
-      onAuthStateChanged 
+      onAuthStateChanged,
+      setPersistence,
+      browserSessionPersistence,
+      EmailAuthProvider,
+      reauthenticateWithCredential
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { 
       getFirestore, 
@@ -288,6 +292,9 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    // Enforce session persistence so the user is asked to log in fresh every time the tab/browser is closed
+    setPersistence(auth, browserSessionPersistence);
 
     const authSection = document.getElementById('authSection');
     const adminPanel = document.getElementById('adminPanel');
@@ -318,6 +325,7 @@
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
+        loginForm.reset();
       } catch (err) {
         console.error("Login error:", err);
         authError.style.display = 'block';
@@ -507,14 +515,34 @@
       });
     }
 
-    // Delete Record Handler
+    // Secure Delete Record Handler (Prompts for password verification before executing delete)
     window.deleteItem = async function(category, docId, title) {
-      if (confirm(`Are you sure you want to delete "${title}"?`)) {
-        try {
-          await deleteDoc(doc(db, category, docId));
-          alert(`Successfully deleted "${title}"`);
-        } catch (err) {
-          console.error("Delete failed:", err);
+      const passwordPrompt = prompt(`Security Verification Required:\nEnter your admin password to delete "${title}":`);
+      
+      if (!passwordPrompt) {
+        return; // Cancelled
+      }
+
+      const user = auth.currentUser;
+      if (!user || !user.email) {
+        alert("Authentication session expired. Please log in again.");
+        location.reload();
+        return;
+      }
+
+      try {
+        // Re-authenticate user with their password before allowing deletion
+        const credential = EmailAuthProvider.credential(user.email, passwordPrompt);
+        await reauthenticateWithCredential(user, credential);
+
+        // Password correct, proceed with deletion
+        await deleteDoc(doc(db, category, docId));
+        alert(`Successfully deleted "${title}"`);
+      } catch (err) {
+        console.error("Deletion security error:", err);
+        if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+          alert("Incorrect password. Deletion cancelled.");
+        } else {
           alert("Failed to delete: " + err.message);
         }
       }
