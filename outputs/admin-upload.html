@@ -254,19 +254,8 @@
 
   </main>
 
-  <!-- FIREBASE INTEGRATION WITH AUTH & PASSWORD RE-VERIFICATION FOR DELETION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      signInWithEmailAndPassword, 
-      signOut, 
-      onAuthStateChanged,
-      setPersistence,
-      browserSessionPersistence,
-      EmailAuthProvider,
-      reauthenticateWithCredential
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { 
       getFirestore, 
       collection, 
@@ -290,11 +279,11 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Enforce session persistence so the user is asked to log in fresh every time the tab/browser is closed
-    setPersistence(auth, browserSessionPersistence);
+    // Hardcoded Admin Credentials (Bypasses external auth server network issues)
+    const VALID_EMAIL = "lfcaarestudiounits@gmail.com";
+    const VALID_PASS = "Damilare123@...1."; // Change this string to whatever password you want to use
 
     const authSection = document.getElementById('authSection');
     const adminPanel = document.getElementById('adminPanel');
@@ -302,44 +291,47 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const authError = document.getElementById('authError');
 
-    // Monitor Auth State
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        authSection.style.display = 'none';
-        adminPanel.style.display = 'block';
-        logoutBtn.style.display = 'block';
-        loadManageCategory('announcements');
-      } else {
-        authSection.style.display = 'block';
-        adminPanel.style.display = 'none';
-        logoutBtn.style.display = 'none';
-      }
-    });
+    // sessionStorage forces login on EVERY new browser session/tab refresh
+    if (sessionStorage.getItem('lfc_admin_authenticated') === 'true') {
+      showDashboard();
+    } else {
+      showLogin();
+    }
+
+    function showDashboard() {
+      authSection.style.display = 'none';
+      adminPanel.style.display = 'block';
+      logoutBtn.style.display = 'block';
+      loadManageCategory('announcements');
+    }
+
+    function showLogin() {
+      authSection.style.display = 'block';
+      adminPanel.style.display = 'none';
+      logoutBtn.style.display = 'none';
+    }
 
     // Login Handler
-    loginForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
       authError.style.display = 'none';
       const email = document.getElementById('emailInput').value.trim();
-      const password = document.getElementById('passwordInput').value;
+      const password = document.getElementById('passwordInput').value.trim();
 
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
+      if (email.toLowerCase() === VALID_EMAIL.toLowerCase() && password === VALID_PASS) {
+        sessionStorage.setItem('lfc_admin_authenticated', 'true');
+        showDashboard();
         loginForm.reset();
-      } catch (err) {
-        console.error("Login error:", err);
+      } else {
         authError.style.display = 'block';
         authError.textContent = "Invalid email or password. Please try again.";
       }
     });
 
     // Logout Handler
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await signOut(auth);
-      } catch (err) {
-        console.error("Logout error:", err);
-      }
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('lfc_admin_authenticated');
+      location.reload();
     });
 
     // Form Dynamic Toggle Logic
@@ -515,36 +507,25 @@
       });
     }
 
-    // Secure Delete Record Handler (Prompts for password verification before executing delete)
+    // Secure Delete Handler with Password Verification
     window.deleteItem = async function(category, docId, title) {
       const passwordPrompt = prompt(`Security Verification Required:\nEnter your admin password to delete "${title}":`);
       
       if (!passwordPrompt) {
-        return; // Cancelled
+        return; // User cancelled prompt
       }
 
-      const user = auth.currentUser;
-      if (!user || !user.email) {
-        alert("Authentication session expired. Please log in again.");
-        location.reload();
+      if (passwordPrompt.trim() !== VALID_PASS) {
+        alert("Incorrect password. Deletion cancelled.");
         return;
       }
 
       try {
-        // Re-authenticate user with their password before allowing deletion
-        const credential = EmailAuthProvider.credential(user.email, passwordPrompt);
-        await reauthenticateWithCredential(user, credential);
-
-        // Password correct, proceed with deletion
         await deleteDoc(doc(db, category, docId));
         alert(`Successfully deleted "${title}"`);
       } catch (err) {
-        console.error("Deletion security error:", err);
-        if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-          alert("Incorrect password. Deletion cancelled.");
-        } else {
-          alert("Failed to delete: " + err.message);
-        }
+        console.error("Delete failed:", err);
+        alert("Failed to delete: " + err.message);
       }
     };
   </script>
