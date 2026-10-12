@@ -215,17 +215,14 @@
 
         const announcementText = data.content || data.body || data.message || data.details || data.text || data.announcement || data.description || "";
 
-        // Bulletproof PDF button check
-        let pdfButton = "";
-        const rawPdf = data.pdfUrl || data.pdf || data.pdfLink || data.fileUrl || data.url || "";
-        const pdfUrlVal = typeof rawPdf === 'string' ? rawPdf.trim() : "";
-        if (pdfUrlVal.length > 0) {
-          pdfButton = `
-            <a href="${pdfUrlVal}" target="_blank" class="btn-action">
-              📥 Download / View PDF Guidelines
-            </a>
-          `;
-        }
+        // FORCED PDF LINK: Uses database pdfUrl if present, otherwise uses your exact Google Drive link as a fallback
+        const targetPdfUrl = data.pdfUrl || "https://drive.google.com/file/d/1xWExWV1EONjM7gy04maebb8niSzp-lB9/preview";
+        
+        const pdfButton = `
+          <a href="${targetPdfUrl}" target="_blank" class="btn-action">
+            📥 Download / View PDF Guidelines
+          </a>
+        `;
 
         // Bulletproof External Link button check
         let linkButton = "";
@@ -255,7 +252,6 @@
 
         announcementsContainer.appendChild(card);
       });
-    });
   </script>
 </body>
 </html>
