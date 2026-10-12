@@ -41,7 +41,7 @@
       .nav-btn { margin-top: 0; }
     }
 
-    /* CONTAINER & ANNOUNCEMENT STYLES */
+    /* CONTAINER & CARD STYLES */
     .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
 
     .announcements-grid {
@@ -85,10 +85,32 @@
       white-space: pre-line;
     }
 
+    .action-btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .btn-action {
+      display: inline-block;
+      background: var(--forest);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-action:hover { background: #0d382b; }
+
     .announcement-card small {
       font-family: "DM Mono", monospace;
       font-size: 0.75rem;
       color: #777;
+      display: block;
+      margin-top: 12px;
     }
 
     footer { background: var(--ink); color: #8a9e97; padding: 40px; text-align: center; font-size: 0.85rem; margin-top: 60px; }
@@ -167,7 +189,6 @@
     const db = getFirestore(app);
 
     const announcementsContainer = document.getElementById('announcementsContainer');
-
     const q = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
 
     onSnapshot(q, (snapshot) => {
@@ -192,8 +213,21 @@
           dateString = data.date;
         }
 
-        // Checks all common field names for announcement text
         const announcementText = data.content || data.body || data.message || data.details || data.text || data.announcement || data.description || "";
+
+        // Build PDF download button if pdfUrl was provided
+        const pdfButton = data.pdfUrl ? `
+          <a href="${data.pdfUrl}" target="_blank" class="btn-action">
+            📥 Download / View PDF Guidelines
+          </a>
+        ` : '';
+
+        // Build External Action link if provided
+        const linkButton = data.link ? `
+          <a href="${data.link}" target="_blank" class="btn-action" style="background: #10221d;">
+            🔗 Open Link / Resource
+          </a>
+        ` : '';
 
         const card = document.createElement("div");
         card.className = "announcement-card";
@@ -202,7 +236,11 @@
           <span class="tag">${data.category || data.tag || "CHURCH ANNOUNCEMENT"}</span>
           <h3>${data.title || "Announcement"}</h3>
           <p>${announcementText}</p>
-          <small>${dateString}</small>
+          <div class="action-btns">
+            ${pdfButton}
+            ${linkButton}
+          </div>
+          ${dateString ? `<small>Date: \${dateString}</small>` : ''}
         `;
 
         announcementsContainer.appendChild(card);
