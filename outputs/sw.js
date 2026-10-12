@@ -41,24 +41,25 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // IGNORE external requests (Firebase, Google APIs, extensions) so they never throw cache errors
-  if (url.origin !== location.origin || url.pathname.includes('googleapis') || url.pathname.includes('identitytoolkit')) {
-    return; 
+  // 1. Skip caching for video and audio files to prevent stream response errors
+  if (url.pathname.endsWith('.mp4') || url.pathname.endsWith('.webm') || url.pathname.endsWith('.mp3')) {
+    return; // Let browser handle media streaming natively
   }
 
+  // 2. Safely handle standard requests
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request).then((networkResponse) => {
-        return caches.open('v1').then((cache) => {
-          // Only cache valid basic responses
-          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-            cache.put(event.request, networkResponse.clone());
-          }
-          return networkResponse;
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).catch((err) => {
+        console.warn('Network fetch failed for:', event.request.url, err);
+        // Ensure we never return undefined/null to event.respondWith
+        return new Response('Network error occurred', {
+          status: 408,
+          headers: { 'Content-Type': 'text/plain' }
         });
       });
-    }).catch(() => {
-      // Fallback for offline pages if needed
     })
   );
 });
