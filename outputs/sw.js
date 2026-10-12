@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lfc-aare-v3';
+const CACHE_NAME = 'lfc-aare-v4';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -37,16 +37,34 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event: Network First with Cache Fallback for dynamic pages
+// Fetch Event: Network-First Strategy for HTML pages, Cache-First for static assets
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // 1. Skip caching for video and audio files to prevent stream response errors
+  // 1. Skip caching for video and audio streams
   if (url.pathname.endsWith('.mp4') || url.pathname.endsWith('.webm') || url.pathname.endsWith('.mp3')) {
-    return; // Let browser handle media streaming natively
+    return;
   }
 
-  // 2. Safely handle standard requests
+  // 2. NETWORK FIRST strategy for HTML pages so code updates load immediately
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // 3. CACHE FIRST strategy for static images and assets
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -54,7 +72,6 @@ self.addEventListener('fetch', (event) => {
       }
       return fetch(event.request).catch((err) => {
         console.warn('Network fetch failed for:', event.request.url, err);
-        // Ensure we never return undefined/null to event.respondWith
         return new Response('Network error occurred', {
           status: 408,
           headers: { 'Content-Type': 'text/plain' }
