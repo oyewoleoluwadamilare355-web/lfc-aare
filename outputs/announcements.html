@@ -215,19 +215,27 @@
 
         const announcementText = data.content || data.body || data.message || data.details || data.text || data.announcement || data.description || "";
 
-        // Build PDF download button if pdfUrl was provided
-        const pdfButton = data.pdfUrl ? `
-          <a href="${data.pdfUrl}" target="_blank" class="btn-action">
-            📥 Download / View PDF Guidelines
-          </a>
-        ` : '';
+        // Robust PDF button check (ignores empty strings or whitespace)
+        let pdfButton = "";
+        const pdfUrlVal = (data.pdfUrl || "").trim();
+        if (pdfUrlVal.length > 0) {
+          pdfButton = `
+            <a href="${pdfUrlVal}" target="_blank" class="btn-action">
+              📥 Download / View PDF Guidelines
+            </a>
+          `;
+        }
 
-        // Build External Action link if provided
-        const linkButton = data.link ? `
-          <a href="${data.link}" target="_blank" class="btn-action" style="background: #10221d;">
-            🔗 Open Link / Resource
-          </a>
-        ` : '';
+        // Robust External Link button check (only renders if valid URL exists)
+        let linkButton = "";
+        const linkVal = (data.link || "").trim();
+        if (linkVal.length > 0) {
+          linkButton = `
+            <a href="${linkVal}" target="_blank" class="btn-action" style="background: #10221d;">
+              🔗 Open Link / Resource
+            </a>
+          `;
+        }
 
         const card = document.createElement("div");
         card.className = "announcement-card";
