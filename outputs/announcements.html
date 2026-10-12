@@ -215,9 +215,10 @@
 
         const announcementText = data.content || data.body || data.message || data.details || data.text || data.announcement || data.description || "";
 
-        // Robust PDF button check (ignores empty strings or whitespace)
+        // Bulletproof PDF button check
         let pdfButton = "";
-        const pdfUrlVal = (data.pdfUrl || "").trim();
+        const rawPdf = data.pdfUrl || data.pdf || data.pdfLink || data.fileUrl || data.url || "";
+        const pdfUrlVal = typeof rawPdf === 'string' ? rawPdf.trim() : "";
         if (pdfUrlVal.length > 0) {
           pdfButton = `
             <a href="${pdfUrlVal}" target="_blank" class="btn-action">
@@ -226,9 +227,10 @@
           `;
         }
 
-        // Robust External Link button check (only renders if valid URL exists)
+        // Bulletproof External Link button check
         let linkButton = "";
-        const linkVal = (data.link || "").trim();
+        const rawLink = data.link || "";
+        const linkVal = typeof rawLink === 'string' ? rawLink.trim() : "";
         if (linkVal.length > 0) {
           linkButton = `
             <a href="${linkVal}" target="_blank" class="btn-action" style="background: #10221d;">
