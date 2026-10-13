@@ -826,9 +826,25 @@
         <button id="showPlanBtn" onclick="toggleBibleTab('plan')" style="flex:1; padding: 10px; background: #f7f5ef; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Daily Plan</button>
       </div>
 
-      <!-- BIBLE GATEWAY EMBEDDABLE READER IFRAME -->
+     <!-- 4. INTEGRATED BIBLE & DAILY READING PLAN (YOUVERSION PLATFORM) -->
+    <section class="card">
+      <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 16px;">📖 Holy Bible & Reading Plan</h2>
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <button id="showBibleBtn" onclick="toggleBibleTab('bible')" style="flex:1; padding: 10px; background: var(--forest); color: #ffffff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Online Bible</button>
+        <button id="showPlanBtn" onclick="toggleBibleTab('plan')" style="flex:1; padding: 10px; background: #f7f5ef; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Daily Plan</button>
+      </div>
+
+      <!-- YOUVERSION AD-FREE BIBLE SECTION -->
       <div id="bibleTab">
-        <iframe src="https://www.biblegateway.com/passage/?search=Genesis+1&version=NIV" style="width: 100%; height: 500px; border: 1px solid var(--line); border-radius: 8px;"></iframe>
+        <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 30px 20px; text-align: center;">
+          <p style="font-size: 1.05rem; color: var(--ink); margin-top: 0; margin-bottom: 16px; font-weight: 500;">
+            Read the Scriptures clean and ad-free with YouVersion.
+          </p>
+          <a href="https://www.bible.com/bible/111/GEN.1.NIV" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: var(--forest); color: #ffffff; padding: 12px 24px; border-radius: 6px; font-weight: 700; text-decoration: none;">
+            📖 Open YouVersion Bible Reader
+          </a>
+        </div>
       </div>
 
       <!-- DAILY READING PLAN OUTLINE -->
