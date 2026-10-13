@@ -817,7 +817,7 @@
       </div>
     </section>
 
-    <!-- 4. INTEGRATED BIBLE & DAILY READING PLAN -->
+    <!-- 4. INTEGRATED BIBLE & DAILY READING PLAN (UPDATED TO YOUVERSION) -->
     <section class="card">
       <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 16px;">📖 Holy Bible & Reading Plan</h2>
       
@@ -826,9 +826,12 @@
         <button id="showPlanBtn" onclick="toggleBibleTab('plan')" style="flex:1; padding: 10px; background: #f7f5ef; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Daily Plan</button>
       </div>
 
-      <!-- BIBLE GATEWAY EMBEDDABLE READER IFRAME -->
-      <div id="bibleTab">
-        <iframe src="https://www.biblegateway.com/passage/?search=Genesis+1&version=NIV" style="width: 100%; height: 500px; border: 1px solid var(--line); border-radius: 8px;"></iframe>
+      <!-- YOUVERSION AD-FREE BIBLE SECTION -->
+      <div id="bibleTab" style="background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 30px 20px; text-align: center;">
+        <p style="font-size: 1.05rem; color: var(--ink); margin-top: 0; margin-bottom: 16px; font-weight: 500;">Enjoy a completely ad-free reading and listening experience powered by YouVersion.</p>
+        <a href="https://www.bible.com/bible" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display: inline-block; background: var(--forest); text-decoration: none;">
+          📖 Open YouVersion Bible Reader
+        </a>
       </div>
 
       <!-- DAILY READING PLAN OUTLINE -->
@@ -905,7 +908,7 @@
     </div>
   </div>
 
-  <!-- SCRIPT FOR SHILOH COUNTDOWN TIMER -->
+  <!-- SCRIPT FOR SHILOH COUNTDOWN TIMER & TAB TOGGLING -->
   <script>
     function updateShilohCountdown() {
       const targetDate = new Date("December 8, 2026 07:00:00 GMT+0100").getTime();
@@ -929,19 +932,8 @@
         document.getElementById("cdSecs").textContent = "00";
       }
     }
-
     setInterval(updateShilohCountdown, 1000);
     updateShilohCountdown();
-  </script>
-
-  <!-- SCRIPT TO TOGGLE MOBILE MENU & BIBLE TAB -->
-  <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const navMenu = document.getElementById('navMenu');
-
-    menuBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
 
     function toggleBibleTab(tab) {
       const bibleTab = document.getElementById('bibleTab');
@@ -954,328 +946,21 @@
         planTab.style.display = 'none';
         showBibleBtn.style.background = 'var(--forest)';
         showBibleBtn.style.color = '#ffffff';
+        showBibleBtn.style.border = 'none';
         showPlanBtn.style.background = '#f7f5ef';
         showPlanBtn.style.color = 'var(--ink)';
+        showPlanBtn.style.border = '1px solid var(--line)';
       } else {
         bibleTab.style.display = 'none';
         planTab.style.display = 'block';
         showPlanBtn.style.background = 'var(--forest)';
         showPlanBtn.style.color = '#ffffff';
+        showPlanBtn.style.border = 'none';
         showBibleBtn.style.background = '#f7f5ef';
         showBibleBtn.style.color = 'var(--ink)';
+        showBibleBtn.style.border = '1px solid var(--line)';
       }
     }
-  </script>
-
-  <!-- SCRIPT FOR AUDIO SERMON PLAYER WITH ANIMATED VIDEO COVER, DOWNLOAD LINKS & LOCK SCREEN CONTROLS -->
-  <script>
-    const audioSermons = [
-      {
-        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 1",
-        preacher: "Sunday Service Message",
-        cover: "./5929544454863068666.mp4",
-        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3"
-      },
-      {
-        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 2",
-        preacher: "Sunday Service Message",
-        cover: "./5929544454863068666.mp4",
-        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3.2.mp3"
-      },
-      {
-        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 3",
-        preacher: "Sunday Service Message",
-        cover: "./5929544454863068666.mp4",
-        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3.3.mp3"
-      },
-      {
-        title: "Prophetic Blessings October",
-        preacher: "Prophetic Service",
-        cover: "./5929544454863068666.mp4",
-        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/Prophetic.Blessings.October.mp3"
-      },
-      {
-        title: "Showers of Blessings",
-        preacher: "Special Service Message",
-        cover: "./5929544454863068666.mp4",
-        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/Showers.of.Blessings.mp3"
-      }
-    ];
-
-    let currentTrackIndex = 0;
-    const audio = document.getElementById('sermonAudio');
-    const playBtn = document.getElementById('playAudioBtn');
-    const prevBtn = document.getElementById('prevAudioBtn');
-    const nextBtn = document.getElementById('nextAudioBtn');
-    const seekBackBtn = document.getElementById('seekBackBtn');
-    const seekForwardBtn = document.getElementById('seekForwardBtn');
-    const progressBar = document.getElementById('audioProgress');
-    const currentTimeEl = document.getElementById('currentTime');
-    const totalDurationEl = document.getElementById('totalDuration');
-    const titleEl = document.getElementById('currentAudioTitle');
-    const preacherEl = document.getElementById('currentAudioPreacher');
-    const playlistContainer = document.getElementById('playlistContainer');
-    const downloadAudioBtn = document.getElementById('downloadAudioBtn');
-
-    const coverVideo = document.getElementById('currentAudioCoverVideo');
-    const videoSource = document.getElementById('currentVideoSource');
-    const coverImg = document.getElementById('currentAudioCoverImg');
-
-    function loadTrack(index) {
-      currentTrackIndex = index;
-      const track = audioSermons[index];
-      audio.src = track.src;
-      titleEl.textContent = track.title;
-      preacherEl.textContent = track.preacher;
-      
-      // Update Main Download Button Target URL
-      if (downloadAudioBtn) {
-        downloadAudioBtn.href = track.src;
-        downloadAudioBtn.setAttribute('download', `${track.title}.mp3`);
-      }
-
-      // Update Cover Display (Check if Video or Image)
-      if (track.cover && track.cover.endsWith('.mp4')) {
-        coverImg.style.display = 'none';
-        coverVideo.style.display = 'block';
-        videoSource.src = track.cover;
-        coverVideo.load();
-        coverVideo.play();
-      } else {
-        coverVideo.style.display = 'none';
-        coverImg.style.display = 'block';
-        coverImg.src = track.cover || './icon-512.png?v=2';
-      }
-
-      updatePlaylistUI();
-
-      // Mobile Lock Screen & Control Center Media Controls
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: track.title,
-          artist: track.preacher,
-          album: "LFC Aare Sermons",
-          artwork: [
-            { src: './icon-512.png?v=2', sizes: '512x512', type: 'image/png' }
-          ]
-        });
-
-        navigator.mediaSession.setActionHandler('play', () => { audio.play(); playBtn.textContent = '⏸'; });
-        navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); playBtn.textContent = '▶'; });
-        navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
-        navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
-        navigator.mediaSession.setActionHandler('seekbackward', () => seekBackBtn.click());
-        navigator.mediaSession.setActionHandler('seekforward', () => seekForwardBtn.click());
-      }
-    }
-
-    function renderPlaylist() {
-      playlistContainer.innerHTML = '';
-      audioSermons.forEach((track, index) => {
-        const item = document.createElement('div');
-        item.className = `sermon-playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
-        
-        let coverMarkup = `<img src="${track.cover}" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover; flex-shrink: 0;" alt="thumb" />`;
-        if (track.cover && track.cover.endsWith('.mp4')) {
-          coverMarkup = `<video autoplay loop muted playsinline style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover; flex-shrink: 0;"><source src="${track.cover}" type="video/mp4"></video>`;
-        }
-
-        item.innerHTML = `
-          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-              ${coverMarkup}
-              <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${track.title}</span>
-            </div>
-            <a href="${track.src}" download target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" title="Download Sermon" style="color: #a3e6cd; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08); text-decoration: none;">
-              ⬇️
-            </a>
-          </div>
-        `;
-        item.onclick = () => {
-          loadTrack(index);
-          audio.play();
-          playBtn.textContent = '⏸';
-        };
-        playlistContainer.appendChild(item);
-      });
-    }
-
-    function updatePlaylistUI() {
-      const items = playlistContainer.querySelectorAll('.sermon-playlist-item');
-      items.forEach((item, idx) => {
-        if (idx === currentTrackIndex) {
-          item.classList.add('active');
-        } else {
-          item.classList.remove('active');
-        }
-      });
-    }
-
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    }
-
-    playBtn.addEventListener('click', () => {
-      if (!audio.src) {
-        loadTrack(0);
-      }
-      if (audio.paused) {
-        audio.play();
-        playBtn.textContent = '⏸';
-      } else {
-        audio.pause();
-        playBtn.textContent = '▶';
-      }
-    });
-
-    prevBtn.addEventListener('click', () => {
-      currentTrackIndex = (currentTrackIndex - 1 + audioSermons.length) % audioSermons.length;
-      loadTrack(currentTrackIndex);
-      audio.play();
-      playBtn.textContent = '⏸';
-    });
-
-    nextBtn.addEventListener('click', () => {
-      currentTrackIndex = (currentTrackIndex + 1) % audioSermons.length;
-      loadTrack(currentTrackIndex);
-      audio.play();
-      playBtn.textContent = '⏸';
-    });
-
-    seekBackBtn.addEventListener('click', () => {
-      audio.currentTime = Math.max(0, audio.currentTime - 10);
-    });
-
-    seekForwardBtn.addEventListener('click', () => {
-      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-    });
-
-    audio.addEventListener('timeupdate', () => {
-      if (audio.duration) {
-        const pct = (audio.currentTime / audio.duration) * 100;
-        progressBar.value = pct;
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-        totalDurationEl.textContent = formatTime(audio.duration);
-      }
-    });
-
-    progressBar.addEventListener('input', () => {
-      if (audio.duration) {
-        audio.currentTime = (progressBar.value / 100) * audio.duration;
-      }
-    });
-
-    audio.addEventListener('ended', () => {
-      nextBtn.click();
-    });
-
-    // Initialize default playlist track
-    renderPlaylist();
-    loadTrack(0);
-  </script>
-
-  <!-- PWA INSTALL EVENT LISTENER & POPUP CONTROLLER -->
-  <script>
-    let deferredPrompt;
-    const heroInstallBtn = document.getElementById('heroInstallBtn');
-    const pwaBanner = document.getElementById('pwaBanner');
-    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
-    const pwaCloseBtn = document.getElementById('pwaCloseBtn');
-
-    function showInstallBanner() {
-      if (!sessionStorage.getItem('pwaBannerDismissed') && pwaBanner) {
-        pwaBanner.classList.add('show');
-      }
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      showInstallBanner();
-    });
-
-    window.addEventListener('load', () => {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-      if (!isStandalone) {
-        setTimeout(showInstallBanner, 3000);
-      }
-    });
-
-    async function triggerInstallPrompt() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          console.log('App installed successfully');
-        }
-        deferredPrompt = null;
-        if (pwaBanner) pwaBanner.classList.remove('show');
-      } else {
-        alert("To install: tap your browser menu (⋮ or Share icon) and select 'Add to Home Screen' or 'Install App'.");
-      }
-    }
-
-    if (heroInstallBtn) heroInstallBtn.addEventListener('click', triggerInstallPrompt);
-    if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', triggerInstallPrompt);
-
-    if (pwaCloseBtn) {
-      pwaCloseBtn.addEventListener('click', () => {
-        if (pwaBanner) pwaBanner.classList.remove('show');
-        sessionStorage.setItem('pwaBannerDismissed', 'true');
-      });
-    }
-
-    window.addEventListener('appinstalled', () => {
-      if (pwaBanner) pwaBanner.classList.remove('show');
-    });
-  </script>
-
-  <!-- FIRESTORE LIVE LISTENER FOR PROPHETIC FOCUS COLLECTION -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // Your Firebase Project Credentials
-    const firebaseConfig = {
-      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
-      authDomain: "kingmegad-30f67.firebaseapp.com",
-      projectId: "kingmegad-30f67",
-      storageBucket: "kingmegad-30f67.firebasestorage.app",
-      messagingSenderId: "81567062415",
-      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
-      measurementId: "G-BVX8SEWFD0"
-    };
-
-    const defaultTitle = "SHOWERS OF BLESSINGS";
-    const defaultContent = "Ezekiel 34:26 - \"And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.\"";
-
-    async function fetchPropheticFocus() {
-      try {
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const querySnapshot = await getDocs(collection(db, "prophetic_focus"));
-        
-        if (!querySnapshot.empty) {
-          const docData = querySnapshot.docs[querySnapshot.docs.length - 1].data();
-          
-          if (docData.title) document.getElementById('focusTitle').textContent = docData.title;
-          if (docData.content) document.getElementById('focusContent').textContent = docData.content;
-
-          const pdfLink = document.getElementById('focusPdfLink');
-          if (docData.pdfUrl) {
-            pdfLink.href = docData.pdfUrl;
-            pdfLink.style.display = 'inline-block';
-          }
-        }
-      } catch (error) {
-        console.warn("Firestore fetch error, displaying defaults:", error);
-      }
-    }
-
-    fetchPropheticFocus();
   </script>
 </body>
 </html>
