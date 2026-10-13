@@ -3,542 +3,809 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LFC Aare | Living Faith Church</title>
-  
-  <!-- FAVICON & APPLE TOUCH ICON WITH CACHE BUSTING -->
+  <title>Living Faith Church Aare - Official Web App</title>
+
+  <!-- PWA & Web App Meta Tags -->
+  <meta name="theme-color" content="#0d2e23" />
+  <meta name="description" content="Welcome to Living Faith Church Aare (Winners Chapel). Access live audio sermons, prophetic focus, daily Bible reading, Shiloh countdown, and testimonies." />
   <link rel="icon" type="image/png" href="./icon-512.png?v=2" />
   <link rel="apple-touch-icon" href="./icon-512.png?v=2" />
-  
-  <!-- PWA MANIFEST & MOBILE THEME -->
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <meta name="theme-color" content="#124b3a" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
     :root {
-      --ink: #10221d;
-      --forest: #124b3a;
-      --paper: #f7f5ef;
-      --line: rgba(16, 34, 29, 0.15);
-      --red: #e52421;
-      --gold: #f5a623;
+      --forest: #0d2e23;
+      --forest-light: #184234;
+      --gold: #d4af37;
+      --gold-hover: #b89528;
+      --cream: #fbf9f4;
+      --white: #ffffff;
+      --ink: #1a231f;
+      --muted: #5e6d66;
+      --border-light: #e2ded4;
+      --shadow-sm: 0 4px 12px rgba(13, 46, 35, 0.05);
+      --shadow-md: 0 8px 24px rgba(13, 46, 35, 0.12);
+      --shadow-lg: 0 16px 36px rgba(13, 46, 35, 0.18);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
-    a { color: inherit; text-decoration: none; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--cream);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .serif-text {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     /* HEADER & NAVIGATION */
     header {
-      background: var(--forest);
-      color: #fff;
-      padding: 16px 24px;
-      position: relative;
-      z-index: 100;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(13, 46, 35, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
     }
-    .header-container {
-      max-width: 1100px;
+
+    .navbar {
+      max-width: 1280px;
       margin: 0 auto;
+      padding: 1rem 1.5rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
+
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    .brand-logo {
-      height: 42px;
-      width: auto;
-      object-fit: contain;
-      background: #fff;
-      padding: 4px;
-      border-radius: 50%;
-    }
-    .brand-title {
-      font-weight: 700;
-      font-size: 1rem;
-      line-height: 1.2;
-      color: #fff;
-    }
-    .brand-subtitle {
-      font-size: 0.75rem;
-      opacity: 0.8;
-      display: block;
+
+    .brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      border: 1.5px solid var(--gold);
     }
 
-    /* MENU TOGGLE BUTTON (Mobile Only) */
-    .menu-toggle {
+    .brand-title {
+      color: var(--white);
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-title span {
+      color: var(--gold);
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .nav-links {
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
+      gap: 1.75rem;
+      list-style: none;
     }
 
-    /* NAV LINKS */
-    nav {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      background: #0d382b;
-      padding: 16px 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: 14px;
-      gap: 12px;
-    }
-    nav.active {
-      display: flex;
-    }
-    nav a {
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.85);
       font-size: 0.95rem;
       font-weight: 500;
-      color: #e0f2ec;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    nav a:last-child {
-      border-bottom: none;
-    }
-    .nav-btn {
-      background: var(--red) !important;
-      color: #fff !important;
-      padding: 10px 16px !important;
-      border-radius: 4px;
-      font-weight: 700;
-      text-align: center;
-      margin-top: 6px;
+      transition: var(--transition);
     }
 
-    /* DESKTOP RESPONSIVENESS */
-    @media (min-width: 900px) {
-      .menu-toggle { display: none; }
-      nav {
-        display: flex !important;
-        flex-direction: row;
-        width: auto;
-        background: transparent;
-        padding: 0;
-        margin-top: 0;
-        border-top: none;
-        align-items: center;
-        gap: 18px;
-      }
-      nav a {
-        padding: 0;
-        border-bottom: none;
-      }
-      .nav-btn {
-        margin-top: 0;
-      }
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
     }
 
     /* HERO SECTION */
     .hero {
-      background: var(--forest);
-      color: #fff;
-      padding: 60px 24px;
-      text-align: left;
-    }
-    .hero-inner {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .hero-tag {
-      font: 600 0.75rem "DM Mono", monospace;
-      letter-spacing: 1.5px;
-      color: #a3e6cd;
-      margin-bottom: 12px;
-      display: block;
-    }
-    .hero h1 {
-      font-family: "Playfair Display", serif;
-      font-size: 2.8rem;
-      line-height: 1.15;
-      margin: 0 0 16px 0;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #d1e8e0;
-      margin-bottom: 28px;
-    }
-    .btn-group {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .btn-primary {
-      background: var(--red);
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 4px;
-      font-weight: 700;
-    }
-    .btn-secondary {
-      border: 1px solid rgba(255,255,255,0.4);
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 4px;
-      font-weight: 600;
+      position: relative;
+      background: linear-gradient(135deg, var(--forest) 0%, #061812 100%);
+      color: var(--white);
+      padding: 5rem 1.5rem 6rem;
+      text-align: center;
+      overflow: hidden;
     }
 
-    .btn-pwa-hero {
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-container {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #25d366;
-      color: #10221d;
-      padding: 12px 20px;
-      border-radius: 4px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: all 0.2s ease-in-out;
-      font-family: inherit;
-    }
-    .btn-pwa-hero:hover {
-      background: #1eb857;
-      transform: translateY(-1px);
-    }
-    .btn-pwa-hero svg {
-      fill: currentColor;
-    }
-
-    .btn-apk-fallback {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: #a3e6cd;
-      border: 1px dashed rgba(163, 230, 205, 0.4);
-      padding: 10px 16px;
-      border-radius: 4px;
-      font-weight: 600;
+      padding: 6px 16px;
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: var(--radius-full);
+      color: var(--gold);
       font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    /* CONTENT SECTIONS & CARDS */
-    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-    .card {
-      background: #ffffff;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      color: var(--white);
     }
 
-    /* AUDIO SERMON PLAYER STYLES */
-    .sermon-player-container {
-      background: linear-gradient(135deg, #10221d 0%, #124b3a 100%);
-      color: #ffffff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    .hero p {
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.82);
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+      font-weight: 300;
     }
-    .sermon-track-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      width: 100%;
-    }
-    .sermon-cover-box {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      overflow: hidden;
-      background: var(--red);
-      flex-shrink: 0;
+
+    .hero-cta {
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .sermon-details h3 {
-      margin: 0 0 4px 0;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      color: #ffffff;
-    }
-    .sermon-details p {
-      margin: 0;
-      font-size: 0.85rem;
-      color: #a3e6cd;
-      font-family: 'DM Mono', monospace;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
 
-    .btn-download-audio {
-      background: rgba(255, 255, 255, 0.15);
-      color: #a3e6cd;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      font-family: 'DM Mono', monospace;
+    .btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-    .btn-download-audio:hover {
-      background: rgba(255, 255, 255, 0.25);
-      color: #ffffff;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      text-decoration: none;
     }
 
-    .audio-controls {
+    .btn-gold {
+      background: var(--gold);
+      color: var(--forest);
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-gold:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--white);
+    }
+
+    /* MAIN CONTAINER & SECTIONS */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+      font-size: 2.25rem;
+      color: var(--forest);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* SHILOH COUNTDOWN SECTION */
+    .shiloh-card {
+      background: linear-gradient(135deg, var(--forest-light) 0%, var(--forest) 100%);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2rem;
+      color: var(--white);
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 4rem;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .shiloh-card h3 {
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .shiloh-timer {
+      display: flex;
+      justify-content: center;
+      gap: 1.25rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .timer-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      min-width: 90px;
+      backdrop-filter: blur(8px);
+    }
+
+    .timer-num {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--white);
+      display: block;
+      line-height: 1;
+    }
+
+    .timer-label {
+      font-size: 0.75rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 6px;
+      display: block;
+    }
+
+    /* PROPHETIC FOCUS VIDEO & DOCS */
+    .focus-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: 900px) {
+      .focus-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .focus-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+    }
+
+    .focus-card h3 {
+      font-size: 1.75rem;
+      color: var(--forest);
+      margin-bottom: 1rem;
+    }
+
+    .focus-content {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      background: #000;
+    }
+
+    .video-wrapper iframe, .video-wrapper video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* AUDIO SERMON PLAYER SECTION */
+    .sermon-player-container {
+      background: var(--forest);
+      border-radius: var(--radius-lg);
+      color: var(--white);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 4rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    @media (max-width: 850px) {
+      .sermon-player-container {
+        grid-template-columns: 1fr;
+        padding: 1.75rem;
+      }
+    }
+
+    .sermon-cover-box {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      background: #000;
+      box-shadow: var(--shadow-md);
+    }
+
+    .sermon-cover-box img, .sermon-cover-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .player-controls-wrap {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 1.25rem;
     }
-    .audio-progress-container {
+
+    .sermon-info h3 {
+      font-size: 1.35rem;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 0.25rem;
+    }
+
+    .sermon-info p {
+      color: var(--gold);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .progress-wrap {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      color: #d1e8e0;
+      gap: 1rem;
     }
-    .audio-progress-bar {
+
+    .progress-bar {
       flex: 1;
-      accent-color: var(--red);
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+      outline: none;
       cursor: pointer;
     }
-    .audio-buttons {
+
+    .progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--gold);
+      cursor: pointer;
+    }
+
+    .time-stamp {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .buttons-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      margin-top: 6px;
+      gap: 1.25rem;
+      margin-top: 0.5rem;
     }
-    .btn-audio-control {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      border-radius: 50%;
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--white);
       width: 44px;
       height: 44px;
-      display: flex;
+      border-radius: 50%;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      transition: var(--transition);
       font-size: 1.1rem;
-      transition: background 0.2s;
-    }
-    .btn-audio-control:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-    .btn-audio-play {
-      background: var(--red);
-      width: 52px;
-      height: 52px;
-      font-size: 1.3rem;
-      border: none;
-    }
-    .btn-audio-play:hover {
-      background: #c81e1b;
     }
 
-    .sermon-playlist {
-      margin-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      padding-top: 14px;
+    .control-btn:hover {
+      background: var(--gold);
+      color: var(--forest);
+    }
+
+    .control-btn.play-btn {
+      width: 58px;
+      height: 58px;
+      background: var(--gold);
+      color: var(--forest);
+      font-size: 1.4rem;
+    }
+
+    .control-btn.play-btn:hover {
+      background: var(--gold-hover);
+      transform: scale(1.05);
+    }
+
+    /* PLAYLIST STYLES */
+    .playlist-card {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: var(--radius-md);
+      padding: 1rem;
       max-height: 220px;
       overflow-y: auto;
-    }
-    .sermon-playlist-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 0.9rem;
-    }
-    .sermon-playlist-item:hover, .sermon-playlist-item.active {
-      background: rgba(255, 255, 255, 0.12);
-    }
-    .sermon-playlist-item.active {
-      border-left: 3px solid var(--red);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* SHILOH & EVENT COUNTDOWN STYLES */
-    .countdown-card {
-      background: linear-gradient(135deg, #0f2d23 0%, #124b3a 100%);
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .sermon-playlist-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 4px;
+    }
+
+    .sermon-playlist-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .sermon-playlist-item.active {
+      background: rgba(212, 175, 55, 0.18);
+      color: var(--gold);
+      font-weight: 600;
+      border-left: 3px solid var(--gold);
+    }
+
+    /* YOUVERSION BIBLE & DAILY PLAN SECTION */
+    .bible-container {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+      margin-bottom: 4rem;
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 1rem;
+    }
+
+    .tab-btn {
+      padding: 8px 20px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: #f7f5ef;
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .tab-btn.active {
+      background: var(--forest);
+      color: var(--white);
+    }
+
+    .youversion-card {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      border-radius: var(--radius-md);
+      padding: 2.5rem 2rem;
+      color: var(--white);
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .youversion-card h3 {
+      font-size: 1.75rem;
+      color: #f3f4f6;
+      margin-bottom: 0.75rem;
+    }
+
+    .youversion-card p {
+      color: #9ca3af;
+      max-width: 580px;
+      margin: 0 auto 1.75rem;
+      font-size: 0.98rem;
+    }
+
+    /* SERVICE TIMETABLE CARDS */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.75rem;
+      margin-bottom: 4rem;
+    }
+
+    .service-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
       position: relative;
       overflow: hidden;
     }
-    .countdown-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .countdown-badge {
-      background: var(--red);
-      color: #ffffff;
-      font-family: "DM Mono", monospace;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 20px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    .countdown-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin: 20px 0;
-      text-align: center;
-    }
-    .countdown-box {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 14px 8px;
-      backdrop-filter: blur(4px);
-    }
-    .countdown-num {
-      font-family: "DM Mono", monospace;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1;
-      display: block;
-    }
-    .countdown-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #a3e6cd;
-      margin-top: 6px;
-      display: block;
-    }
-    @media (max-width: 480px) {
-      .countdown-num { font-size: 1.3rem; }
-      .countdown-grid { gap: 8px; }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gold);
     }
 
-    /* SERVICE TIMETABLE STYLES */
-    .timetable-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-      margin-top: 16px;
-    }
-    .timetable-card {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--forest);
-      border-radius: 8px;
-      padding: 16px;
-    }
-    .timetable-card.midweek {
-      border-left-color: var(--red);
-    }
-    .timetable-card h4 {
-      margin: 0 0 6px 0;
-      font-family: "Playfair Display", serif;
-      font-size: 1.1rem;
-      color: var(--ink);
-    }
-    .timetable-card .time-badge {
-      display: inline-block;
-      font-family: "DM Mono", monospace;
-      font-weight: 600;
-      font-size: 0.85rem;
-      background: var(--forest);
-      color: #ffffff;
-      padding: 4px 8px;
-      border-radius: 4px;
-      margin-top: 4px;
-    }
-    .timetable-card.midweek .time-badge {
-      background: var(--red);
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
     }
 
-    /* TESTIMONIES STYLES */
-    .testimonies-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      margin-top: 24px;
-    }
-    .testimony-card {
-      background: #ffffff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .testimony-card h3 {
-      margin: 0 0 8px 0;
-      font-family: "Playfair Display", serif;
+    .service-card h3 {
       color: var(--forest);
-      font-size: 1.2rem;
+      font-size: 1.35rem;
+      margin-bottom: 0.5rem;
     }
-    .testimony-card p {
+
+    .service-time {
+      color: var(--gold-hover);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    /* TESTIMONIES & PRAYER REQUEST FORMS */
+    .forms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: 850px) {
+      .forms-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-card h3 {
+      font-size: 1.5rem;
+      color: var(--forest);
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      font-family: inherit;
       font-size: 0.95rem;
-      line-height: 1.5;
-      color: #333;
-      margin-bottom: 12px;
-      white-space: pre-line;
-    }
-    .testimony-card small {
-      font-family: "DM Mono", monospace;
-      font-size: 0.75rem;
-      color: #777;
+      outline: none;
+      transition: var(--transition);
+      background: var(--cream);
     }
 
-    footer { background: var(--ink); color: #8a9e97; padding: 40px; text-align: center; font-size: 0.85rem; }
+    .form-control:focus {
+      border-color: var(--forest);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(13, 46, 35, 0.1);
+    }
 
-    /* PWA INSTALL BANNER STYLES */
+    textarea.form-control {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--forest);
+      color: var(--white);
+      padding: 4rem 1.5rem 2rem;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr repeat(2, 1fr);
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    .footer-brand p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 1rem;
+      font-size: 0.92rem;
+      max-width: 360px;
+    }
+
+    .footer-col h4 {
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.65rem;
+    }
+
+    .footer-col ul a {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .footer-col ul a:hover {
+      color: var(--gold);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* PWA INSTALL BANNER */
     .pwa-install-banner {
       position: fixed;
-      bottom: -120px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 480px;
-      background: #ffffff;
-      border: 1px solid rgba(18, 75, 58, 0.2);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      border-radius: 16px;
-      padding: 16px;
-      display: flex;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      max-width: 440px;
+      margin: 0 auto;
+      background: var(--forest);
+      color: var(--white);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 2000;
+      display: none;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      z-index: 9999;
-      transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      gap: 1rem;
+      transform: translateY(120%);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .pwa-install-banner.show {
-      bottom: 20px;
+      display: flex;
+      transform: translateY(0);
     }
 
     .pwa-info {
@@ -548,29 +815,20 @@
     }
 
     .pwa-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      object-fit: contain;
-      background: #f7f5ef;
-      padding: 4px;
-      border: 1px solid #e0e0e0;
-      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
     }
 
     .pwa-text h4 {
-      margin: 0;
       font-size: 0.95rem;
-      font-weight: 700;
-      color: #124b3a;
-      font-family: "DM Sans", sans-serif;
+      color: var(--white);
     }
 
     .pwa-text p {
-      margin: 2px 0 0 0;
       font-size: 0.78rem;
-      color: #555555;
-      font-family: "DM Sans", sans-serif;
+      color: rgba(255, 255, 255, 0.75);
     }
 
     .pwa-actions {
@@ -580,323 +838,308 @@
     }
 
     .btn-pwa-install {
-      background: #124b3a;
-      color: #ffffff;
+      background: var(--gold);
+      color: var(--forest);
       border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 700;
       cursor: pointer;
-      font-family: "DM Sans", sans-serif;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-
-    .btn-pwa-install:hover {
-      background: #0d382b;
     }
 
     .btn-pwa-close {
       background: transparent;
-      color: #888;
       border: none;
-      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.25rem;
       cursor: pointer;
-      padding: 4px 8px;
-      line-height: 1;
-      border-radius: 50%;
+      padding: 4px;
     }
 
-    .btn-pwa-close:hover {
-      color: #e52421;
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--forest);
+        flex-direction: column;
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="header-container">
+    <nav class="navbar">
       <div class="brand">
-        <img class="brand-logo" src="./icon-512.png?v=2" alt="LFC Logo" />
-        <div>
-          <span class="brand-title">LIVING FAITH CHURCH</span>
-          <span class="brand-subtitle">LFC AARE</span>
+        <img src="./icon-512.png?v=2" alt="LFC Aare Logo" onerror="this.src='https://placehold.co/100x100/0d2e23/d4af37?text=LFC+Aare'" />
+        <div class="brand-title">
+          LFC AARE
+          <span>Winners Chapel</span>
         </div>
       </div>
-
-      <!-- TOGGLE BUTTON -->
-      <button class="menu-toggle" id="menuBtn" aria-label="Toggle Navigation">
-        <span>Menu</span> &#9776;
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">
+        <i class="fas fa-bars"></i>
       </button>
-    </div>
-
-    <!-- EXPANDABLE MENU LINKS -->
-    <nav id="navMenu">
-      <a href="./index.html">Home</a>
-      <a href="./announcements.html">Announcements</a>
-      <a href="./wsf-outline.html">WSF Outline</a>
-      <a href="./testimonies.html">Testimonies</a>
-      <a href="./hymns.html">Hymns</a>
-      <a href="./book-of-the-month.html">Book of the Month</a>
-      <a href="./join.html" class="nav-btn">Join Studio Units</a>
+      <ul class="nav-links" id="navMenu">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#sermons">Audio Sermons</a></li>
+        <li><a href="#focus">Prophetic Focus</a></li>
+        <li><a href="#bible">Bible & Plan</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#prayer">Prayer Request</a></li>
+      </ul>
     </nav>
   </header>
 
-  <section class="hero">
-    <div class="hero-inner">
-      <span class="hero-tag">LFC AARE CHURCH &bull; MEDIA & TECH STUDIO</span>
-      <h1>Serving God through creativity.</h1>
-      <p>Welcome to Living Faith Church (LFC Aare). Join us to worship, grow in God's word, and serve through our studio media and tech units.</p>
-
-      <div class="btn-group">
-        <a href="./wsf-outline.html" class="btn-primary">WSF Outline &rarr;</a>
-        <a href="./join.html" class="btn-secondary">Join Studio Units &rarr;</a>
-        
-        <!-- INSTANT PWA INSTALL BUTTON (CLEAN & NO WARNINGS) -->
-        <button id="heroInstallBtn" class="btn-pwa-hero">
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-          </svg>
-          Install App Instantly
-        </button>
-
-        <!-- STANDALONE APK DIRECT DOWNLOAD OPTION -->
-        <a href="https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.2/LFC.Aare.apk" class="btn-apk-fallback" target="_blank" rel="noopener noreferrer">
-          Direct .APK
-        </a>
+  <section class="hero" id="home">
+    <div class="hero-container">
+      <div class="badge"><i class="fas fa-church"></i> Welcome to God's Presence</div>
+      <h1>Living Faith Church<br><span style="color: var(--gold);">Aare, Ogbomoso</span></h1>
+      <p>Experience the operational power of God's word, spiritual empowerment, and supernatural turnarounds in an atmosphere of active faith.</p>
+      <div class="hero-cta">
+        <a href="#sermons" class="btn btn-gold"><i class="fas fa-play-circle"></i> Listen to Sermons</a>
+        <button id="heroInstallBtn" class="btn btn-outline"><i class="fas fa-download"></i> Install Web App</button>
       </div>
     </div>
   </section>
 
   <div class="container">
 
-    <!-- AUDIO SERMON & MESSAGE PLAYER WITH ANIMATED VIDEO COVER & DIRECT DOWNLOAD -->
-    <section class="card sermon-player-container">
-      <span style="font: 600 0.75rem 'DM Mono', monospace; color: #a3e6cd; display: block; margin-bottom: 8px;">AUDIO MESSAGES & SERMONS</span>
-      
-      <div class="sermon-track-info">
-        <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
-          <div class="sermon-cover-box" id="sermonCoverContainer">
-            <video id="currentAudioCoverVideo" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
-              <source id="currentVideoSource" src="./5929544454863068666.mp4" type="video/mp4" />
-            </video>
-            <img id="currentAudioCoverImg" src="./icon-512.png?v=2" alt="Cover" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
-          </div>
-          <div class="sermon-details" style="overflow: hidden;">
-            <h3 id="currentAudioTitle" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Select a Sermon</h3>
-            <p id="currentAudioPreacher">LFC Aare Audio Library</p>
-          </div>
+    <section class="shiloh-card">
+      <h3><i class="fas fa-fire"></i> Countdown to Shiloh 2026</h3>
+      <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Gathering of the Giants • Annual Prophetic Convocation</p>
+      <div class="shiloh-timer">
+        <div class="timer-box">
+          <span class="timer-num" id="cdDays">00</span>
+          <span class="timer-label">Days</span>
         </div>
+        <div class="timer-box">
+          <span class="timer-num" id="cdHours">00</span>
+          <span class="timer-label">Hours</span>
+        </div>
+        <div class="timer-box">
+          <span class="timer-num" id="cdMins">00</span>
+          <span class="timer-label">Minutes</span>
+        </div>
+        <div class="timer-box">
+          <span class="timer-num" id="cdSecs">00</span>
+          <span class="timer-label">Seconds</span>
+        </div>
+      </div>
+    </section>
 
-        <!-- MAIN AUDIO DOWNLOAD BUTTON -->
-        <a id="downloadAudioBtn" href="#" download target="_blank" rel="noopener noreferrer" class="btn-download-audio">
-          📥 Download
+    <section class="focus-grid" id="focus">
+      <div class="focus-card">
+        <div class="badge" style="background: rgba(13, 46, 35, 0.08); color: var(--forest); border-color: rgba(13, 46, 35, 0.2);">
+          Monthly Prophetic Focus
+        </div>
+        <h3 id="focusTitle">SHOWERS OF BLESSINGS</h3>
+        <p class="focus-content" id="focusContent">
+          Ezekiel 34:26 - "And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing."
+        </p>
+        <a href="#" id="focusPdfLink" class="btn btn-gold" style="display: none;" target="_blank" rel="noopener">
+          <i class="fas fa-file-pdf"></i> Download Recommended Books / PDF
         </a>
       </div>
-
-      <!-- HTML5 AUDIO PLAYER CONTROLS -->
-      <audio id="sermonAudio" preload="metadata"></audio>
-
-      <div class="audio-controls">
-        <div class="audio-progress-container">
-          <span id="currentTime">00:00</span>
-          <input type="range" id="audioProgress" class="audio-progress-bar" value="0" min="0" max="100" />
-          <span id="totalDuration">00:00</span>
-        </div>
-
-        <div class="audio-buttons">
-          <button class="btn-audio-control" id="prevAudioBtn" title="Previous Track">⏮</button>
-          <button class="btn-audio-control" id="seekBackBtn" title="Rewind 10s">⏪</button>
-          <button class="btn-audio-control btn-audio-play" id="playAudioBtn" title="Play/Pause">▶</button>
-          <button class="btn-audio-control" id="seekForwardBtn" title="Forward 10s">⏩</button>
-          <button class="btn-audio-control" id="nextAudioBtn" title="Next Track">⏭</button>
-        </div>
-      </div>
-
-      <!-- PLAYLIST SELECTOR WITH ITEM DOWNLOAD BUTTONS -->
-      <div class="sermon-playlist" id="playlistContainer">
-        <!-- Audio items populated dynamically via JS -->
-      </div>
-    </section>
-
-    <!-- 1. SHILOH 2026 ANIMATED COUNTDOWN CARD -->
-    <section class="card countdown-card">
-      <div class="countdown-header">
-        <div>
-          <span class="countdown-badge">Upcoming Major Event</span>
-          <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin: 8px 0 4px 0; color: #ffffff;">SHILOH 2026: FAR ABOVE</h2>
-          <p style="margin: 0; color: #a3e6cd; font-size: 0.95rem; font-weight: 500;">Ephesians 1:20-21 &bull; Faith Tabernacle, Canaanland</p>
-        </div>
-      </div>
-
-      <!-- ANIMATED COUNTDOWN TIMER -->
-      <div class="countdown-grid">
-        <div class="countdown-box">
-          <span class="countdown-num" id="cdDays">00</span>
-          <span class="countdown-label">Days</span>
-        </div>
-        <div class="countdown-box">
-          <span class="countdown-num" id="cdHours">00</span>
-          <span class="countdown-label">Hours</span>
-        </div>
-        <div class="countdown-box">
-          <span class="countdown-num" id="cdMins">00</span>
-          <span class="countdown-label">Minutes</span>
-        </div>
-        <div class="countdown-box">
-          <span class="countdown-num" id="cdSecs">00</span>
-          <span class="countdown-label">Seconds</span>
-        </div>
-      </div>
-
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.15); font-size: 0.88rem; color: #d1e8e0;">
-        <span>📅 <strong>Date:</strong> 8th – 13th Dec. 2026 | 7AM & 7PM Daily (WAT)</span>
-        <a href="./announcements.html" style="color: #ffffff; background: var(--red); padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">View Event Details &rarr;</a>
-      </div>
-    </section>
-
-    <!-- 2. PROPHETIC FOCUS OF THE MONTH BANNER (ANIMATED MP4 VIDEO) -->
-    <section class="card" id="propheticFocusSection" style="padding: 0; overflow: hidden; border-radius: 12px;">
-      <div style="position: relative; width: 100%; max-height: 280px; overflow: hidden; background: #000;">
-        <!-- LOOPING BACKGROUND VIDEO -->
-        <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
+      <div class="video-wrapper">
+        <video autoplay loop muted playsinline poster="./icon-512.png?v=2">
           <source src="./5929544454863068666.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
+          Your browser does not support HTML5 video playback.
         </video>
-        
-        <!-- OVERLAY HEADING -->
-        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(18, 75, 58, 0.95)); color: #ffffff;">
-          <span style="font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #a3e6cd; font-family: 'DM Mono', monospace; display: block; margin-bottom: 4px;">🔥 PROPHETIC FOCUS</span>
-          <h2 id="focusTitle" style="font-family: 'Playfair Display', serif; margin: 0; color: #ffffff; font-size: 1.6rem;">SHOWERS OF BLESSINGS</h2>
-        </div>
-      </div>
-
-      <!-- TEXT DESCRIPTION BELOW VIDEO -->
-      <div style="padding: 20px; background: var(--forest); color: #ffffff;">
-        <p id="focusContent" style="line-height: 1.6; font-size: 0.95rem; opacity: 0.95; white-space: pre-line; margin: 0 0 12px 0;">Ezekiel 34:26 - "And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing."</p>
-        <a id="focusPdfLink" href="#" target="_blank" rel="noopener noreferrer" style="display: none; color: #a3e6cd; border: 1px dashed rgba(163, 230, 205, 0.5); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; width: fit-content;">📄 View Document</a>
       </div>
     </section>
 
-    <!-- 3. SERVICE TIMETABLE & LOCATION FINDER -->
-    <section class="card">
-      <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">SCHEDULE & DIRECTIONS</span>
-      <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-top: 0; margin-bottom: 8px; color: var(--forest);">⏰ Service Timetable & Location Finder</h2>
-      <p style="line-height: 1.6; color: #40574f; margin-top: 0; margin-bottom: 20px;">Join us for our worship services at 46 Aare Road, Iyana Aare Abule Ijoko Lemode, Ogun State.</p>
+    <section class="sermon-player-container" id="sermons">
+      <div class="sermon-cover-box">
+        <video id="currentAudioCoverVideo" autoplay loop muted playsinline style="display: none;">
+          <source id="currentVideoSource" src="" type="video/mp4" />
+        </video>
+        <img id="currentAudioCoverImg" src="./icon-512.png?v=2" alt="Sermon Cover" onerror="this.src='https://placehold.co/300x300/0d2e23/d4af37?text=LFC+Sermon'" />
+      </div>
 
-      <!-- TIMETABLE CARDS -->
-      <div class="timetable-grid">
-        <div class="timetable-card">
-          <h4>Sunday First Service</h4>
-          <p style="margin: 0 0 6px 0; font-size: 0.88rem; color: #555;">Celebration Service</p>
-          <span class="time-badge">7:30 AM – 9:00 AM</span>
+      <div class="player-controls-wrap">
+        <div class="sermon-info">
+          <h3 id="currentAudioTitle">Loading Sermon...</h3>
+          <p id="currentAudioPreacher">Sunday Service Message</p>
         </div>
 
-        <div class="timetable-card">
-          <h4>Sunday Second Service</h4>
-          <p style="margin: 0 0 6px 0; font-size: 0.88rem; color: #555;">Celebration Service</p>
-          <span class="time-badge">9:00 AM – 11:00 AM</span>
+        <audio id="sermonAudio" preload="metadata"></audio>
+
+        <div class="progress-wrap">
+          <span class="time-stamp" id="currentTime">00:00</span>
+          <input type="range" class="progress-bar" id="audioProgress" value="0" min="0" max="100" />
+          <span class="time-stamp" id="totalDuration">00:00</span>
         </div>
 
-        <div class="timetable-card midweek">
-          <h4>Wednesday Midweek</h4>
-          <p style="margin: 0 0 6px 0; font-size: 0.88rem; color: #555;">Communion Service</p>
-          <span class="time-badge">6:00 PM – 8:00 PM</span>
+        <div class="buttons-row">
+          <button class="control-btn" id="seekBackBtn" title="Rewind 10s"><i class="fas fa-undo-alt"></i></button>
+          <button class="control-btn" id="prevAudioBtn" title="Previous Track"><i class="fas fa-step-backward"></i></button>
+          <button class="control-btn play-btn" id="playAudioBtn" title="Play/Pause"><i class="fas fa-play"></i></button>
+          <button class="control-btn" id="nextAudioBtn" title="Next Track"><i class="fas fa-step-forward"></i></button>
+          <button class="control-btn" id="seekForwardBtn" title="Forward 10s"><i class="fas fa-redo-alt"></i></button>
+          <a id="downloadAudioBtn" class="control-btn" download title="Download MP3" href="#"><i class="fas fa-download"></i></a>
         </div>
-      </div>
 
-      <!-- LOCATION MAP LINK BUTTONS -->
-      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-        <a href="https://maps.google.com/?q=46+Aare+Road+Iyana+Aare+Abule+Ijoko+Lemode+Ogun+State" target="_blank" rel="noopener noreferrer" style="background: var(--forest); color: #ffffff; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
-          📍 Open in Google Maps
-        </a>
-        <a href="https://waze.com/ul?q=46+Aare+Road+Iyana+Aare+Abule+Ijoko+Lemode+Ogun+State" target="_blank" rel="noopener noreferrer" style="background: #ffffff; color: var(--forest); border: 1px solid var(--line); padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
-          🚗 Get Driving Directions
-        </a>
-      </div>
-    </section>
-
-    <!-- 4. INTEGRATED BIBLE & DAILY READING PLAN (UPDATED TO YOUVERSION) -->
-    <section class="card">
-      <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 16px;">📖 Holy Bible & Reading Plan</h2>
-      
-      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-        <button id="showBibleBtn" onclick="toggleBibleTab('bible')" style="flex:1; padding: 10px; background: var(--forest); color: #ffffff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Online Bible</button>
-        <button id="showPlanBtn" onclick="toggleBibleTab('plan')" style="flex:1; padding: 10px; background: #f7f5ef; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Daily Plan</button>
-      </div>
-
-      <!-- YOUVERSION AD-FREE BIBLE SECTION -->
-      <div id="bibleTab" style="background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 30px 20px; text-align: center;">
-        <p style="font-size: 1.05rem; color: var(--ink); margin-top: 0; margin-bottom: 16px; font-weight: 500;">Enjoy a completely ad-free reading and listening experience powered by YouVersion.</p>
-        <a href="https://www.bible.com/bible" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display: inline-block; background: var(--forest); text-decoration: none;">
-          📖 Open YouVersion Bible Reader
-        </a>
-      </div>
-
-      <!-- DAILY READING PLAN OUTLINE -->
-      <div id="planTab" style="display: none; background: #f7f5ef; padding: 16px; border-radius: 8px;">
-        <h3 style="margin-top:0; color: var(--forest); font-size: 1.1rem;">This Week's Reading Outline</h3>
-        <ul style="line-height: 2; padding-left: 20px; font-weight: 500; margin-bottom: 0;">
-          <li><strong>Monday:</strong> Psalm 119:1–32</li>
-          <li><strong>Tuesday:</strong> Psalm 119:33–72</li>
-          <li><strong>Wednesday:</strong> Psalm 119:73–104</li>
-          <li><strong>Thursday:</strong> Psalm 119:105–144</li>
-          <li><strong>Friday:</strong> Psalm 119:145–176</li>
-          <li><strong>Saturday:</strong> Proverbs 1:1–33</li>
-          <li><strong>Sunday:</strong> Proverbs 2:1–22</li>
-        </ul>
+        <div class="playlist-card" id="playlistContainer">
+          <!-- Playlist items rendered dynamically -->
+        </div>
       </div>
     </section>
 
-    <!-- 5. PRAYER REQUEST SUBMISSION FORM -->
-    <section class="card">
-      <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 6px;">🙏 Prayer Request & Intercession</h2>
-      <p style="font-size: 0.9rem; color: #555; margin-top: 0; margin-bottom: 16px;">Submit your prayer points. Our intercessory team will join you in faith.</p>
+    <section class="bible-container" id="bible">
+      <div class="tab-bar">
+        <button class="tab-btn active" id="showBibleBtn" onclick="toggleBibleTab('bible')"><i class="fas fa-book-open"></i> Online Bible</button>
+        <button class="tab-btn" id="showPlanBtn" onclick="toggleBibleTab('plan')"><i class="fas fa-calendar-check"></i> Daily Reading Plan</button>
+      </div>
 
-      <form id="prayerForm">
-        <div style="margin-bottom: 12px;">
-          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Your Name (Optional)</label>
-          <input type="text" id="prayerName" placeholder="Leave blank to remain anonymous" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
+      <!-- Online Bible Tab Content -->
+      <div id="bibleTab">
+        <div class="youversion-card">
+          <i class="fas fa-bible" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem;"></i>
+          <h3>Ad-Free Holy Bible Reader</h3>
+          <p>Read, study, and meditate on God's Word seamlessly through the YouVersion Bible experience without distraction.</p>
+          <a href="https://www.bible.com/bible" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+            <i class="fas fa-external-link-alt"></i> Open YouVersion Bible App
+          </a>
         </div>
+      </div>
 
-        <div style="margin-bottom: 12px;">
-          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Phone / Email (Optional)</label>
-          <input type="text" id="prayerContact" placeholder="For follow-up support" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
+      <!-- Daily Plan Tab Content -->
+      <div id="planTab" style="display: none;">
+        <div class="youversion-card" style="background: linear-gradient(135deg, #184234 0%, #0d2e23 100%);">
+          <i class="fas fa-book-reader" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem;"></i>
+          <h3>Winners Daily Bible Reading Plan</h3>
+          <p>Follow along with our daily scripture reading program to stay fed in the spirit every day.</p>
+          <a href="https://www.bible.com/reading-plans" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+            <i class="fas fa-list-ol"></i> View Reading Plans
+          </a>
         </div>
-
-        <div style="margin-bottom: 16px;">
-          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Prayer Request *</label>
-          <textarea id="prayerContent" rows="4" required placeholder="Type your prayer request here..." style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;"></textarea>
-        </div>
-
-        <button type="submit" style="width: 100%; background: var(--forest); color: #ffffff; padding: 12px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 1rem; font-family: inherit;">
-          🕊️ Submit Prayer Request
-        </button>
-      </form>
+      </div>
     </section>
 
-    <!-- TESTIMONIES SECTION -->
-    <div style="margin-top: 40px;">
-      <span style="font: 600 0.75rem 'DM Mono', monospace; color: var(--red); display: block; margin-bottom: 8px;">TESTIMONIES</span>
-      <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-top: 0;">Praise Reports & Testimonies</h2>
-      
-      <div id="testimoniesContainer" class="testimonies-grid">
-        <p>Loading testimonies...</p>
+    <section class="section-title" id="services">
+      <h2>Weekly Services</h2>
+      <p>Join us in fellowship and experience transformation</p>
+    </section>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <h3>Sunday Service</h3>
+        <span class="service-time">1st Service: 6:30 AM | 2nd Service: 8:30 AM</span>
+        <p>An explosive time of praise, worship, prophetic declarations, and the unadulterated word of faith.</p>
+      </div>
+
+      <div class="service-card">
+        <h3>Mid-Week Communion</h3>
+        <span class="service-time">Wednesdays • 5:00 PM</span>
+        <p>A mid-week spiritual refresh featuring teachings, prayer intercessions, and the holy communion table.</p>
+      </div>
+
+      <div class="service-card">
+        <h3>Covenant Hour of Prayer</h3>
+        <span class="service-time">Mon - Sat • 6:00 AM</span>
+        <p>Start your mornings by committing your day into God's hands through intense intercession.</p>
       </div>
     </div>
+
+    <section class="forms-grid" id="prayer">
+      <div class="form-card">
+        <h3><i class="fas fa-praying-hands" style="color: var(--gold);"></i> Send Prayer Request</h3>
+        <form onsubmit="event.preventDefault(); alert('Your prayer request has been received. Our pastoral team will stand in agreement with you!'); this.reset();">
+          <div class="form-group">
+            <label for="pName">Full Name</label>
+            <input type="text" id="pName" class="form-control" required placeholder="John Doe" />
+          </div>
+          <div class="form-group">
+            <label for="pPhone">Phone / WhatsApp</label>
+            <input type="tel" id="pPhone" class="form-control" placeholder="+234..." />
+          </div>
+          <div class="form-group">
+            <label for="pReq">Prayer Request Details</label>
+            <textarea id="pReq" class="form-control" required placeholder="Describe what you are trusting God for..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-gold" style="width: 100%;"><i class="fas fa-paper-plane"></i> Submit Request</button>
+        </form>
+      </div>
+
+      <div class="form-card">
+        <h3><i class="fas fa-star" style="color: var(--gold);"></i> Share Your Testimony</h3>
+        <form onsubmit="event.preventDefault(); alert('Praise God! Thank you for sharing your testimony.'); this.reset();">
+          <div class="form-group">
+            <label for="tName">Full Name</label>
+            <input type="text" id="tName" class="form-control" required placeholder="Jane Doe" />
+          </div>
+          <div class="form-group">
+            <label for="tTitle">Testimony Title</label>
+            <input type="text" id="tTitle" class="form-control" placeholder="Healed from disease / New Job..." />
+          </div>
+          <div class="form-group">
+            <label for="tDetails">Testimony Details</label>
+            <textarea id="tDetails" class="form-control" required placeholder="Share what the Lord has done..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-gold" style="width: 100%;"><i class="fas fa-bullhorn"></i> Share Testimony</button>
+        </form>
+      </div>
+    </section>
 
   </div>
 
   <footer>
-    <p>📍 46 Aare Road, Iyana Aare Abule Ijoko Lemode, Ogun State</p>
-    <p>&copy; 2026 Living Faith Church (LFC Aare). All rights reserved.</p>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="brand">
+          <img src="./icon-512.png?v=2" alt="LFC Logo" onerror="this.src='https://placehold.co/100x100/0d2e23/d4af37?text=LFC+Aare'" />
+          <div class="brand-title">
+            LFC AARE
+            <span>Winners Chapel</span>
+          </div>
+        </div>
+        <p>Living Faith Church Aare, Ogbomoso. Raising a generation of champions through the preaching of the Word of Faith.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#sermons">Audio Sermons</a></li>
+          <li><a href="#focus">Prophetic Focus</a></li>
+          <li><a href="#bible">Online Bible</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="#prayer">Prayer Requests</a></li>
+          <li><a href="#prayer">Testimonies</a></li>
+          <li><a href="#services">Service Times</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Living Faith Church Aare. All Rights Reserved.</p>
+    </div>
   </footer>
 
   <!-- CUSTOM PWA INSTALL BANNER -->
   <div id="pwaBanner" class="pwa-install-banner" role="dialog" aria-label="Install App">
     <div class="pwa-info">
-      <img src="./icon-512.png?v=2" alt="LFC Logo" class="pwa-icon" />
+      <img src="./icon-512.png?v=2" alt="LFC Logo" class="pwa-icon" onerror="this.src='https://placehold.co/100x100/0d2e23/d4af37?text=LFC'" />
       <div class="pwa-text">
         <h4>Install LFC Aare App</h4>
         <p id="pwaSubtitle">Add to your Home Screen for easy access</p>
@@ -908,12 +1151,8 @@
     </div>
   </div>
 
-  <!-- SCRIPT FOR NAVIGATION, COUNTDOWN TIMER, AUDIO PLAYER & FIREBASE -->
+  <!-- SCRIPT FOR SHILOH COUNTDOWN TIMER -->
   <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const navMenu = document.getElementById('navMenu');
-    menuBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
-
     function updateShilohCountdown() {
       const targetDate = new Date("December 8, 2026 07:00:00 GMT+0100").getTime();
       const now = new Date().getTime();
@@ -936,8 +1175,21 @@
         document.getElementById("cdSecs").textContent = "00";
       }
     }
+
     setInterval(updateShilohCountdown, 1000);
     updateShilohCountdown();
+  </script>
+
+  <!-- SCRIPT TO TOGGLE MOBILE MENU & BIBLE TAB -->
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+
+    if (menuBtn && navMenu) {
+      menuBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+      });
+    }
 
     function toggleBibleTab(tab) {
       const bibleTab = document.getElementById('bibleTab');
@@ -950,36 +1202,291 @@
         planTab.style.display = 'none';
         showBibleBtn.style.background = 'var(--forest)';
         showBibleBtn.style.color = '#ffffff';
-        showBibleBtn.style.border = 'none';
         showPlanBtn.style.background = '#f7f5ef';
         showPlanBtn.style.color = 'var(--ink)';
-        showPlanBtn.style.border = '1px solid var(--line)';
       } else {
         bibleTab.style.display = 'none';
         planTab.style.display = 'block';
         showPlanBtn.style.background = 'var(--forest)';
         showPlanBtn.style.color = '#ffffff';
-        showPlanBtn.style.border = 'none';
         showBibleBtn.style.background = '#f7f5ef';
         showBibleBtn.style.color = 'var(--ink)';
-        showBibleBtn.style.border = '1px solid var(--line)';
       }
     }
   </script>
 
-  <!-- FIREBASE AUDIO & TESTIMONIES INTEGRATION -->
+  <!-- SCRIPT FOR AUDIO SERMON PLAYER WITH ANIMATED VIDEO COVER, DOWNLOAD LINKS & LOCK SCREEN CONTROLS -->
+  <script>
+    const audioSermons = [
+      {
+        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 1",
+        preacher: "Sunday Service Message",
+        cover: "./5929544454863068666.mp4",
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3"
+      },
+      {
+        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 2",
+        preacher: "Sunday Service Message",
+        cover: "./5929544454863068666.mp4",
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3.2.mp3"
+      },
+      {
+        title: "UNDERSTANDING THE MINISTRY OF THE HOLY SPIRIT SHOWERS OF BLESSINGS - Part 3",
+        preacher: "Sunday Service Message",
+        cover: "./5929544454863068666.mp4",
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/UNDERSTANDING_THE_MINISTRY_OF_THE_HOLY_SPIRIT_SHOWERS_OF_BLESSIN.mp3.3.mp3"
+      },
+      {
+        title: "Prophetic Blessings October",
+        preacher: "Prophetic Service",
+        cover: "./5929544454863068666.mp4",
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/Prophetic.Blessings.October.mp3"
+      },
+      {
+        title: "Showers of Blessings",
+        preacher: "Special Service Message",
+        cover: "./5929544454863068666.mp4",
+        src: "https://github.com/oyewoleoluwadamilare355-web/lfc-aare/releases/download/v1.0.1-sermons/Showers.of.Blessings.mp3"
+      }
+    ];
+
+    let currentTrackIndex = 0;
+    const audio = document.getElementById('sermonAudio');
+    const playBtn = document.getElementById('playAudioBtn');
+    const prevBtn = document.getElementById('prevAudioBtn');
+    const nextBtn = document.getElementById('nextAudioBtn');
+    const seekBackBtn = document.getElementById('seekBackBtn');
+    const seekForwardBtn = document.getElementById('seekForwardBtn');
+    const progressBar = document.getElementById('audioProgress');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalDurationEl = document.getElementById('totalDuration');
+    const titleEl = document.getElementById('currentAudioTitle');
+    const preacherEl = document.getElementById('currentAudioPreacher');
+    const playlistContainer = document.getElementById('playlistContainer');
+    const downloadAudioBtn = document.getElementById('downloadAudioBtn');
+
+    const coverVideo = document.getElementById('currentAudioCoverVideo');
+    const videoSource = document.getElementById('currentVideoSource');
+    const coverImg = document.getElementById('currentAudioCoverImg');
+
+    function loadTrack(index) {
+      currentTrackIndex = index;
+      const track = audioSermons[index];
+      audio.src = track.src;
+      titleEl.textContent = track.title;
+      preacherEl.textContent = track.preacher;
+      
+      // Update Main Download Button Target URL
+      if (downloadAudioBtn) {
+        downloadAudioBtn.href = track.src;
+        downloadAudioBtn.setAttribute('download', `${track.title}.mp3`);
+      }
+
+      // Update Cover Display (Check if Video or Image)
+      if (track.cover && track.cover.endsWith('.mp4')) {
+        coverImg.style.display = 'none';
+        coverVideo.style.display = 'block';
+        videoSource.src = track.cover;
+        coverVideo.load();
+        coverVideo.play().catch(() => {});
+      } else {
+        coverVideo.style.display = 'none';
+        coverImg.style.display = 'block';
+        coverImg.src = track.cover || './icon-512.png?v=2';
+      }
+
+      updatePlaylistUI();
+
+      // Mobile Lock Screen & Control Center Media Controls
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: track.title,
+          artist: track.preacher,
+          album: "LFC Aare Sermons",
+          artwork: [
+            { src: './icon-512.png?v=2', sizes: '512x512', type: 'image/png' }
+          ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => { audio.play(); playBtn.innerHTML = '<i class="fas fa-pause"></i>'; });
+        navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); playBtn.innerHTML = '<i class="fas fa-play"></i>'; });
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
+        navigator.mediaSession.setActionHandler('seekbackward', () => seekBackBtn.click());
+        navigator.mediaSession.setActionHandler('seekforward', () => seekForwardBtn.click());
+      }
+    }
+
+    function renderPlaylist() {
+      playlistContainer.innerHTML = '';
+      audioSermons.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = `sermon-playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
+        
+        let coverMarkup = `<img src="${track.cover}" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover; flex-shrink: 0;" alt="thumb" onerror="this.src='./icon-512.png?v=2'" />`;
+        if (track.cover && track.cover.endsWith('.mp4')) {
+          coverMarkup = `<video autoplay loop muted playsinline style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover; flex-shrink: 0;"><source src="${track.cover}" type="video/mp4"></video>`;
+        }
+
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${coverMarkup}
+              <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${track.title}</span>
+            </div>
+            <a href="${track.src}" download target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" title="Download Sermon" style="color: #a3e6cd; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08); text-decoration: none;">
+              <i class="fas fa-download"></i>
+            </a>
+          </div>
+        `;
+        item.onclick = () => {
+          loadTrack(index);
+          audio.play();
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        };
+        playlistContainer.appendChild(item);
+      });
+    }
+
+    function updatePlaylistUI() {
+      const items = playlistContainer.querySelectorAll('.sermon-playlist-item');
+      items.forEach((item, idx) => {
+        if (idx === currentTrackIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "00:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (!audio.src) {
+        loadTrack(0);
+      }
+      if (audio.paused) {
+        audio.play();
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      } else {
+        audio.pause();
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex - 1 + audioSermons.length) % audioSermons.length;
+      loadTrack(currentTrackIndex);
+      audio.play();
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex + 1) % audioSermons.length;
+      loadTrack(currentTrackIndex);
+      audio.play();
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    });
+
+    seekBackBtn.addEventListener('click', () => {
+      audio.currentTime = Math.max(0, audio.currentTime - 10);
+    });
+
+    seekForwardBtn.addEventListener('click', () => {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        progressBar.value = pct;
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        totalDurationEl.textContent = formatTime(audio.duration);
+      }
+    });
+
+    progressBar.addEventListener('input', () => {
+      if (audio.duration) {
+        audio.currentTime = (progressBar.value / 100) * audio.duration;
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      nextBtn.click();
+    });
+
+    // Initialize default playlist track
+    renderPlaylist();
+    loadTrack(0);
+  </script>
+
+  <!-- PWA INSTALL EVENT LISTENER & POPUP CONTROLLER -->
+  <script>
+    let deferredPrompt;
+    const heroInstallBtn = document.getElementById('heroInstallBtn');
+    const pwaBanner = document.getElementById('pwaBanner');
+    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+    const pwaCloseBtn = document.getElementById('pwaCloseBtn');
+
+    function showInstallBanner() {
+      if (!sessionStorage.getItem('pwaBannerDismissed') && pwaBanner) {
+        pwaBanner.classList.add('show');
+      }
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showInstallBanner();
+    });
+
+    window.addEventListener('load', () => {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+      if (!isStandalone) {
+        setTimeout(showInstallBanner, 3000);
+      }
+    });
+
+    async function triggerInstallPrompt() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          console.log('App installed successfully');
+        }
+        deferredPrompt = null;
+        if (pwaBanner) pwaBanner.classList.remove('show');
+      } else {
+        alert("To install: tap your browser menu (⋮ or Share icon) and select 'Add to Home Screen' or 'Install App'.");
+      }
+    }
+
+    if (heroInstallBtn) heroInstallBtn.addEventListener('click', triggerInstallPrompt);
+    if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', triggerInstallPrompt);
+
+    if (pwaCloseBtn) {
+      pwaCloseBtn.addEventListener('click', () => {
+        if (pwaBanner) pwaBanner.classList.remove('show');
+        sessionStorage.setItem('pwaBannerDismissed', 'true');
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      if (pwaBanner) pwaBanner.classList.remove('show');
+    });
+  </script>
+
+  <!-- FIRESTORE LIVE LISTENER FOR PROPHETIC FOCUS COLLECTION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getFirestore, 
-      collection, 
-      onSnapshot, 
-      query, 
-      orderBy,
-      addf,
-      serverTimestamp 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // Your Firebase Project Credentials
     const firebaseConfig = {
       apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
       authDomain: "kingmegad-30f67.firebaseapp.com",
@@ -990,33 +1497,31 @@
       measurementId: "G-BVX8SEWFD0"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    async function fetchPropheticFocus() {
+      try {
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    // Fetch Testimonies Realtime
-    const testimoniesContainer = document.getElementById('testimoniesContainer');
-    const testQuery = query(collection(db, "testimonies"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(collection(db, "prophetic_focus"));
+        
+        if (!querySnapshot.empty) {
+          const docData = querySnapshot.docs[querySnapshot.docs.length - 1].data();
+          
+          if (docData.title) document.getElementById('focusTitle').textContent = docData.title;
+          if (docData.content) document.getElementById('focusContent').textContent = docData.content;
 
-    onSnapshot(testQuery, (snapshot) => {
-      if (snapshot.empty) {
-        testimoniesContainer.innerHTML = "<p>No testimonies published yet.</p>";
-        return;
+          const pdfLink = document.getElementById('focusPdfLink');
+          if (docData.pdfUrl) {
+            pdfLink.href = docData.pdfUrl;
+            pdfLink.style.display = 'inline-block';
+          }
+        }
+      } catch (error) {
+        console.warn("Firestore fetch error, displaying defaults:", error);
       }
-      testimoniesContainer.innerHTML = "";
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const card = document.createElement("div");
-        card.className = "testimony-card";
-        card.innerHTML = `
-          <div>
-            <h3>${data.title || "Testimony"}</h3>
-            <p>${data.content || data.testimony || ""}</p>
-          </div>
-          <small>By: ${data.name || "Anonymous"}</small>
-        `;
-        testimoniesContainer.appendChild(card);
-      });
-    });
+    }
+
+    fetchPropheticFocus();
   </script>
 </body>
 </html>
