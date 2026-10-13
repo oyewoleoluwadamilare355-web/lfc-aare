@@ -908,8 +908,12 @@
     </div>
   </div>
 
-  <!-- SCRIPT FOR SHILOH COUNTDOWN TIMER & TAB TOGGLING -->
+  <!-- SCRIPT FOR NAVIGATION, COUNTDOWN TIMER, AUDIO PLAYER & FIREBASE -->
   <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    menuBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+
     function updateShilohCountdown() {
       const targetDate = new Date("December 8, 2026 07:00:00 GMT+0100").getTime();
       const now = new Date().getTime();
@@ -961,6 +965,58 @@
         showBibleBtn.style.border = '1px solid var(--line)';
       }
     }
+  </script>
+
+  <!-- FIREBASE AUDIO & TESTIMONIES INTEGRATION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      onSnapshot, 
+      query, 
+      orderBy,
+      addf,
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9pPgstjk61L591zdlcn2f7OaypP3mPgA",
+      authDomain: "kingmegad-30f67.firebaseapp.com",
+      projectId: "kingmegad-30f67",
+      storageBucket: "kingmegad-30f67.firebasestorage.app",
+      messagingSenderId: "81567062415",
+      appId: "1:81567062415:web:8ba053c67b05cdfea5d3fa",
+      measurementId: "G-BVX8SEWFD0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Fetch Testimonies Realtime
+    const testimoniesContainer = document.getElementById('testimoniesContainer');
+    const testQuery = query(collection(db, "testimonies"), orderBy("createdAt", "desc"));
+
+    onSnapshot(testQuery, (snapshot) => {
+      if (snapshot.empty) {
+        testimoniesContainer.innerHTML = "<p>No testimonies published yet.</p>";
+        return;
+      }
+      testimoniesContainer.innerHTML = "";
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const card = document.createElement("div");
+        card.className = "testimony-card";
+        card.innerHTML = `
+          <div>
+            <h3>${data.title || "Testimony"}</h3>
+            <p>${data.content || data.testimony || ""}</p>
+          </div>
+          <small>By: ${data.name || "Anonymous"}</small>
+        `;
+        testimoniesContainer.appendChild(card);
+      });
+    });
   </script>
 </body>
 </html>
