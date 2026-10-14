@@ -1148,17 +1148,17 @@
     }
 
     playBtn.addEventListener('click', () => {
-      if (!audio.src) {
-        loadTrack(0);
-      }
-      if (audio.paused) {
-        audio.play();
-        playBtn.textContent = '⏸';
-      } else {
-        audio.pause();
-        playBtn.textContent = '▶';
-      }
-    });
+  if (!audio.src) {
+    loadTrack(0);
+  }
+  if (audio.paused) {
+    audio.play();
+    playBtn.textContent = '❚❚';
+  } else {
+    audio.pause();
+    playBtn.textContent = '▶';
+  }
+});
 
     prevBtn.addEventListener('click', () => {
       currentTrackIndex = (currentTrackIndex - 1 + audioSermons.length) % audioSermons.length;
