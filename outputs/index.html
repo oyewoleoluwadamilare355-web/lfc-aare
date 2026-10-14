@@ -1152,7 +1152,10 @@
     loadTrack(0);
   }
   if (audio.paused) {
-    audio.play();
+    if (audio.readyState === 0) {
+      audio.load();
+    }
+    audio.play().catch(err => console.error("Playback error:", err));
     playBtn.textContent = '❚❚';
   } else {
     audio.pause();
