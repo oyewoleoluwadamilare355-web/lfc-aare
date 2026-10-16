@@ -1,3 +1,6 @@
+// 1. Import OneSignal Service Worker SDK
+importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
+
 const CACHE_NAME = 'lfc-aare-v4';
 const STATIC_ASSETS = [
   './',
@@ -41,12 +44,17 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // 1. Skip caching for video and audio streams
-  if (url.pathname.endsWith('.mp4') || url.pathname.endsWith('.webm') || url.pathname.endsWith('.mp3')) {
+  // Skip caching for OneSignal API requests & external media streams
+  if (
+    url.hostname.includes('onesignal.com') ||
+    url.pathname.endsWith('.mp4') ||
+    url.pathname.endsWith('.webm') ||
+    url.pathname.endsWith('.mp3')
+  ) {
     return;
   }
 
-  // 2. NETWORK FIRST strategy for HTML pages so code updates load immediately
+  // NETWORK FIRST strategy for HTML pages so code updates load immediately
   if (event.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
     event.respondWith(
       fetch(event.request)
@@ -64,7 +72,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. CACHE FIRST strategy for static images and assets
+  // CACHE FIRST strategy for static images and assets
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -81,7 +89,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Firebase Push Notification Listener
+// Push Notification Fallback Listener
 self.addEventListener('push', (event) => {
   let notificationData = {
     title: 'LFC Aare Notification',
