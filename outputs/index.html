@@ -1095,6 +1095,15 @@
           ]
         });
 
+        // Update download button link dynamically for active track
+const downloadAudioBtn = document.getElementById('downloadAudioBtn');
+if (downloadAudioBtn) {
+  downloadAudioBtn.onclick = function(e) {
+    e.preventDefault();
+    downloadSermonFile(track.src, `${track.title.replace(/[^a-zA-Z0-9 ]/g, "").trim()}.mp3`);
+  };
+}
+
         navigator.mediaSession.setActionHandler('play', () => { audio.play(); playBtn.textContent = '⏸'; });
         navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); playBtn.textContent = '▶'; });
         navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
@@ -1212,6 +1221,39 @@
     // Initialize default playlist track
     renderPlaylist();
     loadTrack(0);
+    // Helper function to fetch audio file bytes and force local download
+async function downloadSermonFile(url, filename) {
+  const downloadBtn = document.getElementById('downloadAudioBtn');
+  const originalText = downloadBtn ? downloadBtn.innerHTML : '📥 Download';
+
+  try {
+    if (downloadBtn) downloadBtn.innerHTML = "⏳ Downloading...";
+    
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Download request failed");
+    
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.href = blobUrl;
+    link.download = filename || 'sermon.mp3';
+    
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up memory
+    window.URL.revokeObjectURL(blobUrl);
+    document.body.removeChild(link);
+    if (downloadBtn) downloadBtn.innerHTML = originalText;
+  } catch (error) {
+    console.error("Direct download fallback triggered:", error);
+    if (downloadBtn) downloadBtn.innerHTML = originalText;
+    // Fallback: Open directly if fetch is blocked
+    window.open(url, '_blank');
+  }
+}
   </script>
 
   <!-- PWA INSTALL EVENT LISTENER & POPUP CONTROLLER -->
