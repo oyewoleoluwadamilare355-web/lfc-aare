@@ -859,31 +859,37 @@
     </section>
 
     <!-- 5. PRAYER REQUEST SUBMISSION FORM -->
-    <section class="card">
-      <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 6px;">🙏 Prayer Request & Intercession</h2>
-      <p style="font-size: 0.9rem; color: #555; margin-top: 0; margin-bottom: 16px;">Submit your prayer points. Our intercessory team will join you in faith.</p>
+<section class="card">
+  <h2 style="color: var(--forest); font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 6px;">🙏 Prayer Request & Intercession</h2>
+  <p style="font-size: 0.9rem; color: #555; margin-top: 0; margin-bottom: 16px;">Submit your prayer points. Our intercessory team will join you in faith.</p>
 
-      <form id="prayerForm">
-        <div style="margin-bottom: 12px;">
-          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Your Name (Optional)</label>
-          <input type="text" id="prayerName" placeholder="Leave blank to remain anonymous" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
-        </div>
+  <form action="https://api.web3forms.com/submit" method="POST" id="prayerForm">
+    <!-- Web3Forms Access Key -->
+    <input type="hidden" name="access_key" value="a2f1f736-c60e-41ea-b888-74d15521062e">
+    
+    <!-- Email Notification Subject -->
+    <input type="hidden" name="subject" value="🙏 New Prayer Request - LFC Aare">
 
-        <div style="margin-bottom: 12px;">
-          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Phone / Email (Optional)</label>
-          <input type="text" id="prayerContact" placeholder="For follow-up support" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
-        </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Your Name (Optional)</label>
+      <input type="text" name="Name" id="prayerName" placeholder="Leave blank to remain anonymous" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
+    </div>
 
-        <div style="margin-bottom: 16px;">
-          <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Prayer Request *</label>
-          <textarea id="prayerContent" rows="4" required placeholder="Type your prayer request here..." style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;"></textarea>
-        </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Phone / Email (Optional)</label>
+      <input type="text" name="Contact Info" id="prayerContact" placeholder="For follow-up support" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
+    </div>
 
-        <button type="submit" style="width: 100%; background: var(--forest); color: #ffffff; padding: 12px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 1rem; font-family: inherit;">
-          🕊️ Submit Prayer Request
-        </button>
-      </form>
-    </section>
+    <div style="margin-bottom: 16px;">
+      <label style="display: block; font-weight: 600; margin-bottom: 4px; color: var(--forest); font-size: 0.9rem;">Prayer Request *</label>
+      <textarea name="Prayer Request" id="prayerContent" rows="4" required placeholder="Type your prayer request here..." style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;"></textarea>
+    </div>
+
+    <button type="submit" style="width: 100%; background: var(--forest); color: #ffffff; padding: 12px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 1rem; font-family: inherit;">
+      🕊️ Submit Prayer Request
+    </button>
+  </form>
+</section>
 
     <!-- TESTIMONIES SECTION -->
     <div style="margin-top: 40px;">
