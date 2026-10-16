@@ -676,53 +676,54 @@
 
   <div class="container">
 
-    <!-- AUDIO SERMON & MESSAGE PLAYER WITH ANIMATED VIDEO COVER & DIRECT DOWNLOAD -->
-    <section class="card sermon-player-container">
-      <span style="font: 600 0.75rem 'DM Mono', monospace; color: #a3e6cd; display: block; margin-bottom: 8px;">AUDIO MESSAGES & SERMONS</span>
-      
-      <div class="sermon-track-info">
-        <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
-          <div class="sermon-cover-box" id="sermonCoverContainer">
-            <video id="currentAudioCoverVideo" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
-              <source id="currentVideoSource" src="./5929544454863068666.mp4" type="video/mp4" />
-            </video>
-            <img id="currentAudioCoverImg" src="./icon-512.png?v=2" alt="Cover" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
-          </div>
-          <div class="sermon-details" style="overflow: hidden;">
-            <h3 id="currentAudioTitle" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Select a Sermon</h3>
-            <p id="currentAudioPreacher">LFC Aare Audio Library</p>
-          </div>
-        </div>
-
-        <!-- MAIN AUDIO DOWNLOAD BUTTON -->
-<a id="downloadAudioBtn" href="#" class="btn-download-audio" style="cursor: pointer;">
-  📥 Download
-</a>
-
-      <!-- HTML5 AUDIO PLAYER CONTROLS -->
-      <audio id="sermonAudio" preload="auto"></audio>
-
-      <div class="audio-controls">
-        <div class="audio-progress-container">
-          <span id="currentTime">00:00</span>
-          <input type="range" id="audioProgress" class="audio-progress-bar" value="0" min="0" max="100" />
-          <span id="totalDuration">00:00</span>
-        </div>
-
-        <div class="audio-buttons">
-          <button class="btn-audio-control" id="prevAudioBtn" title="Previous Track">⏮</button>
-          <button class="btn-audio-control" id="seekBackBtn" title="Rewind 10s">⏪</button>
-          <button class="btn-audio-control btn-audio-play" id="playAudioBtn" title="Play/Pause">▶</button>
-          <button class="btn-audio-control" id="seekForwardBtn" title="Forward 10s">⏩</button>
-          <button class="btn-audio-control" id="nextAudioBtn" title="Next Track">⏭</button>
-        </div>
+   <!-- AUDIO SERMON & MESSAGE PLAYER WITH ANIMATED VIDEO COVER & DIRECT DOWNLOAD -->
+<section class="card sermon-player-container">
+  <span style="font: 600 0.75rem 'DM Mono', monospace; color: #a3e6cd; display: block; margin-bottom: 8px;">AUDIO MESSAGES & SERMONS</span>
+  
+  <div class="sermon-track-info">
+    <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
+      <div class="sermon-cover-box" id="sermonCoverContainer">
+        <video id="currentAudioCoverVideo" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
+          <source id="currentVideoSource" src="./5929544454863068666.mp4" type="video/mp4" />
+        </video>
+        <img id="currentAudioCoverImg" src="./icon-512.png?v=2" alt="Cover" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
       </div>
-
-      <!-- PLAYLIST SELECTOR WITH ITEM DOWNLOAD BUTTONS -->
-      <div class="sermon-playlist" id="playlistContainer">
-        <!-- Audio items populated dynamically via JS -->
+      <div class="sermon-details" style="overflow: hidden;">
+        <h3 id="currentAudioTitle" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Select a Sermon</h3>
+        <p id="currentAudioPreacher">LFC Aare Audio Library</p>
       </div>
-    </section>
+    </div>
+
+    <!-- MAIN AUDIO DOWNLOAD BUTTON -->
+    <a id="downloadAudioBtn" href="#" class="btn-download-audio" style="cursor: pointer;">
+      📥 Download
+    </a>
+  </div>
+
+  <!-- HTML5 AUDIO PLAYER CONTROLS -->
+  <audio id="sermonAudio" preload="auto"></audio>
+
+  <div class="audio-controls">
+    <div class="audio-progress-container">
+      <span id="currentTime">00:00</span>
+      <input type="range" id="audioProgress" class="audio-progress-bar" value="0" min="0" max="100" />
+      <span id="totalDuration">00:00</span>
+    </div>
+
+    <div class="audio-buttons">
+      <button class="btn-audio-control" id="prevAudioBtn" title="Previous Track">⏮</button>
+      <button class="btn-audio-control" id="seekBackBtn" title="Rewind 10s">⏪</button>
+      <button class="btn-audio-control btn-audio-play" id="playAudioBtn" title="Play/Pause">▶</button>
+      <button class="btn-audio-control" id="seekForwardBtn" title="Forward 10s">⏩</button>
+      <button class="btn-audio-control" id="nextAudioBtn" title="Next Track">⏭</button>
+    </div>
+  </div>
+
+  <!-- PLAYLIST SELECTOR WITH ITEM DOWNLOAD BUTTONS -->
+  <div class="sermon-playlist" id="playlistContainer">
+    <!-- Audio items populated dynamically via JS -->
+  </div>
+</section>
 
     <!-- 1. SHILOH 2026 ANIMATED COUNTDOWN CARD -->
     <section class="card countdown-card">
